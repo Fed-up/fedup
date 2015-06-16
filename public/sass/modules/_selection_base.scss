@@ -1,0 +1,561 @@
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+    outline: none;
+}
+
+.video__home{
+	@media #{$small-only} {
+		background-color: $main_dark;
+	  	background: transparent url(/images/selection/selection10.png) 50% 50% / cover no-repeat ;
+	 	height: 23.5rem;
+	 	width: 100%; 
+	 	margin-top: -2.5rem; 
+	 	overflow: hidden;
+	 	background-size:cover;  
+	}
+	@media #{$medium-only} {
+		background-color: $main_dark;
+		background: transparent url(/images/selection/selection10.png) 50% 50% / cover no-repeat ;
+	  	// background: url(/images/paws/mobiledog.png) no-repeat 0 0; 
+	 	height: 30rem;
+	 	width: 100%;
+	 	margin-top: -2.5rem; 
+	 	overflow: hidden;
+	 	background-size:cover; 
+	}
+	
+	@media #{$large-up} { 
+		background-color: $main_dark;
+		background: transparent url(/images/selection/selection10.png) 50% 50% / cover no-repeat ;
+	  	// background: url(/images/paws/mobiledog.png) no-repeat 0 0; 
+	 	height: 35rem;
+	 	width: 100%;
+	 	margin-top: -2.5rem; 
+	 	overflow: hidden;
+	 	background-size:cover; 
+  	}
+  	@media #{$xlarge-up} { 
+		background-color: $main_dark;
+		background: transparent url(/images/selection/selection10.png) 50% 50% / cover no-repeat ;
+	  	// background: url(/images/paws/mobiledog.png) no-repeat 0 0; 
+	 	height: 50rem;
+	 	width: 100%;
+	 	margin-top: -2.5rem; 
+	 	overflow: hidden;
+	 	background-size:cover; 
+  	}
+  	@media #{$xxlarge-up} { 
+		background-color: $main_dark;
+		background: transparent url(/images/selection/selection10.png) 50% 50% / cover no-repeat ;
+	  	// background: url(/images/paws/mobiledog.png) no-repeat 0 0; 
+	 	height: 60rem;
+	 	width: 100%;
+	 	margin-top: -2.5rem; 
+	 	overflow: hidden;
+	 	background-size:cover; 
+  	}
+
+		
+} 
+
+
+video#bgvid {
+	@media #{$small-only} {
+		display: none;
+		background-size:cover; 
+	}
+	@media #{$medium-only} {
+		display: none;
+		background-size:cover; 
+	}
+	
+	@media #{$large-up} { 
+
+  		position: static; 
+		/*top: -2.5;*/
+		/*right: 0; */
+		/*bottom: 0;*/
+		margin-top: -2.5rem;
+		min-width: 100%; 
+		min-height: 100%;
+		width: auto;  
+		height: auto; 
+		z-index: -100;
+		background: url(/images/paws/videopic.jpg) no-repeat 0 0;
+		background-size: cover;	
+  	}
+}
+
+/*@media only screen and (max-width: 480px) {
+	body.showPanel video#bgvid{
+		display:none;
+	}
+}*/
+.section__white--form{
+	position: absolute;
+	top: 3.5rem;
+	/* background-color: #fff; */
+	padding: 1rem;
+	/* width: 100%; */
+	/* border: 1px solid #e0e0e0; */
+	color: #fff;
+	@media #{$medium-up} { 
+  		top: 7rem;
+  	}
+
+	@media #{$large-up} { 
+  		top: 9rem;
+  	}
+
+  	@media #{$xlarge-up} { 
+  		top: 15rem;
+  		/*background-color: green;*/
+  	}
+
+}
+
+.homepage_title{
+	font-family: selection_heading;
+	text-align: center;
+	color: #fff;
+	font-weight: 100;
+	font-size: 60px;
+	letter-spacing: 0.1rem; 
+	@media #{$medium-up} { 
+		font-size: 75px;
+		letter-spacing: 0.1rem; 
+	}
+    @media #{$large-up} { 
+        font-size: 100px;
+  		letter-spacing: 0.1rem;  
+    }
+    @media #{$xlarge-up} { 
+        font-size: 100px;
+  		letter-spacing: 0.1rem;  
+    }
+    @media #{$xxlarge-up} { 
+        font-size: 120px;
+  		letter-spacing: 0.1rem;  
+    }
+}
+
+.business_name{
+	color: $main_color;
+	font-size:1.4rem;
+	@media #{$medium-up} { 
+  		font-size: 1.6rem;
+  	}
+  	@media #{$large-up} { 
+  		font-size: 2rem;
+  	}
+  	@media #{$xlarge-up} { 
+  		font-size: 2.1rem;
+  	}
+  	@media #{$xxlarge-up} { 
+  		font-size: 2.1rem;
+  	}
+}
+.map_location{
+	color: $main_light;
+	font-size:0.9rem;
+	@media #{$medium-up} { 
+  		font-size: 1.2rem;
+   	}
+  	@media #{$large-up} { 
+  		font-size: 1.6rem;
+  	}
+  	@media #{$xlarge-up} {  
+  		font-size: 1.7rem;
+  	}
+  	@media #{$xxlarge-up} { 
+  		font-size: 1.7rem;
+  	}
+}
+
+.business_hours{
+	color: $main_light;
+	font-size:0.9rem;
+	@media #{$medium-up} { 
+  		font-size: 1.2rem;
+   	}
+  	@media #{$large-up} { 
+  		font-size: 1.6rem;
+  	}
+  	@media #{$xlarge-up} { 
+  		font-size: 1.7rem;
+  	}
+  	@media #{$xxlarge-up} { 
+  		font-size: 1.7rem;
+  	}
+}
+
+.section__heading{
+	color: $main_light;
+	font-size:0.9rem;
+	@media #{$medium-up} { 
+  		font-size: 1.2rem;
+   	}
+  	@media #{$large-up} { 
+  		font-size: 1.6rem;
+  	}
+  	@media #{$xlarge-up} { 
+  		font-size: 1.7rem;
+  	}
+  	@media #{$xxlarge-up} { 
+  		font-size: 1.7rem;
+  	}
+}
+
+.instagram__feed{
+	color: #fff;
+}
+ 
+.section__white--homepage{
+	position: relative;
+	font-family: base_font;
+	font-size: .9rem;
+	background-color: #fff;
+	padding-top: 10rem;
+	padding-left: 1rem;
+	padding-right: 1rem;
+	padding-bottom: 1.8rem;
+	text-align: center;
+	z-index: -1;
+	@media #{$medium-up} {  
+  		padding: 4rem;
+  	}
+  	@media #{$large-up} { 
+  		padding:4rem;;
+  	}
+  	@media #{$xlarge-up} { 
+  		padding:5rem;
+  	}
+  	@media #{$xxlarge-up} { 
+  		padding:5rem;
+  	}
+}
+
+.section__white--insta{
+	position: relative;
+	font-family: base_font; 
+	font-size: 0.9rem;
+	background-color: #fff;
+	padding-top: 1rem;
+	padding-left: 1rem; 
+	padding-right: 1rem;
+	padding-bottom:1.8rem;
+	text-align: center;
+	z-index: -1;
+	@media #{$medium-up} {  
+  		padding:1rem;
+  	}
+  	@media #{$large-up} { 
+  		padding:1rem;;
+  	}
+  	@media #{$xlarge-up} { 
+  		padding:1rem;
+  	}
+  	@media #{$xxlarge-up} { 
+  		padding:1rem;
+  	}
+}
+
+#map-canvas {
+	width: 100%;
+	height: 400px;
+}
+
+.section__mission{
+	position: relative;
+	font-family: base_font; 
+	font-weight: 100;
+	margin-top: 2rem;
+  	margin-bottom: 5rem;
+	padding-top:3rem;
+	padding-bottom:3rem;
+	text-align:center;
+	font-size:18px;
+	background-color:$main_light;
+	color:#fff;
+	@media #{$small-only} { 
+  		font-size:22px;
+  	}
+}
+
+.section__vision{
+	position: relative;
+	font-family: base_font; 
+	font-weight: 100;
+	padding-top:3rem;
+	padding-bottom:3rem;
+	text-align:center;
+	font-size:18px;
+	background-color:$main_light;
+	color:#fff;
+	@media #{$small-only} { 
+  		font-size:22px;
+  	}
+}
+
+.error_message {
+  font-size: 80%;
+  color: #ff7c81;
+}
+
+.video__link{
+	color: $text;
+  	position: fixed;
+  	bottom: 1rem;
+  	right: 1rem;
+}
+.video__link:hover{
+	color: $main_dark;
+}
+
+.bullet_point{
+	list-style-type: circle;
+}
+
+.vision_list{
+	text-align: left;
+	@media #{$small-only}{
+		padding-left: 2rem;
+		padding-right: 0.5rem;
+	}
+}
+.facebook__link{
+	// padding-top: 5rem;
+	// padding-left: 1rem;
+	// padding-right: 1rem;
+	// padding-bottom:5rem;
+	/*text-align: center;*/
+	color: $main_light;
+	@media #{$medium-up} { 
+  		/*padding:5rem;*/
+  		// font-size: 3.1rem;
+  	}
+  	@media #{$large-up} { 
+  		/*padding:5rem;*/
+  		// font-size: 6.2rem;
+  	}
+  	@media #{$xlarge-up} { 
+  		/*padding:5rem;*/
+  		// font-size: 8.3rem;
+  	}
+  	@media #{$xxlarge-up} { 
+  		/*padding:5rem;*/
+  		// font-size: 10rem;
+  	}
+}
+
+.section__facebook{
+	/*position: relative;*/
+	margin: 0rem;
+	font-family: base_font;
+	// color: #fff;
+	font-size: 2rem;
+	background-color: $white;
+	padding-top: 5rem;
+	// padding-left: 1rem;
+	// padding-right: 1rem;
+	padding-bottom:5rem;
+	text-align: center;
+	z-index: -1;
+	@media #{$medium-up} { 
+  		padding-left:1rem;
+  		padding-right:1rem;
+  		padding-top: 7.5rem;
+		padding-bottom:7.5rem;
+  		font-size: 2.5rem;
+  	}
+  	@media #{$large-up} { 
+  		padding-left:1rem;
+  		padding-right:1rem;
+  		padding-top: 10rem;
+		padding-bottom:10rem;
+  		font-size: 3.5rem;
+  	}
+  	@media #{$xlarge-up} { 
+  		padding-left:1rem;
+  		padding-right:1rem;
+  		padding-top: 12rem;
+		padding-bottom:12rem;
+  		font-size: 4.5rem;
+  		// font-size: 8.3rem;
+  	}
+  	@media #{$xxlarge-up} { 
+  		padding-left:1rem;
+  		padding-right:1rem;
+  		padding-top: 14rem;
+		padding-bottom:14rem;
+  		font-size: 6rem;
+  		// font-size: 10rem;
+  	}
+}
+
+.vision_p{
+	text-align: center;
+}
+
+.leaf1{
+	position: absolute;
+	bottom: 1rem;
+	left: 0;
+	margin: 0;
+}
+
+.leaf2{
+	position: absolute;
+	bottom: 0;
+	right: 2rem;
+}
+
+.leaf3{
+	position: absolute;
+	right: 0;
+	bottom: -9rem;
+}
+
+.registered__message{
+	font-family: paws_base_font; 
+	color: #fff;
+	border: 1px solid #e0e0e0;
+	/* background: #fff; */
+	padding: 1rem;
+	font-size: 28px;
+}
+
+
+
+#fs:hover{ background-color: #3b5998; }
+#fs:hover #fl {color: white}
+
+a.textlink{text-decoration: none; color: $white;}
+a.textlink:hover{text-decoration: none; color: $main_dark;}
+
+
+/*////////////////////  Icon Links  /////////////////////////////////////////*/
+.section__points{
+	padding-top:1rem;
+	padding-bottom:1rem;
+	margin-top: 2rem;
+}
+
+/*.points.first{
+	margin-top:0rem;
+}*/
+
+.points{
+	padding: 1rem;
+	width: 15rem;
+ 	color: #fff;
+ 	height: 15rem; 
+  	background: url(/images/selection/fedup.png) no-repeat 0 0;
+  	background-size: contain;
+  	margin:auto;
+  	@media #{$medium-up} { 
+  		width: 16rem;
+ 		height: 16rem; 
+  	}
+  	@media #{$large-up} { 
+  		width: 17rem;
+ 		height: 17rem; 
+  	}
+  	@media #{$xlarge-up} { 
+  		width: 18rem;
+ 		height: 18rem; 
+  	}
+  	@media #{$xxlarge-up} { 
+  		width: 20rem;
+ 		height: 20rem; 
+  	}
+}
+
+.points:hover{
+	padding: 1rem;
+	width: 15rem;
+ 	color: #fff;
+ 	height: 15rem; 
+  	background: url(/images/selection/discover1.png) no-repeat 0 0;
+  	background-size: contain;
+  	margin:auto;
+  	@media #{$medium-up} { 
+  		width: 16rem;
+ 		height: 16rem; 
+  	}
+  	@media #{$large-up} { 
+  		width: 17rem;
+ 		height: 17rem; 
+  	}
+  	@media #{$xlarge-up} { 
+  		width: 18rem;
+ 		height: 18rem; 
+  	}
+  	@media #{$xxlarge-up} { 
+  		width: 20rem;
+ 		height: 20rem; 
+  	}
+}
+
+// .points__image{
+// 	  /* position: absolute; */
+//   /* top: 0.2rem; */
+//   /* right: 10px; */
+//   width: 20.8rem;
+//   color: #fff;
+//   /* height: 4rem; */
+//   background: url(/images/selection/fedup.png) no-repeat 0 0;
+//   background-size: contain;
+// }
+
+.iconbox{
+	overflow: hidden; 
+	/*background: #fff; */
+	padding: 5px; 
+	width: 100%; 
+	height:100%;
+}
+
+.iconbox__content{
+	position: relative;
+	/*background: red; */
+	padding: 2px; 
+	margin:auto; 
+	width: 70%; 
+	height: 70%;
+	font-size: 28px;
+  	text-align: center;
+  	@media #{$medium-up} { 
+  		font-size: 20px;
+  		width: 100%; 
+		height: 100%;
+  	}
+  	@media #{$large-up} { 
+  		font-size: 24px;
+  		width: 80%; 
+		height: 80%;
+  	}
+  	@media #{$xlarge-up} { 
+  		font-size: 28px;
+  		width: 80%; 
+		height: 80%;
+  	}
+  	@media #{$xxlarge-up} { 
+  		font-size: 30px;
+  		width: 70%; 
+		height: 70%;
+  	}
+}
+
+.fresh__point{
+	margin:1rem;
+	background-color: #fff; 
+}
+
+.user__message{
+	font-style: italic;
+	padding-left: 1rem;
+	padding-right: 1rem;
+}

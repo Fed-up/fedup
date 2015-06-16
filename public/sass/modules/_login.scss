@@ -1,0 +1,56 @@
+
+.section {
+  	background-color: white;
+  	border: #e0e0e0 1px solid; 
+  	padding: 1rem;
+}
+
+
+.section--form {
+  margin: 1rem 0.5rem; }
+
+@media only screen and (max-width: 959px) { }
+
+@media only screen and (min-width: 768px) and (max-width: 959px) { }
+
+@media only screen and (max-width: 767px) { }
+
+.section__login{
+	height: 60rem;
+}
+
+.form__input--side--login {
+    // width: 100%; 
+    /* margin: auto; */
+    /* margin-top: 2rem; */
+    margin-left: 1rem;
+    margin-right: 1rem; 
+}
+
+.form__button--login{
+	margin-top: 1.5rem;
+	background-color: #ff7c81;
+	color: #fff;
+	padding: 0.5rem;
+	border-radius: 5px;
+	border: 0px;
+	margin-right: 0.5rem;
+	margin-bottom: 1rem;
+	float: right;
+}
+
+.form__button--cancel{
+	margin-top: 1.5rem;
+	background-color: $white;
+	color: $error;
+	padding: 0.3rem;
+	border-radius: 5px;
+	border: 0px;
+	margin-right: 0.5rem;
+	margin-bottom: 1rem;
+	/*float: left;*/
+}
+
+.input__text--login{
+	width:100%;
+}

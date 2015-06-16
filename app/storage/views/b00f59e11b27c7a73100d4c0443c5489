@@ -1,0 +1,51 @@
+
+
+
+<?php $__env->startSection('content'); ?>
+    <section class="page">  
+        <nav class=" subnav subnav--centre" >
+            <h2 class="content__title--main"><a class="plain__header__link" href="/menu">All Catering Options</a></h2>
+        </nav>
+
+        <section class="content__page--sub"> 
+            <!-- <h3>Fresh all day - savoury meals</h3> -->
+            <div class="row content-boxes__wrapper content">
+                <div class="row">
+                    <?php foreach($rData as $index=>$recipe): ?>
+                        <div class="columns small-12 medium-4 large-3 xlarge-3 xxlarge-2 end">
+                            <article class="content-box">
+                                <div class="row collapse" id="recipe__row">                                   
+                                    <a href="/recipe/<?php echo $recipe->id; ?>" class="columns small-4 medium-12 tile__title end">
+                                        <span class="tile__title--inner"><?php echo $recipe->name; ?></span>
+                                        <img src="/uploads/<?php echo $rImage[$recipe->id]; ?>" />
+                                    </a>
+                                    <section class="columns small-8 medium-12 content-box__copy--wrapper">
+                                        <div class="content-box__copy">
+                                            <a href="/recipe/<?php echo $recipe->id; ?>" class="content-box__copy__inner--recipe"><h5 class="content-box__title"><?php echo $recipe->name; ?></h5></a>
+                                            <!-- <?php if(!empty($category[$recipe->id])): ?>
+                                                <a href="/collection/<?php echo $category[$recipe->id]->id; ?>" class="content-box__tag"><?php echo $category[$recipe->id]->name; ?></a>
+                                            <?php else: ?>
+                                                <a href="/collections" class="content-box__tag">Collections</a>
+                                            <?php endif; ?> -->
+                                        </div>
+                                    </section>
+                                </div>
+                            </article>
+                        </div> 
+                    <?php endforeach; ?>
+                </div>
+            </div>           
+        </section>
+
+        <!-- <h2 class="content__title content__title--main"><a class="content__title--link" href="/recipes">More Recipes</a></h2> -->
+        <!-- <div class="footer__push"></div> -->
+  	</section><!--End Band Content-->
+<?php $__env->stopSection(); ?>
+<?php /* '<pre>'; print_r($recipe->MenuCategories->name); echo '</pre>'; */ ?>
+
+<?php $__env->startSection('_footer'); ?>
+	<script type="text/javascript" src="/public/js/flexslider.js"></script>
+	<script type="text/javascript" src="/public/js/tabs.js"></script>
+    <script type="text/javascript" src="/js/gallery.js"></script>
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('tmpl.public', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

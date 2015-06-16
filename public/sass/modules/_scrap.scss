@@ -1,0 +1,57 @@
+_scrap.scss
+/* line 41, C:/webroot/lcsnbn/sass/modules/signup */
+.form__button--sub {
+    padding: 0.5rem;
+    background-color: #fff;
+}
+
+/* line 52, C:/webroot/lcsnbn/sass/modules/signup */
+.form__button--sub--signup {
+    margin-left: 0rem; 
+}
+
+/* line 56, C:/webroot/lcsnbn/sass/modules/signup */
+.form__button--sub:hover {
+    padding: 0.5rem;
+    background-color: $main_color;
+}
+
+
+/* line 65, C:/webroot/lcsnbn/sass/modules/signup */
+.form__button--sub--signup:hover {
+    margin-left: 0rem; 
+}
+
+.side__login__button {
+    background-color: $main_dark;
+    color: #fff;
+    border: 0px; 
+}
+@media only screen and (min-width:481px) {
+    .side__login__button {
+        padding: 0.5rem 1rem; 
+    } 
+}
+
+.side__login__button:hover {
+    background-color: $main_color; 
+}
+
+.side__login__button--signup {
+    margin-right: 0rem; 
+}
+    @media only screen and (min-width:481px) {
+    .side__login__button--signup {
+        padding: 0.5rem 1rem; 
+    } 
+}
+
+.side__login__button--swipe {
+background-color: $contrast_dark;
+color: #fff;
+
+}
+
+.side__login__button--swipe:hover {
+background-color: $contrast_light; }
+

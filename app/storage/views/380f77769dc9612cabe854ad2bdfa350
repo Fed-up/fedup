@@ -1,0 +1,170 @@
+
+<?php $__env->startSection('content'); ?>
+
+<main class="main page">
+    <div class="bg"></div>
+        <div class="video__home">
+            <video autoplay loop poster="/images/paws/videopic.jpg" id="bgvid" class="show-for-large-up">
+                <source src="videos/dogshow.webm" type="video/webm">
+                <source src="videos/dogshow.mp4" type="video/mp4">
+            </video>
+        </div>
+        <div id="vidpause"></div>
+        <section class="columns small-12 medium-10 medium-push-1 large-8 large-push-2 xlarge-6 xlarge-push-3 section__white--form">
+            <?php if (isset($message)): ?>
+               <div class="message__alert"><?php echo $message; ?></div>
+            <?php endif; ?>
+            <?php if (isset($registered)): ?>
+                <div class="registered__message"><?php echo $registered; ?></div>
+            <?php else: ?>
+                <?php echo Form::open(array('action' => 'HomeController@postAddUser', 'class' => 'form-horizontal')); ?> 
+                    <h2 class="form__title--signup">Dog Cafe soon to Melbourne..</h2> 
+
+                    <div class="form-group <?php echo ($errors->has('fname')) ? 'has-error' : '' ;; ?> row">
+                        <?php echo Form::label('fname', 'Full Name: ', array('class' => ' form_field_title ')); ?>
+                        <div class=""> 
+                            <?php echo Form::text('fname', (isset($input['fname'])? Input::old('fname') : (isset($data->fname)? $data->fname : '' )), array('class' => ($errors->has('fname'))? 'columns small-12 medium-8 input__text input__text--error' : 'columns small-12 medium-8 input__text', 'placeholder' => ($errors->has('fname'))? $errors->first('fname') : '' )); ?> 
+                        </div>
+                    </div>
+                    <div class="form-group <?php echo ($errors->has('email')) ? 'has-error' : '' ;; ?> row">
+                        <?php echo Form::label('email', 'Email: ', array('class' => ' form_field_title ')); ?>
+                        <div class="">
+                            <?php echo Form::text('email', (isset($input['email'])? Input::old('email') : (isset($data->email)? $data->email : '' )), array('class' => ($errors->has('email'))? 'columns small-12 medium-8 input__text input__text--error' : 'columns small-12 medium-8 input__text', 'placeholder' => ($errors->has('email'))? $errors->first('email') : '' )); ?>  
+                        </div>
+                    </div>  
+     
+           
+                
+                    <div class="form__buttons">
+                        <?php echo Form::submit('', array('class' => 'form__image__submit')); ?>
+                    </div>
+
+                    <!-- <div class="form-group">
+                        <?php echo Form::submit('', array('class' => 'form__image__submit form__image__submit--small')); ?>
+                    </div> -->
+                <?php echo Form::close(); ?> 
+            <?php endif; ?>        
+        </section>
+        <section class="section__white--homepage">
+            <img src="/images/paws/s2leaf.png" alt="Where Real food comes to life" name="Where Real food comes to life" class="leaf1">
+            <p>Where real food comes to life</p>
+        </section>
+        <section id="mission"class="section__mission">
+            <img src="/images/paws/rleaf.png" alt="Where Real food comes to life" name="Where Real food comes to life" class="leaf3">
+            <article class="small-12 medium-10 medium-push-1 large-8 large-push-2 xlarge-6 xlarge-push-3">
+                <p class="">
+                We are creating a dog friendly ‘real food’
+                cafe, that is passionate about providing 
+                nutritious, organic, locally sourced cuisine  
+                </p>
+                <br/>
+                <p class="">
+                    We believe in the healing power of food
+                    and desire to educate and inspire people 
+                    to expect the best not only for themselves
+                    but for our canine friends as well
+                </p>
+                <br/>
+                <p class="">
+                    We strive to create a place where service
+                    is not only a smile, its a place to call a
+                    second home, a place where there
+                    will always be..
+                </p>
+            </article>         
+        </section>
+        <section class="section__white--homepage ">
+            <img src="/images/paws/logo200.png" alt="Where Real food comes to life" name="Where Real food comes to life" class="show-for-small-only" style="width: 200px;  margin: auto;">
+            <img src="/images/paws/logo300.png" alt="Where Real food comes to life" name="Where Real food comes to life" class="show-for-medium-only" style="width: 300px;  margin: auto;">
+            <img src="/images/paws/logo400.png" alt="Where Real food comes to life" name="Where Real food comes to life" class="show-for-large-up" style="width: 400px;  margin: auto;">
+            <!-- <p>Where real food comes to life</p> -->
+        </section>
+        <section id="fs" class="section__facebook">
+            <img src="/images/paws/s2leaf.png" alt="Where Real food comes to life" name="Where Real food comes to life" class="leaf1">
+            <a id="fl" href="https://www.facebook.com/pages/Time-4-Paws/341349089397253?fref=ts" class="facebook__link">
+                
+                Check us out on facebook
+            </a>
+        </section>
+        <section id="vision"class="section__vision">
+            <article class="small-12 medium-10 medium-push-1 large-8 large-push-2 xlarge-6 xlarge-push-3">
+                <b class="vision_p">
+                A cafe that welcomes the ENTIRE family, with menus
+                for everyone including you furbaby!
+                </b>
+                <br/><br/>
+                <p class="vision_p">We invite you to</p>
+                <ul class="vision_list">
+                    <li class="bullet_point">Treat your 4-legged part of the family to a nutritious breaky, brunch or lunch</li>
+                    <li class="bullet_point">Make new friends for you and your fur baby in a safe and friendly environment</li>
+                    <li class="bullet_point">Experience personalised service where you and your family are our family</li>
+                    <li class="bullet_point">Interested in adopting a real food lifestyle in your home? Let us show you how</li>
+                    <li class="bullet_point">Check out Eco friendly products for your dog</li>
+                    <li class="bullet_point">Try our exclusive Time 4 Paws home cooked ‘real’ dry food for your fury friend.</li>
+                    <li class="bullet_point">Incorporate Paleo/LCHF lifestyle into your household</li>
+                    <li class="bullet_point">Be amongst like minded people</li>
+                <br/>
+                <p class="vision_p">
+                    Don’t have a furbaby?
+                </p>
+                <p class="vision_p">
+                    Come experience great service, great atmosphere and get your 4 legged fur fix =) After all everyone needs to take ‘Time 4 Paws’
+                </p>
+            </article>  
+            <img src="/images/paws/bleaf.png" alt="Where Real food comes to life" name="Where Real food comes to life" class="leaf2">       
+        </section>
+    </main>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('_footer'); ?>
+    <script type="text/javascript" src="/js/flexslider.js"></script>
+    <script type="text/javascript" src="/js/tabs.js"></script>
+    <script type="text/javascript" src="/js/gallery.js"></script>
+    <script>
+        // $(window).load(function() {
+        //   $('.flexslider--thumbs').flexslider({
+        //     controlNav: "thumbnails",
+        //     controlsContainer: "#thumbs",
+        //     animationSpeed: 300,
+        //     slideshow: false,
+        //     directionNav: false,
+
+        //     animation: "slide",
+        //     direction: "vertical"
+        //   });
+        // });
+
+        var vid = document.getElementById("bgvid");
+        var pauseButton = document.getElementById("vidpause");
+        function vidFade() {
+        vid.classList.add("stopfade");
+        }
+        vid.addEventListener('ended', function() {
+        // only functional if "loop" is removed
+        vid.pause();
+        // to capture IE10
+        vidFade();
+        });
+        pauseButton.addEventListener("click", function() {
+        vid.classList.toggle("stopfade");
+        if (vid.paused) {
+        vid.play();
+        pauseButton.innerHTML = "Pause";
+        } else {
+        vid.pause();
+        pauseButton.innerHTML = "Paused";
+        }
+        })
+        $('video').prop('volume', 0)
+        $('video').prop('muted', true)
+        
+    </script>
+    <script>
+        video#bgvid { transition: 5s opacity; }
+        .stopfade { opacity: .5; }
+        
+
+    </script>
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('tmpl.public', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

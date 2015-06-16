@@ -1,0 +1,18 @@
+<?php //echo Request::segment(2); ?>
+
+<div class="col-sm-3 col-md-2 sidebar"> 
+    <ul class="nav nav-sidebar">
+        <li class="tophead"><?php echo HTML::link('admin/user/members', 'Users'); ?></li>
+    </ul>
+    <ul class="nav nav-sidebar">
+        <?php if (Request::segment(2) === 'user'): ?>
+            <?php if(Auth::user()->user_type === 'Manager' || Auth::user()->user_type === 'ADMIN' ): ?>
+                <li <?php echo (Request::segment(3) === 'members')? 'class="active"' : 'class=""' ; ?>><?php echo HTML::link('admin/user/members', 'Members'); ?></li>
+            <?php endif; ?> 
+        <?php endif; ?>
+    </ul>
+
+    <ul class="nav nav-sidebar">
+        <li class="head"><?php echo HTML::link('logout', 'Logout'); ?></li>
+    </ul>
+</div>

@@ -1,0 +1,34 @@
+
+<?php $__env->startSection('__header'); ?> 
+<?php $__env->stopSection(); ?>  
+
+<?php $__env->startSection('content'); ?>   
+<div class="band page">
+
+    <h2 class="content__title content__title--main"><a class="content__title--link" href="/profile">Login</a></h2>
+    <div class="container row section__login"> <!--Sign up section-->
+        <section class="columns small-12 medium-8 medium-push-2 large-8 large-push-2 xlarge-6 xlarge-push-3">
+            <div class="section section--form" >
+            	<?php echo Form::open(array('url' => 'login', 'class' => 'form-signin')); ?>
+                	<h2 class="content__title--login">Please Login</h2>    
+                    <div class="form__input--side--login">
+                        <?php echo Form::label('email', 'Email: ', array('class' => 'content-title--sub')); ?>
+                        <?php echo Form::email('email', '', array('placeholder' => ($errors->has('email'))? $errors->first('email') : '', 'class'=>'input__text input__text--login' ) ); ?>
+                    </div>
+                    <div class="form__input--side--login">
+                      <?php echo Form::label('password', 'Password: ', array('class' => 'content-title--sub')); ?>
+                      <?php echo Form::password('password', array('placeholder' => ($errors->has('password'))? $errors->first('password') : '', 'class'=>'input__text input__text--login' ) ); ?>
+                    </div>
+                    <a href="/">
+                        <?php echo Form::button('Cancel' ,array('class' => 'form__button--cancel')); ?>
+                    </a>
+                    <?php echo Form::submit('Login', array('class' => 'form__button--login')); ?>
+
+                <?php echo Form::close(); ?>
+            </div>
+        </section>
+    </div>
+</div>
+
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('tmpl.public', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
