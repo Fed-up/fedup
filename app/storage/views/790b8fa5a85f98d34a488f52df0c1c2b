@@ -1,0 +1,27 @@
+
+<?php $__env->startSection('title'); ?> Paws <?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('_head'); ?>
+
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('content'); ?>
+<main class="main page">
+    <div class="bg">
+        <div class="section__white--logo row">
+            <img src="/images/paws/logo200.png" alt="Where Real food comes to life" name="Where Real food comes to life" class="admin__logo">
+        </div>
+        <section class="section__white--homepage row">
+            <!-- <img src="/images/paws/quote.png" alt="Where Real food comes to life" name="Where Real food comes to life"> -->
+            <p>Where real food comes to life</p>
+        </section>
+    </div>
+</main>
+<?php $__env->stopSection(); ?>
+
+
+<?php $__env->startSection('_tail'); ?>
+
+<?php $__env->stopSection(); ?>
+    
+<?php echo $__env->make('tmpl.admin', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

@@ -123,6 +123,15 @@ Route::group(array('before' => 'auth'), function() {
 	Route::get('admin/menu/recipes/edit/{id}', 'Admin_RecipesController@getEditRecipes');
 	Route::get('admin/menu/recipes/active/{id}', 'Admin_RecipesController@getActiveRecipes');
 	Route::get('admin/menu/recipes/delete/{id}', 'Admin_RecipesController@getDeleteRecipes');
+
+	//Our recipes
+	Route::get('admin/menu/quick', 'Admin_QuickController@getQuick');
+	Route::get('admin/menu/quick/add', 'Admin_QuickController@getAddQuick');
+	Route::post('admin/menu/quick/add', 'Admin_QuickController@postAddQuick');
+	Route::post('admin/menu/quick/edit', 'Admin_QuickController@postUpdateQuick');
+	Route::get('admin/menu/quick/edit/{id}', 'Admin_QuickController@getEditQuick');
+	Route::get('admin/menu/quick/active/{id}', 'Admin_QuickController@getActiveQuick');
+	Route::get('admin/menu/quick/delete/{id}', 'Admin_QuickController@getDeleteQuicks');
 	
 	//Our Ingredients
 	Route::get('admin/menu/ingredients', 'Admin_IngredientsController@getIngredients');

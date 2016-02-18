@@ -8,7 +8,7 @@
         <meta name="author" content="">
         <link rel="shortcut icon" href="../../assets/ico/favicon.ico">
         
-    	<title>Selection</title>
+    	<title>Fed Up Project</title>
         <!-- Bootstrap core CSS -->
     	<link rel="stylesheet" type="text/css" href="/packages/bootstrap-3.1.1-dist/css/bootstrap.min.css">
         <!-- Custom styles for this template -->

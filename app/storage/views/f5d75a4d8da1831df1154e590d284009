@@ -1,0 +1,1500 @@
+
+<?php $__env->startSection('title'); ?>
+    <?php echo $title; ?>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('_head'); ?> 
+	<script type="text/javascript" src="/packages/jquery-1.11.1.min/vendor/jquery-ui-1.10.4.custom/js/jquery-ui-1.10.4.custom.min.js"></script>
+	<script type="text/javascript" src="/packages/plupload-2.1.2/js/plupload.full.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/packages/jquery-1.11.1.min/vendor/jquery-ui-1.10.4.custom/css/no-theme/jquery-ui-1.10.4.custom.min.css"/> 
+    
+    <script>
+      
+
+
+	$(function() {
+		  
+		$( "._mySortable" ).sortable({ 
+			axis: "y", 
+			opacity: 0.3,
+			placeholder: "sortable-placeholder",
+			// callback function
+			update: function( event, ui ) {
+				ui.item.css({'background':'#DBEEC9'})
+			},
+		});
+		$( "._mySortable" ).disableSelection();
+
+		
+
+		//Start Delete Ingredient
+		$('#counterBase').val( $('#_ListBase li').length );
+
+		$('.deleteBase').click(function(e) {
+			e.preventDefault();
+			
+			//var currentID = 0;	
+					
+			var currentID = (this.id);
+			
+			if($("#ddb" + currentID).length == 0) {
+				$('#_ListBase')
+					
+						.append( $('<input>',{
+							'type':'hidden',
+							'name':'ddb[]',
+							'id':'ddi'+currentID, /*ddi = delete data ingredient*/
+							'class':'form-control',
+							'value':''+currentID,
+						}) )
+				;
+				$(this).parent('li').hide().unbind('click');
+				
+			} else {
+			//alert('this record already exists');
+				$("#ddb" + currentID).closest('input').remove().unbind('click');
+			}
+			
+			
+			
+		});
+
+		
+		//Start Ingredients
+		$('#counterBase').val( $('#_ListBase li').length );
+		$('#btnActionAddBase').click(function(e) {
+			e.preventDefault();
+			
+			var currentID = $('#counterBase').val();
+					
+			$ix = 0;
+			var ingredientsArray = [];
+			<?php
+			
+			$ix = 0;
+			foreach ($ingredients as $i=>$v) {
+				echo 'ingredientsArray['.$ix.'] = ["'.$i.'","'.$v.'"]'."\n";
+				$ix++;
+			}; 
+
+			?>
+			
+			var SelectList	= $('<select>',{
+						'name':'ingredients_b_[][x]',
+						'id':'ingredients_b_'+currentID,
+						'class':'form-control input--ingredient',
+					});
+			
+			$.each(ingredientsArray, function(key,value) {
+				SelectList
+					.append($('<option></option>')
+					.attr('value',value[0])
+					.text(value[1])); 
+			});
+			
+			var metricArray = [];
+			<?php
+			
+			$ix = 0;
+			foreach ($metric as $i=>$v) {
+				echo 'metricArray['.$ix.'] = ["'.$i.'","'.$v.'"]'."\n";
+				$ix++;
+			}; 
+
+			?>
+			
+			var SelectListM	= $('<select>',{
+						'name':'metric_b_[][x]',
+						'id':'metric_b_'+currentID,
+						'class':'form-control input--metric',
+					});
+			
+			$.each(metricArray, function(key,value) {
+				SelectListM
+					.append($('<option></option>')
+					.attr('value',value[0])//Returns first element in the array
+					.text(value[1])); //Returns second element in the array
+			});
+			
+			var deleteButton	= $('<button>',{
+										'class':'glyphicon glyphicon-remove btn btn-danger'
+									});
+			deleteButton.bind('click', function(e){
+				e.preventDefault();
+				$(this).parent('li').remove().unbind('click');
+			});
+			
+			$('#_ListBase')
+				.append( $('<li>') 
+				
+					.append( SelectList )
+					.append( '&nbsp;' )
+					.append( $('<input>',{
+						'name':'amount_b_[][x]',
+						'id':'amount_b_'+currentID,
+						'class':'form-control input--amount',
+						'placeholder':'amount',
+					}) )
+					.append( '&nbsp;' )
+					.append( SelectListM )
+					.append( '&nbsp;' )
+					.append( $('<input>',{
+						'name':'ri_sales_amount_b_[][x]',
+						'id':'ri_sales_amount_b_'+currentID,
+						'class':'form-control input--amount',
+						'placeholder':'0.00',
+					}) )
+					.append( '&nbsp;' )
+					.append( $('<input>',{
+						'name':'grams_b[][x]',
+						'id':'grams_b_'+currentID,
+						'class':'form-control input--grams',
+						'placeholder':'grams',
+					}) )
+					.append( '&nbsp;' )
+
+					.append( deleteButton )
+					.append( '&nbsp;' )
+					.append( $('<span>',{
+						'class':'glyphicon glyphicon-sort btn btn-default disabled'
+					}) )
+					
+				)
+			;
+			
+			$('#counterBase').val( parseInt(currentID, 10) + 1 );
+			
+		});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		//Start Ingredients
+		$('#counterProtein').val( $('#_ListProtein li').length );
+		$('#btnActionAddProtein').click(function(e) {
+			e.preventDefault();
+			
+			var currentID = $('#counterProtein').val();
+					
+			$ix = 0;
+			var ingredientsArray = [];
+			<?php
+			
+			$ix = 0;
+			foreach ($ingredients as $i=>$v) {
+				echo 'ingredientsArray['.$ix.'] = ["'.$i.'","'.$v.'"]'."\n";
+				$ix++;
+			}; 
+
+			?>
+			
+			var SelectList	= $('<select>',{
+						'name':'ingredients_p_[][x]',
+						'id':'ingredients_p_'+currentID,
+						'class':'form-control input--ingredient',
+					});
+			
+			$.each(ingredientsArray, function(key,value) {
+				SelectList
+					.append($('<option></option>')
+					.attr('value',value[0])
+					.text(value[1])); 
+			});
+			
+			var metricArray = [];
+			<?php
+			
+			$ix = 0;
+			foreach ($metric as $i=>$v) {
+				echo 'metricArray['.$ix.'] = ["'.$i.'","'.$v.'"]'."\n";
+				$ix++;
+			}; 
+
+			?>
+			
+			var SelectListM	= $('<select>',{
+						'name':'metric_p_[][x]',
+						'id':'metric_p_'+currentID,
+						'class':'form-control input--metric',
+					});
+			
+			$.each(metricArray, function(key,value) {
+				SelectListM
+					.append($('<option></option>')
+					.attr('value',value[0])//Returns first element in the array
+					.text(value[1])); //Returns second element in the array
+			});
+			
+			var deleteButton	= $('<button>',{
+										'class':'glyphicon glyphicon-remove btn btn-danger'
+									});
+			deleteButton.bind('click', function(e){
+				e.preventDefault();
+				$(this).parent('li').remove().unbind('click');
+			});
+			
+			$('#_ListProtein')
+				.append( $('<li>') 
+				
+					.append( SelectList )
+					.append( '&nbsp;' )
+					.append( $('<input>',{
+						'name':'amount_p_[][x]',
+						'id':'amount_p_'+currentID,
+						'class':'form-control input--amount',
+						'placeholder':'amount',
+					}) )
+					.append( '&nbsp;' )
+					.append( SelectListM )
+					.append( '&nbsp;' )
+					.append( $('<input>',{
+						'name':'ri_sales_amount_p_[][x]',
+						'id':'ri_sales_amount_p_'+currentID,
+						'class':'form-control input--amount',
+						'placeholder':'0.00',
+					}) )
+					.append( '&nbsp;' )
+					.append( $('<input>',{
+						'name':'grams_p[][x]',
+						'id':'grams_b_'+currentID,
+						'class':'form-control input--grams',
+						'placeholder':'grams',
+					}) )
+					.append( '&nbsp;' )
+
+					.append( deleteButton )
+					.append( '&nbsp;' )
+					.append( $('<span>',{
+						'class':'glyphicon glyphicon-sort btn btn-default disabled'
+					}) )
+					
+				)
+			;
+			
+			$('#counterProtein').val( parseInt(currentID, 10) + 1 );
+			
+		});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		// //Start Delete Side1
+		$('#counterSide1').val( $('#_ListSide1 li').length );
+
+		$('.deleteSide1').click(function(e) {
+			e.preventDefault();
+			
+			//var currentID = 0;	
+					
+			var currentID = (this.id);
+			
+			if($("#dds" + currentID).length == 0) {
+				$('#_ListSide1')
+					
+						.append( $('<input>',{
+							'type':'hidden',
+							'name':'dds[]',
+							'id':'dds'+currentID, /*ddi = delete data ingredient*/
+							'class':'form-control',
+							'value':''+currentID,
+						}) )
+				;
+				$(this).parent('li').hide().unbind('click');
+				
+			} else {
+			//alert('this record already exists');
+				$("#dds" + currentID).closest('input').remove().unbind('click');
+			}
+			
+			
+			
+		});
+
+		
+		// //Start Ingredients Side 1
+		$('#counterSide1').val( $('#_ListSide1 li').length );
+		$('#btnActionAddSide1').click(function(e) {
+			e.preventDefault();
+			
+			var currentID = $('#counterSide1').val();
+					
+			$ix = 0;
+			var ingredientsArray = [];
+			<?php
+			
+			$ix = 0;
+			foreach ($ingredients as $i=>$v) {
+				echo 'ingredientsArray['.$ix.'] = ["'.$i.'","'.$v.'"]'."\n";
+				$ix++;
+			}; 
+
+			?>
+			
+			var SelectList	= $('<select>',{
+						'name':'ingredients_s_[][x]',
+						'id':'ingredients_s_'+currentID,
+						'class':'form-control input--ingredient',
+					});
+			
+			$.each(ingredientsArray, function(key,value) {
+				SelectList
+					.append($('<option></option>')
+					.attr('value',value[0])
+					.text(value[1])); 
+			});
+			
+			var metricArray = [];
+			<?php
+			
+			$ix = 0;
+			foreach ($metric as $i=>$v) {
+				echo 'metricArray['.$ix.'] = ["'.$i.'","'.$v.'"]'."\n";
+				$ix++;
+			}; 
+
+			?>
+			
+			var SelectListM	= $('<select>',{
+						'name':'metric_s_[][x]',
+						'id':'metric_s_'+currentID,
+						'class':'form-control input--metric',
+					});
+			
+			$.each(metricArray, function(key,value) {
+				SelectListM
+					.append($('<option></option>')
+					.attr('value',value[0])//Returns first element in the array
+					.text(value[1])); //Returns second element in the array
+			});
+			
+			var deleteButton	= $('<button>',{
+										'class':'glyphicon glyphicon-remove btn btn-danger'
+									});
+			deleteButton.bind('click', function(e){
+				e.preventDefault();
+				$(this).parent('li').remove().unbind('click');
+			});
+			
+			$('#_ListSide1')
+				.append( $('<li>') 
+				
+					.append( SelectList )
+					.append( '&nbsp;' )
+					.append( $('<input>',{
+						'name':'amount_s_[][x]',
+						'id':'amount_s_'+currentID,
+						'class':'form-control input--amount',
+						'placeholder':'amount',
+					}) )
+					.append( '&nbsp;' )
+					.append( SelectListM )
+					.append( '&nbsp;' )
+					.append( $('<input>',{
+						'name':'ri_sales_amount_s_[][x]',
+						'id':'ri_sales_amount_s_'+currentID,
+						'class':'form-control input--amount',
+						'placeholder':'0.00',
+					}) )
+					.append( '&nbsp;' )
+					.append( $('<input>',{
+						'name':'grams_s_[][x]',
+						'id':'grams_s_'+currentID,
+						'class':'form-control input--grams',
+						'placeholder':'grams',
+					}) )
+					.append( '&nbsp;' )
+
+					.append( deleteButton )
+					.append( '&nbsp;' )
+					.append( $('<span>',{
+						'class':'glyphicon glyphicon-sort btn btn-default disabled'
+					}) )
+					
+				)
+			;
+			
+			$('#counterSide1').val( parseInt(currentID, 10) + 1 );
+			
+		});
+		
+		
+		
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+				// //Start Delete Side2
+		$('#counterSide2').val( $('#_ListSide2 li').length );
+
+		$('.deleteSide2').click(function(e) {
+			e.preventDefault();
+			
+			//var currentID = 0;	
+					
+			var currentID = (this.id);
+			
+			if($("#dds" + currentID).length == 0) {
+				$('#_ListSide2')
+					
+						.append( $('<input>',{
+							'type':'hidden',
+							'name':'ddss[]',
+							'id':'ddss'+currentID, /*ddi = delete data ingredient*/
+							'class':'form-control',
+							'value':''+currentID,
+						}) )
+				;
+				$(this).parent('li').hide().unbind('click');
+				
+			} else {
+			//alert('this record already exists');
+				$("#dds" + currentID).closest('input').remove().unbind('click');
+			}
+			
+			
+			
+		});
+
+		
+		// //Start Ingredients Side 2
+		$('#counterSide2').val( $('#_ListSide2 li').length );
+		$('#btnActionAddSide2').click(function(e) {
+			e.preventDefault();
+			
+			var currentID = $('#counterSide2').val();
+					
+			$ix = 0;
+			var ingredientsArray = [];
+			<?php
+			
+			$ix = 0;
+			foreach ($ingredients as $i=>$v) {
+				echo 'ingredientsArray['.$ix.'] = ["'.$i.'","'.$v.'"]'."\n";
+				$ix++;
+			}; 
+
+			?>
+			
+			var SelectList	= $('<select>',{
+						'name':'ingredients_ss_[][x]',
+						'id':'ingredients_ss_'+currentID,
+						'class':'form-control input--ingredient',
+					});
+			
+			$.each(ingredientsArray, function(key,value) {
+				SelectList
+					.append($('<option></option>')
+					.attr('value',value[0])
+					.text(value[1])); 
+			});
+			
+			var metricArray = [];
+			<?php
+			
+			$ix = 0;
+			foreach ($metric as $i=>$v) {
+				echo 'metricArray['.$ix.'] = ["'.$i.'","'.$v.'"]'."\n";
+				$ix++;
+			}; 
+
+			?>
+			
+			var SelectListM	= $('<select>',{
+						'name':'metric_ss_[][x]',
+						'id':'metric_ss_'+currentID,
+						'class':'form-control input--metric',
+					});
+			
+			$.each(metricArray, function(key,value) {
+				SelectListM
+					.append($('<option></option>')
+					.attr('value',value[0])//Returns first element in the array
+					.text(value[1])); //Returns second element in the array
+			});
+			
+			var deleteButton	= $('<button>',{
+										'class':'glyphicon glyphicon-remove btn btn-danger'
+									});
+			deleteButton.bind('click', function(e){
+				e.preventDefault();
+				$(this).parent('li').remove().unbind('click');
+			});
+			
+			$('#_ListSide2')
+				.append( $('<li>') 
+				
+					.append( SelectList )
+					.append( '&nbsp;' )
+					.append( $('<input>',{
+						'name':'amount_ss_[][x]',
+						'id':'amount_ss_'+currentID,
+						'class':'form-control input--amount',
+						'placeholder':'amount',
+					}) )
+					.append( '&nbsp;' )
+					.append( SelectListM )
+					.append( '&nbsp;' )
+					.append( $('<input>',{
+						'name':'ri_sales_amount_ss_[][x]',
+						'id':'ri_sales_amount_ss_'+currentID,
+						'class':'form-control input--amount',
+						'placeholder':'0.00',
+					}) )
+					.append( '&nbsp;' )
+					.append( $('<input>',{
+						'name':'grams_ss_[][x]',
+						'id':'grams_ss_'+currentID,
+						'class':'form-control input--grams',
+						'placeholder':'grams',
+					}) )
+					.append( '&nbsp;' )
+
+					.append( deleteButton )
+					.append( '&nbsp;' )
+					.append( $('<span>',{
+						'class':'glyphicon glyphicon-sort btn btn-default disabled'
+					}) )
+					
+				)
+			;
+			
+			$('#counterSide2').val( parseInt(currentID, 10) + 1 );
+			
+		});
+
+
+				// //Start Delete Side2
+		$('#counterSide2').val( $('#_ListSide2 li').length );
+
+		$('.deleteSide2').click(function(e) {
+			e.preventDefault();
+			
+			//var currentID = 0;	
+					
+			var currentID = (this.id);
+			
+			if($("#dds" + currentID).length == 0) {
+				$('#_ListSide2')
+					
+						.append( $('<input>',{
+							'type':'hidden',
+							'name':'ddss[]',
+							'id':'ddss'+currentID, /*ddi = delete data ingredient*/
+							'class':'form-control',
+							'value':''+currentID,
+						}) )
+				;
+				$(this).parent('li').hide().unbind('click');
+				
+			} else {
+			//alert('this record already exists');
+				$("#dds" + currentID).closest('input').remove().unbind('click');
+			}
+			
+			
+			
+		});
+
+		
+		// //Start Ingredients Topping
+		$('#counterTopping').val( $('#_ListTopping li').length );
+		$('#btnActionAddTopping').click(function(e) {
+			e.preventDefault();
+			
+			var currentID = $('#counterTopping').val();
+					
+			$ix = 0;
+			var ingredientsArray = [];
+			<?php
+			
+			$ix = 0;
+			foreach ($ingredients as $i=>$v) {
+				echo 'ingredientsArray['.$ix.'] = ["'.$i.'","'.$v.'"]'."\n";
+				$ix++;
+			}; 
+
+			?>
+			
+			var SelectList	= $('<select>',{
+						'name':'ingredients_t_[][x]',
+						'id':'ingredients_t_'+currentID,
+						'class':'form-control input--ingredient',
+					});
+			
+			$.each(ingredientsArray, function(key,value) {
+				SelectList
+					.append($('<option></option>')
+					.attr('value',value[0])
+					.text(value[1])); 
+			});
+			
+			var metricArray = [];
+			<?php
+			
+			$ix = 0;
+			foreach ($metric as $i=>$v) {
+				echo 'metricArray['.$ix.'] = ["'.$i.'","'.$v.'"]'."\n";
+				$ix++;
+			}; 
+
+			?>
+			
+			var SelectListM	= $('<select>',{
+						'name':'metric_t_[][x]',
+						'id':'metric_t_'+currentID,
+						'class':'form-control input--metric',
+					});
+			
+			$.each(metricArray, function(key,value) {
+				SelectListM
+					.append($('<option></option>')
+					.attr('value',value[0])//Returns first element in the array
+					.text(value[1])); //Returns second element in the array
+			});
+			
+			var deleteButton	= $('<button>',{
+										'class':'glyphicon glyphicon-remove btn btn-danger'
+									});
+			deleteButton.bind('click', function(e){
+				e.preventDefault();
+				$(this).parent('li').remove().unbind('click');
+			});
+			
+			$('#_ListTopping')
+				.append( $('<li>') 
+				
+					.append( SelectList )
+					.append( '&nbsp;' )
+					.append( $('<input>',{
+						'name':'amount_tt_[][x]',
+						'id':'amount_tt_'+currentID,
+						'class':'form-control input--amount',
+						'placeholder':'amount',
+					}) )
+					.append( '&nbsp;' )
+					.append( SelectListM )
+					.append( '&nbsp;' )
+					.append( $('<input>',{
+						'name':'ri_sales_amount_tt_[][x]',
+						'id':'ri_sales_amount_tt_'+currentID,
+						'class':'form-control input--amount',
+						'placeholder':'0.00',
+					}) )
+					.append( '&nbsp;' )
+					.append( $('<input>',{
+						'name':'grams_tt_[][x]',
+						'id':'grams_tt_'+currentID,
+						'class':'form-control input--grams',
+						'placeholder':'grams',
+					}) )
+					.append( '&nbsp;' )
+
+					.append( deleteButton )
+					.append( '&nbsp;' )
+					.append( $('<span>',{
+						'class':'glyphicon glyphicon-sort btn btn-default disabled'
+					}) )
+					
+				)
+			;
+			
+			$('#counterTopping').val( parseInt(currentID, 10) + 1 );
+			
+		});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		
+		//Start Delete Ingredient
+		$('#counterIngredients').val( $('#_ListIngredients li').length );
+
+		$('.deleteIngredient').click(function(e) {
+			e.preventDefault();
+			
+			//var currentID = 0;	
+					
+			var currentID = (this.id);
+			
+			if($("#ddi" + currentID).length == 0) {
+				$('#_ListIngredients')
+					
+						.append( $('<input>',{
+							'type':'hidden',
+							'name':'ddi[]',
+							'id':'ddi'+currentID, /*ddi = delete data ingredient*/
+							'class':'form-control',
+							'value':''+currentID,
+						}) )
+				;
+				$(this).parent('li').hide().unbind('click');
+				
+			} else {
+			//alert('this record already exists');
+				$("#ddi" + currentID).closest('input').remove().unbind('click');
+			}
+			
+			
+			
+		});
+
+		
+		//Start Ingredients
+		$('#counterIngredients').val( $('#_ListIngredients li').length );
+		$('#btnActionAddIngredient').click(function(e) {
+			e.preventDefault();
+			
+			var currentID = $('#counterIngredients').val();
+			
+			var ingredientsArray = [];
+			<?php
+			
+			$ix = 0;
+			foreach ($ingredients as $i=>$v) {
+				echo 'ingredientsArray['.$ix.'] = ["'.$i.'","'.$v.'"]'."\n";
+				$ix++;
+			}; 
+
+			?>
+			
+			var SelectList	= $('<select>',{
+						'name':'ingredients[][x]',
+						'id':'ingredients_'+currentID,
+						'class':'form-control input--ingredient',
+					});
+			
+			$.each(ingredientsArray, function(key,value) {
+				SelectList
+					.append($('<option></option>')
+					.attr('value',value[0])
+					.text(value[1])); 
+			});
+			
+			var metricArray = [];
+			<?php
+			
+			$ix = 0;
+			foreach ($metric as $i=>$v) {
+				echo 'metricArray['.$ix.'] = ["'.$i.'","'.$v.'"]'."\n";
+				$ix++;
+			}; 
+
+			?>
+			
+			var SelectListM	= $('<select>',{
+						'name':'metric[][x]',
+						'id':'metric_'+currentID,
+						'class':'form-control input--metric',
+					});
+			
+			$.each(metricArray, function(key,value) {
+				SelectListM
+					.append($('<option></option>')
+					.attr('value',value[0])//Returns first element in the array
+					.text(value[1])); //Returns second element in the array
+			});
+			
+			var deleteButton	= $('<button>',{
+										'class':'glyphicon glyphicon-remove btn btn-danger'
+									});
+			deleteButton.bind('click', function(e){
+				e.preventDefault();
+				$(this).parent('li').remove().unbind('click');
+			});
+			
+			$('#_ListIngredients')
+				.append( $('<li>') 
+				
+					.append( SelectList )
+					.append( '&nbsp;' )
+					.append( $('<input>',{
+						'name':'amount[][x]',
+						'id':'amount_'+currentID,
+						'class':'form-control input--amount',
+						'placeholder':'amount',
+					}) )
+					.append( '&nbsp;' )
+					.append( SelectListM )
+					.append( '&nbsp;' )
+					.append( $('<input>',{
+						'name':'ri_sales_amount[][x]',
+						'id':'ri_sales_amount_'+currentID,
+						'class':'form-control input--amount',
+						'placeholder':'0.00',
+					}) )
+					.append( '&nbsp;' )
+					.append( $('<input>',{
+						'name':'grams[][x]',
+						'id':'grams_'+currentID,
+						'class':'form-control input--grams',
+						'placeholder':'grams',
+					}) )
+					.append( '&nbsp;' )
+
+					.append( deleteButton )
+					.append( '&nbsp;' )
+					.append( $('<span>',{
+						'class':'glyphicon glyphicon-sort btn btn-default disabled'
+					}) )
+					
+				)
+			;
+			
+			$('#counterIngredients').val( parseInt(currentID, 10) + 1 );
+			
+		});
+		
+		
+	}) ;
+
+
+	</script>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('content'); ?>
+
+	<?php //echo '<pre>'; print_r($json_calc); echo '</pre>'; exit; ?>
+  
+  <div class="row">
+  	<h1 class="page-header"><?php echo $__env->yieldContent('title'); ?></h1>
+    <?php if(isset($data->id)): ?>
+    	<?php echo Form::open(array('action' => 'Admin_RecipesController@postUpdateRecipes', 'class' => 'form-horizontal')); ?> 
+   	<?php else: ?>
+  		<?php echo Form::open(array('action' => 'Admin_RecipesController@postAddRecipes', 'class' => 'form-horizontal')); ?> 
+    <?php endif; ?>
+    
+    <ul id="myTab" class="nav nav-tabs">
+      	<li class="<?php if($calculated != 1): ?>active<?php endif; ?>"><a href="#protein" data-toggle="tab">Protein</a></li>
+      	<li><a href="#base" data-toggle="tab">Base</a></li>
+      	<li><a href="#side1" data-toggle="tab">Side 1</a></li>
+     	<li><a href="#side2" data-toggle="tab">Side 2</a></li>
+      	<li><a href="#topping" data-toggle="tab">Topping</a></li>
+      <li class="<?php if($calculated == 1): ?>active<?php endif; ?>"><a href="#sales" data-toggle="tab">Sales Data</a></li>
+    </ul>
+    
+    <div id="myTabContent" class="tab-content ">
+    	<div class="tab-pane fade in <?php if($calculated != 1): ?>active<?php endif; ?>" id="protein">
+    		<div class="col-sm-1">
+	          	<?php /* Form::button('+ Add', array('id' => 'btnActionAddProtein','class' => 'btn btn-primary')) */ ?>
+	          	<a href="#" id="btnActionAddProtein" class="btn btn-primary">+ Add</a>
+	          	<?php echo Form::hidden('counterProtein',null,array('id'=>'counterProtein')); ?> 
+	        </div>
+			<hr/>
+			 <div class="form-group <?php echo ($errors->has('base')) ? 'has-error' : '' ;; ?>">
+	           	<?php echo ($errors->has('base'))? '<p>'. $errors->first('base') .'</p>' : ''; ?>
+	          	<ul id="_ListProtein" class="_mySortable">
+	            	<?php $x = 0; ?>
+	                <?php if(isset($b_ingredients)): ?>
+	                	<?php foreach($b_ingredients as $b_ingredient): ?>
+	                    	<li>
+	                            <select name="ingredients[][<?php echo $r_ingredient->id; ?>]" id="ingredients_<?php echo $x; ?>" class="form-control input--ingredient"/>
+	                                <?php foreach($base as $i=>$v): ?>
+	                                	<option value="<?php echo $i; ?>" <?php if ($b_ingredient->menu_ingredients_id == $i): ?> selected="selected" <?php endif; ?> ><?php echo $v; ?></option>
+	                                <?php endforeach; ?>
+	                            </select>
+	                            <input name="amount[][<?php echo $r_ingredient->id; ?>]" id="ingredients_<?php echo $x; ?>" class="form-control input--amount " value="<?php echo $r_ingredient->amount; ?>" />
+	                            <select name="metric[][<?php echo $r_ingredient->id; ?>]" id="ingredients_<?php echo $x; ?>" class="form-control input--metric"/>
+	                                <?php foreach($metric as $in=>$val): ?>
+	                                	<option value="<?php echo $in; ?>" <?php if ($r_ingredient->metric_id == $in): ?> selected="selected" <?php endif; ?> ><?php echo $val; ?></option>
+	                                <?php endforeach; ?>
+	                            </select>
+	                            <input name="ri_sales_amount[][<?php echo $r_ingredient->id; ?>]" id="ingredients_<?php echo $x; ?>" class="form-control input--amount " value="<?php echo $r_ingredient->ri_sales_amount; ?>" />
+	                            <input name="grams[][<?php echo $r_ingredient->id; ?>]" id="ingredients_<?php echo $x; ?>" class="form-control input--grams " value="<?php echo $r_ingredient->grams; ?>" />
+
+	                            <?php foreach($json_array as $i => $in): ?>
+	                            	<?php if($i == $r_ingredient->menu_ingredients_id): ?>
+	                            		<input type="hidden" name="i_grams[<?php echo $i; ?>]" value="<?php echo $in['grams']; ?>" />
+	                            		<input type="hidden" name="i_price[<?php echo $i; ?>]" value="<?php echo $in['price']; ?>" />
+		                        	<?php endif; ?>
+		                        <?php endforeach; ?>
+
+	                            <button id="<?php echo $r_ingredient->id; ?>" class="deleteIngredient glyphicon glyphicon-remove btn btn-danger"></button>
+	                            <span class="glyphicon glyphicon-sort btn btn-default disabled"></span>
+	                            
+	                   		</li>
+		                 	<?php $x++; ?>                    
+	                   	<?php endforeach; ?>
+	                <?php endif; ?>
+	         	</ul>
+			</div>
+
+		</div>
+		<div class="tab-pane fade in" id="base">
+			<div class="col-sm-1">
+	          	<?php /* Form::button('+ Add', array('id' => 'btnActionAddBase','class' => 'btn btn-primary')) */ ?>
+	          	<a href="#" id="btnActionAddBase" class="btn btn-primary">+ Add</a>
+	          	<?php echo Form::hidden('counterBase',null,array('id'=>'counterBase')); ?> 
+	        </div>
+			<hr/>
+	        <div class="form-group <?php echo ($errors->has('base')) ? 'has-error' : '' ;; ?>">
+	           	<?php echo ($errors->has('base'))? '<p>'. $errors->first('base') .'</p>' : ''; ?>
+	          	<ul id="_ListBase" class="_mySortable">
+	            	<?php $x = 0; ?>
+	                <?php if(isset($b_ingredients)): ?>
+	                	<?php foreach($b_ingredients as $b_ingredient): ?>
+	                    	<li>
+	                            <select name="ingredients[][<?php echo $r_ingredient->id; ?>]" id="ingredients_<?php echo $x; ?>" class="form-control input--ingredient"/>
+	                                <?php foreach($base as $i=>$v): ?>
+	                                	<option value="<?php echo $i; ?>" <?php if ($b_ingredient->menu_ingredients_id == $i): ?> selected="selected" <?php endif; ?> ><?php echo $v; ?></option>
+	                                <?php endforeach; ?>
+	                            </select>
+	                            <input name="amount[][<?php echo $r_ingredient->id; ?>]" id="ingredients_<?php echo $x; ?>" class="form-control input--amount " value="<?php echo $r_ingredient->amount; ?>" />
+	                            <select name="metric[][<?php echo $r_ingredient->id; ?>]" id="ingredients_<?php echo $x; ?>" class="form-control input--metric"/>
+	                                <?php foreach($metric as $in=>$val): ?>
+	                                	<option value="<?php echo $in; ?>" <?php if ($r_ingredient->metric_id == $in): ?> selected="selected" <?php endif; ?> ><?php echo $val; ?></option>
+	                                <?php endforeach; ?>
+	                            </select>
+	                            <input name="ri_sales_amount[][<?php echo $r_ingredient->id; ?>]" id="ingredients_<?php echo $x; ?>" class="form-control input--amount " value="<?php echo $r_ingredient->ri_sales_amount; ?>" />
+	                            <input name="grams[][<?php echo $r_ingredient->id; ?>]" id="ingredients_<?php echo $x; ?>" class="form-control input--grams " value="<?php echo $r_ingredient->grams; ?>" />
+
+	                            <?php foreach($json_array as $i => $in): ?>
+	                            	<?php if($i == $r_ingredient->menu_ingredients_id): ?>
+	                            		<input type="hidden" name="i_grams[<?php echo $i; ?>]" value="<?php echo $in['grams']; ?>" />
+	                            		<input type="hidden" name="i_price[<?php echo $i; ?>]" value="<?php echo $in['price']; ?>" />
+		                        	<?php endif; ?>
+		                        <?php endforeach; ?>
+
+	                            <button id="<?php echo $r_ingredient->id; ?>" class="deleteIngredient glyphicon glyphicon-remove btn btn-danger"></button>
+	                            <span class="glyphicon glyphicon-sort btn btn-default disabled"></span>
+	                            
+	                   		</li>
+		                 	<?php $x++; ?>                    
+	                   	<?php endforeach; ?>
+	                <?php endif; ?>
+	         	</ul>
+			</div> 
+		</div>
+		<div class="tab-pane fade in" id="side1">
+			<div class="col-sm-1">
+	          	<?php /* Form::button('+ Add', array('id' => 'btnActionAddSide1','class' => 'btn btn-primary')) */ ?>
+	          	<a href="#" id="btnActionAddSide1" class="btn btn-primary">+ Add</a>
+	          	<?php echo Form::hidden('counterSide1',null,array('id'=>'counterSide1')); ?> 
+	        </div>
+			<hr/>
+			<div class="form-group <?php echo ($errors->has('side1')) ? 'has-error' : '' ;; ?>">
+	           	<?php echo ($errors->has('side1'))? '<p>'. $errors->first('side1') .'</p>' : ''; ?>
+	          	<ul id="_ListSide1" class="_mySortable">
+	            	<?php $x = 0; ?>
+	                <?php if(isset($r_ingredients)): ?>
+	                	<?php foreach($r_ingredients as $r_ingredient): ?>
+	                    	<li>
+	                            <select name="ingredients[][<?php echo $r_ingredient->id; ?>]" id="ingredients_<?php echo $x; ?>" class="form-control input--ingredient"/>
+	                                <?php foreach($ingredients as $i=>$v): ?>
+	                                	<option value="<?php echo $i; ?>" <?php if ($r_ingredient->menu_ingredients_id == $i): ?> selected="selected" <?php endif; ?> ><?php echo $v; ?></option>
+	                                <?php endforeach; ?>
+	                            </select>
+	                            <input name="amount[][<?php echo $r_ingredient->id; ?>]" id="ingredients_<?php echo $x; ?>" class="form-control input--amount " value="<?php echo $r_ingredient->amount; ?>" />
+	                            <select name="metric[][<?php echo $r_ingredient->id; ?>]" id="ingredients_<?php echo $x; ?>" class="form-control input--metric"/>
+	                                <?php foreach($metric as $in=>$val): ?>
+	                                	<option value="<?php echo $in; ?>" <?php if ($r_ingredient->metric_id == $in): ?> selected="selected" <?php endif; ?> ><?php echo $val; ?></option>
+	                                <?php endforeach; ?>
+	                            </select>
+	                            <input name="ri_sales_amount[][<?php echo $r_ingredient->id; ?>]" id="ingredients_<?php echo $x; ?>" class="form-control input--amount " value="<?php echo $r_ingredient->ri_sales_amount; ?>" />
+	                            <input name="grams[][<?php echo $r_ingredient->id; ?>]" id="ingredients_<?php echo $x; ?>" class="form-control input--grams " value="<?php echo $r_ingredient->grams; ?>" />
+
+	                            <?php foreach($json_array as $i => $in): ?>
+	                            	<?php if($i == $r_ingredient->menu_ingredients_id): ?>
+	                            		<input type="hidden" name="i_grams[<?php echo $i; ?>]" value="<?php echo $in['grams']; ?>" />
+	                            		<input type="hidden" name="i_price[<?php echo $i; ?>]" value="<?php echo $in['price']; ?>" />
+		                        	<?php endif; ?>
+		                        <?php endforeach; ?>
+
+	                            <button id="<?php echo $r_ingredient->id; ?>" class="deleteIngredient glyphicon glyphicon-remove btn btn-danger"></button>
+	                            <span class="glyphicon glyphicon-sort btn btn-default disabled"></span>
+	                            
+	                   		</li>
+		                 	<?php $x++; ?>                    
+	                   	<?php endforeach; ?>
+	                <?php endif; ?>
+	         	</ul>
+			</div>
+		</div>
+
+		<div class="tab-pane fade in" id="side2">
+			<div class="col-sm-1">
+	          	<?php /* Form::button('+ Add', array('id' => 'btnActionAddSide2','class' => 'btn btn-primary')) */ ?>
+	          	<a href="#" id="btnActionAddSide2" class="btn btn-primary">+ Add</a>
+	          	<?php echo Form::hidden('counterSide2',null,array('id'=>'counterSide2')); ?> 
+	        </div>
+			<hr/>
+			<div class="form-group <?php echo ($errors->has('side2')) ? 'has-error' : '' ;; ?>">
+	           	<?php echo ($errors->has('side2'))? '<p>'. $errors->first('side2') .'</p>' : ''; ?>
+	          	<ul id="_ListSide2" class="_mySortable">
+	            	<?php $x = 0; ?>
+	                <?php if(isset($r_ingredients)): ?>
+	                	<?php foreach($r_ingredients as $r_ingredient): ?>
+	                    	<li>
+	                            <select name="ingredients[][<?php echo $r_ingredient->id; ?>]" id="ingredients_<?php echo $x; ?>" class="form-control input--ingredient"/>
+	                                <?php foreach($ingredients as $i=>$v): ?>
+	                                	<option value="<?php echo $i; ?>" <?php if ($r_ingredient->menu_ingredients_id == $i): ?> selected="selected" <?php endif; ?> ><?php echo $v; ?></option>
+	                                <?php endforeach; ?>
+	                            </select>
+	                            <input name="amount[][<?php echo $r_ingredient->id; ?>]" id="ingredients_<?php echo $x; ?>" class="form-control input--amount " value="<?php echo $r_ingredient->amount; ?>" />
+	                            <select name="metric[][<?php echo $r_ingredient->id; ?>]" id="ingredients_<?php echo $x; ?>" class="form-control input--metric"/>
+	                                <?php foreach($metric as $in=>$val): ?>
+	                                	<option value="<?php echo $in; ?>" <?php if ($r_ingredient->metric_id == $in): ?> selected="selected" <?php endif; ?> ><?php echo $val; ?></option>
+	                                <?php endforeach; ?>
+	                            </select>
+	                            <input name="ri_sales_amount[][<?php echo $r_ingredient->id; ?>]" id="ingredients_<?php echo $x; ?>" class="form-control input--amount " value="<?php echo $r_ingredient->ri_sales_amount; ?>" />
+	                            <input name="grams[][<?php echo $r_ingredient->id; ?>]" id="ingredients_<?php echo $x; ?>" class="form-control input--grams " value="<?php echo $r_ingredient->grams; ?>" />
+
+	                            <?php foreach($json_array as $i => $in): ?>
+	                            	<?php if($i == $r_ingredient->menu_ingredients_id): ?>
+	                            		<input type="hidden" name="i_grams[<?php echo $i; ?>]" value="<?php echo $in['grams']; ?>" />
+	                            		<input type="hidden" name="i_price[<?php echo $i; ?>]" value="<?php echo $in['price']; ?>" />
+		                        	<?php endif; ?>
+		                        <?php endforeach; ?>
+
+	                            <button id="<?php echo $r_ingredient->id; ?>" class="deleteIngredient glyphicon glyphicon-remove btn btn-danger"></button>
+	                            <span class="glyphicon glyphicon-sort btn btn-default disabled"></span>
+	                            
+	                   		</li>
+		                 	<?php $x++; ?>                    
+	                   	<?php endforeach; ?>
+	                <?php endif; ?>
+	         	</ul>
+			</div>
+		</div>
+		
+      	<div class="tab-pane fade in" id="topping">
+      		<div class="col-sm-1">
+	          	<?php /* Form::button('+ Add', array('id' => 'btnActionAddTopping','class' => 'btn btn-primary')) */ ?>
+	          	<a href="#" id="btnActionAddTopping" class="btn btn-primary">+ Add</a>
+	          	<?php echo Form::hidden('counterTopping',null,array('id'=>'counterTopping')); ?> 
+	        </div>
+			<hr/>
+			<div class="form-group <?php echo ($errors->has('Topping')) ? 'has-error' : '' ;; ?>">
+	           	<?php echo ($errors->has('Topping'))? '<p>'. $errors->first('Topping') .'</p>' : ''; ?>
+	          	<ul id="_ListTopping" class="_mySortable">
+	            	<?php $x = 0; ?>
+	                <?php if(isset($r_ingredients)): ?>
+	                	<?php foreach($r_ingredients as $r_ingredient): ?>
+	                    	<li>
+	                            <select name="ingredients[][<?php echo $r_ingredient->id; ?>]" id="ingredients_<?php echo $x; ?>" class="form-control input--ingredient"/>
+	                                <?php foreach($ingredients as $i=>$v): ?>
+	                                	<option value="<?php echo $i; ?>" <?php if ($r_ingredient->menu_ingredients_id == $i): ?> selected="selected" <?php endif; ?> ><?php echo $v; ?></option>
+	                                <?php endforeach; ?>
+	                            </select>
+	                            <input name="amount[][<?php echo $r_ingredient->id; ?>]" id="ingredients_<?php echo $x; ?>" class="form-control input--amount " value="<?php echo $r_ingredient->amount; ?>" />
+	                            <select name="metric[][<?php echo $r_ingredient->id; ?>]" id="ingredients_<?php echo $x; ?>" class="form-control input--metric"/>
+	                                <?php foreach($metric as $in=>$val): ?>
+	                                	<option value="<?php echo $in; ?>" <?php if ($r_ingredient->metric_id == $in): ?> selected="selected" <?php endif; ?> ><?php echo $val; ?></option>
+	                                <?php endforeach; ?>
+	                            </select>
+	                            <input name="ri_sales_amount[][<?php echo $r_ingredient->id; ?>]" id="ingredients_<?php echo $x; ?>" class="form-control input--amount " value="<?php echo $r_ingredient->ri_sales_amount; ?>" />
+	                            <input name="grams[][<?php echo $r_ingredient->id; ?>]" id="ingredients_<?php echo $x; ?>" class="form-control input--grams " value="<?php echo $r_ingredient->grams; ?>" />
+
+	                            <?php foreach($json_array as $i => $in): ?>
+	                            	<?php if($i == $r_ingredient->menu_ingredients_id): ?>
+	                            		<input type="hidden" name="i_grams[<?php echo $i; ?>]" value="<?php echo $in['grams']; ?>" />
+	                            		<input type="hidden" name="i_price[<?php echo $i; ?>]" value="<?php echo $in['price']; ?>" />
+		                        	<?php endif; ?>
+		                        <?php endforeach; ?>
+
+	                            <button id="<?php echo $r_ingredient->id; ?>" class="deleteIngredient glyphicon glyphicon-remove btn btn-danger"></button>
+	                            <span class="glyphicon glyphicon-sort btn btn-default disabled"></span>
+	                            
+	                   		</li>
+		                 	<?php $x++; ?>                    
+	                   	<?php endforeach; ?>
+	                <?php endif; ?>
+	         	</ul>
+			</div>
+		</div>
+      	<div class="tab-pane fade in <?php if($calculated == 1): ?>active<?php endif; ?>" id="sales">
+            <div class="col-sm-1">
+            	<?php echo Form::submit('+ Calc', array('id' => 'btnActionCalculate','name' => 'calc','class' => 'btn btn-primary')); ?>
+            </div>
+            <hr/>
+            <?php if(isset($data->id)): ?>                	
+            	<?php foreach($r_sales as $sdata): ?>
+					<?php echo Form::hidden('sdata_id', $sdata->id); ?>
+		            <div class="row">
+			            <div class="form-group">
+				              <?php echo Form::label('staff_cost_per_hour', 'Staff cost per hour: ', array('class' => 'col-sm-2 control-label')); ?>
+				            <div class="col-sm-3">
+				            <?php echo Form::text('staff_cost_per_hour', (isset($input['staff_cost_per_hour'])? Input::old('staff_cost_per_hour') : (isset($sdata->staff_cost_per_hour)? $sdata->staff_cost_per_hour : '' )), array('class' => 'form-control')); ?>				            </div>
+
+				            <?php echo Form::label('sales_price', 'Price: ', array('class' => 'col-sm-2 control-label')); ?>
+				            <div class="col-sm-3">
+				               <?php echo Form::text('sales_price', (isset($input['sales_price'])? Input::old('sales_price') : (isset($sdata->sales_price)? $sdata->sales_price : '' )), array('class' => 'form-control')); ?> 
+				            </div>
+
+				        </div>
+				        <div class="form-group">
+				        	<h5 class="col-sm-2 control-label sales-data__title">Staff cost to make recipe batch:</h5>
+				            <div class="col-sm-3">
+				               <p class="sales-data__info">$ <?php echo (isset($sdata->staff_cost_to_make_recipe_batch)? $sdata->staff_cost_to_make_recipe_batch : '' ); ?></p>
+				            </div>
+
+				            <?php echo Form::label('B2B_sales_price', 'B2B - Price: ', array('class' => 'col-sm-2 control-label')); ?>
+				            <div class="col-sm-3">
+				               <?php echo Form::text('B2B_sales_price', (isset($input['B2B_sales_price'])? Input::old('B2B_sales_price') : (isset($sdata->B2B_sales_price)? $sdata->B2B_sales_price : '' )), array('class' => 'form-control')); ?> 
+				            </div>
+				        </div>
+				        <div class="form-group">
+				        	<h5 class="col-sm-2 control-label sales-data__title">Staff cost per piece:</h5>
+				            <div class="col-sm-3">
+				               <p class="sales-data__info">$ <?php echo (isset($sdata->staff_cost_per_piece)? $sdata->staff_cost_per_piece : '' ); ?></p>
+				            </div>
+
+				            <?php echo Form::label('sales_amount', 'Amount: ', array('class' => 'col-sm-2 control-label')); ?>
+				            <div class="col-sm-3">
+				               <?php echo Form::text('sales_amount', (isset($input['sales_amount'])? Input::old('sales_amount') : (isset($sdata->sales_amount)? $sdata->sales_amount : '' )), array('class' => 'form-control')); ?>
+				            </div>
+				        </div>
+				        <div class="form-group">
+				        	<h5 class="col-sm-2 control-label sales-data__title">Generate Total Recipe Grams</h5>
+				            <div class="col-sm-3">
+				            	<?php echo Form::checkbox('total_recipe_grams_active', 1, (isset($input['total_recipe_grams_active'])? Input::old('total_recipe_grams_active') : (isset($sdata->total_recipe_grams_active)? $sdata->total_recipe_grams_active : '' )), array('class' => '')); ?>
+				            </div>
+
+				            <?php echo Form::label('sales_time', 'Time - minutes: ', array('class' => 'col-sm-2 control-label')); ?>
+				            <div class="col-sm-3">
+				               <?php echo Form::text('sales_time', (isset($input['sales_time'])? Input::old('sales_time') : (isset($sdata->sales_time)? $sdata->sales_time : '' )), array('class' => 'form-control')); ?>
+				            </div>
+				        </div>
+				        <hr/>
+
+				        <div class="form-group <?php echo ($errors->has('title')) ? ' has-error' : '' ;; ?>">
+				        	<h5 class="col-sm-2 control-label sales-data__title">Total recipe grams:</h5>
+				            <div class="col-sm-3">
+				               <p class="sales-data__info"><?php echo $sdata->total_recipe_grams; ?> g</p>
+				            </div>
+
+				            <h5 class="col-sm-2 control-label sales-data__title">Total grams per piece:</h5>
+				            <div class="col-sm-3">
+				               <p class="sales-data__info"><?php echo $sdata->total_grams_per_piece; ?> g</p>
+				            </div>
+
+				        </div>
+				        <!-- <hr>  -->
+				        <div class="form-group">
+				        	 <h5 class="col-sm-2 control-label sales-data__title">B2C - Desired Sales Price:</h5>
+				            <div class="col-sm-3">
+				               <p class="sales-data__info">$ <?php echo (isset($sdata->desired_sales_price)? $sdata->desired_sales_price : '' ); ?></p>
+				            </div>
+
+				            <?php echo Form::label('desired_total_markup', 'Desired Total Markup - %: ', array('class' => 'col-sm-2 control-label')); ?>
+				            <div class="col-sm-2">
+				               <?php echo Form::text('desired_total_markup', (isset($input['desired_total_markup'])? Input::old('desired_total_markup') : (isset($sdata->desired_total_markup)? $sdata->desired_total_markup : '' )), array('class' => 'form-control', 'placeholder' => '350')); ?>
+				            </div>
+				            <!-- <div class="col-sm-1"></div> -->
+				             
+				        </div>
+				        <div class="form-group">
+				        	<h5 class="col-sm-2 control-label sales-data__title">B2B - Desired Sales Price:</h5>
+				            <div class="col-sm-3">
+				               <p class="sales-data__info">$ <?php echo $sdata->B2B_desired_sales_price; ?></p>
+				            </div>
+				            <h5 class="col-sm-2 control-label sales-data__title">B2B Total markup - %:</h5>
+				            <div class="col-sm-3">
+				               <p class="sales-data__info"><?php echo $sdata->B2B_desired_total_markup; ?> %</p>
+				            </div>  
+				        </div>
+						<hr/>
+				        <div class="form-group <?php echo ($errors->has('title')) ? ' has-error' : '' ;; ?>">
+			        	    <h5 class="col-sm-2 control-label sales-data__title">Total recipe cost:</h5>
+				            <div class="col-sm-3">
+				               <p class="sales-data__info">$ <?php echo $sdata->total_recipe_cost; ?></p>
+				            </div>
+				            <h5 class="col-sm-2 control-label sales-data__title">B2C Total markup - %:</h5>
+				            <div class="col-sm-3">
+				               <p class="sales-data__info"><?php echo $sdata->total_markup_percentage; ?> %</p>
+				            </div>           
+						 </div>
+				        <div class="form-group <?php echo ($errors->has('title')) ? ' has-error' : '' ;; ?>">
+			        	    <h5 class="col-sm-2 control-label sales-data__title">Total ingredient cost:</h5>
+				            <div class="col-sm-3">
+				               <p class="sales-data__info">$ <?php echo $sdata->total_ingredient_cost; ?></p>
+				            </div>
+				            <h5 class="col-sm-2 control-label sales-data__title">B2B Total Recipe Revenue:</h5>
+				            <div class="col-sm-3">
+				               <p class="sales-data__info">$ <?php echo $sdata->B2B_total_recipe_revenue; ?></p>
+				            </div>  
+				        </div>
+				        <div class="form-group <?php echo ($errors->has('title')) ? ' has-error' : '' ;; ?>">
+			        	    <h5 class="col-sm-2 control-label sales-data__title">Total ingredient cost per piece:</h5>
+				            <div class="col-sm-3">
+				               <p class="sales-data__info">$ <?php echo $sdata->total_ingredient_cost_per_piece; ?></p>
+				            </div>
+
+				            <h5 class="col-sm-2 control-label sales-data__title">B2C Total recipe revenue:</h5>
+				            <div class="col-sm-3">
+				               <p class="sales-data__info">$ <?php echo $sdata->total_recipe_revenue; ?></p>
+				            </div>
+				        </div>
+				        <hr/>
+				        <div class="form-group <?php echo ($errors->has('title')) ? ' has-error' : '' ;; ?>">
+			        	    
+				        	<h5 class="col-sm-2 control-label sales-data__title">Total cost percentage</h5>
+				            <div class="col-sm-3">
+				               <p class="sales-data__info"> <?php echo $sdata->total_cost_percentage; ?> %</p>
+				            </div>
+
+
+				            <h5 class="col-sm-2 control-label sales-data__title">Total gross profit:</h5>
+				            <div class="col-sm-3">
+				               <p class="sales-data__info">$ <?php echo $sdata->total_profit; ?></p>
+				            </div>
+				        </div>
+				        <div class="form-group <?php echo ($errors->has('title')) ? ' has-error' : '' ;; ?>">
+			        	    <h5 class="col-sm-2 control-label sales-data__title">Staff cost percentage:</h5>
+				            <div class="col-sm-3">
+				               <p class="sales-data__info"><?php echo $sdata->staff_cost_percentage; ?> %</p>
+				            </div>
+
+				            <h5 class="col-sm-2 control-label sales-data__title">Total profit per piece:</h5>
+				            <div class="col-sm-3">
+				               <p class="sales-data__info">$ <?php echo $sdata->total_profit_per_piece; ?></p>
+				            </div>
+				        </div>
+				        <div class="form-group <?php echo ($errors->has('title')) ? ' has-error' : '' ;; ?>">
+			        	    <h5 class="col-sm-2 control-label sales-data__title">Ingredient cost percentage:</h5>
+				            <div class="col-sm-3">
+				               <p class="sales-data__info"><?php echo $sdata->ingredient_cost_percentage; ?> %</p>
+				            </div>
+
+				            <h5 class="col-sm-2 control-label sales-data__title">Total cost per piece:</h5>
+				            <div class="col-sm-3">
+				               <p class="sales-data__info">$ <?php echo $sdata->total_cost_per_piece; ?></p>
+				            </div>
+				        </div>
+				        <div class="form-group <?php echo ($errors->has('title')) ? ' has-error' : '' ;; ?>">
+				        	<h5 class="col-sm-2 control-label sales-data__title">Total gross margin percentage:</h5>
+				            <div class="col-sm-3">
+				               <p class="sales-data__info"><?php echo $sdata->total_margin_percentage; ?> %</p>
+				            </div>
+
+				            
+				        </div>
+				        
+				        <hr/>
+		        		<?php //echo '<pre>'; print_r($sdata->price); echo '</pre>'; exit; ?>
+               	<?php endforeach; ?>
+            <?php endif; ?>
+	        <!-- <div class="form-group <?php echo ($errors->has('title')) ? ' has-error' : '' ;; ?>">
+        	    <h5 class="col-sm-2 control-label sales-data__title">Ingredient cost percentage:</h5>
+	            <div class="col-sm-3">
+	               <p class="sales-data__info">$$$$ %%</p>
+	            </div>
+
+	            <h5 class="col-sm-2 control-label sales-data__title">Total markup percentage:</h5>
+	            <div class="col-sm-3">
+	               <p class="sales-data__info">$$$$ %%</p>
+	            </div>
+	        </div> -->
+	        <div class="row">
+
+	        	<div class="col-sm-offset-1 col-sm-10">
+			       	<table class="table table-striped">
+			            <thead>
+			            	<tr>
+			                    <th>Ingredient</td>
+			                    <th>Ingredient Cost</th>
+			                    <th>Packet Grams</th>
+			                    <th>Packet Grams %</th>
+			                    <th>Recipe Ingredient Cost</th>
+			                    <th>Recipe Grams</th>
+			                </tr>
+			            </thead>
+			            <?php if(isset($r_ingredients)): ?>
+
+            			<?php foreach($r_ingredients as $r_ingredient): ?>
+
+	            			<?php foreach($s_ingredients as $ingredient): ?>
+
+		            			
+		            				<?php //echo '<pre>'; print_r($sales_data_ingredients); echo '</pre>'; exit;?>
+		            				
+		            				<?php //echo '<pre>'; print_r($ingredient->id); echo '</pre>'; exit; ?>
+
+
+		                            <?php if ($r_ingredient->menu_ingredients_id == $ingredient->id): ?>    	
+						            <tbody>
+							            <tr>
+							                <td> <?php echo $ingredient->name; ?> </td>
+							                <td>$ <?php echo $ingredient->price; ?> </td>
+							                <td> <?php echo $ingredient->grams; ?>g </td>
+							                <td> <?php echo $r_ingredient->packet_grams_percentage; ?> % </td>
+							                <td>$ <?php echo $r_ingredient->recipe_ingredient_cost; ?> </td>
+							                <td> <?php echo $r_ingredient->sales_grams; ?>g </td>
+							            </tr>
+						            </tbody>
+						            <?php endif; ?> 
+					            
+				            <?php endforeach; ?>
+			            <?php endforeach; ?>
+			            <?php endif; ?>
+			            <tfoot>
+			            	<tr>
+			                	<td colspan="20">
+			                    	
+			                    </td>
+			               	</tr>
+			            </tfoot>
+			       	</table>
+		        </div>	
+			</div>
+	        </div>
+      </div>
+            
+            <div class="form-group <?php echo ($errors->has('extra')) ? 'has-error' : '' ;; ?>">
+	           	<?php echo ($errors->has('extra'))? '<p>'. $errors->first('extra') .'</p>' : ''; ?>
+            </div>
+      </div>
+      
+    </div>
+        
+        	<?php echo Form::hidden('id', (isset($input['id'])? Input::old('id') : (isset($data->id)? $data->id : '' ))); ?>
+        	<?php /* Form::hidden('sc', ( '10' )) */ ?>
+            
+            <hr/>
+            
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+              <?php echo Form::submit('Save', array('class' => 'btn btn-primary')); ?>
+              <?php echo Form::submit('Save & Close', array('name' => 'sc','class' => 'btn btn-success')); ?>
+              <!-- <input type="submit" name="sc" id="1" value="Save & Close" class="btn btn-success"> -->
+            <a href="/admin/menu/recipes/">
+                <?php echo Form::button('Cancel' ,array('class' => 'btn btn-danger')); ?>
+            </a>
+            </div>
+        </div>
+    <?php echo Form::close(); ?>
+    	        	
+  </div>
+
+<?php $__env->stopSection(); ?>
+
+
+<?php $__env->startSection('_tail'); ?>
+
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('tmpl.admin', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

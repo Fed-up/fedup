@@ -1,21 +1,4 @@
 <?php
-//Recipes
-
-
-// <inpu class="input--ingredient">
-
-
-// $(".input--ingredient").on("blur", myfunc);
-
-// function myfunc($event){
-// 	$(this).text()
-
-// 	$(this).attr("name")
-
-// 	$("#outputfiled").val(3847293478);
-
-// }
-
 
 class Admin_RecipesController extends BaseController{
 
@@ -28,16 +11,9 @@ class Admin_RecipesController extends BaseController{
 	}
 	
 	public function getAddRecipes(){
-		$categories = MenuCategories::orderBy('name','ASC')->where('active', '!=', '9')->get(); // Bring in data that has not been deleted
 		$ingredients = MenuIngredients::orderBy('name','ASC')->where('active', '!=', '9')->get();
 		$metrics = Metric::orderBy('name','ASC')->get();
-		
-		$mCat = array();
-		$mCat[0]	= '- Select Category -';
-		foreach ($categories as $category) {
-			$mCat[$category->id]	= $category->name;
-		};
-		
+				
 		$mIng = array();
 		$mIng[0]	= '- Select Ingredients -';
 		foreach ($ingredients as $ingredient) {
