@@ -51,245 +51,406 @@ class Admin_QuickController extends BaseController{
 			));	
 	}
 	
-	public function postAddRecipes(){
+	public function postAddQuick(){
 		
 		//echo '<pre>'; print_r($_POST); echo '</pre>'; exit;
 		
 		$input = Input::all();
-		// echo '<pre>'; print_r($input); echo '</pre>'; exit;
+		
 
 		$rules = array(
-			'title' => 'required|Max:20|unique:menu_recipes,name',
-			'summary' => 'required',
-			'length' => 'required',
-			'difficulty' => 'required',
-			'serve' => 'required',
-			'categories' => 'required|not_in:0'
+			'ingredients_p' => 'required',
+			'ingredients_b' => 'required',
+			'ingredients_s' => 'required',
+			'ingredients_t' => 'required',
 		);
-		$validator = Validator::make($input, $rules);
+		$messages = array(
+           'required' => 'Please ensure every tab has atleast 1 ingredient',
+        );
+		$validator = Validator::make($input, $rules, $messages);
 		
 		if($validator->fails()){
 			return Redirect::back()
 				->withErrors($validator)
 				->withInput($input);
 		}else{
-			$data = new MenuRecipes();
-			$data->name = Input::get('title');
-			$data->summary = Input::get('summary');
-			$data->menu_categories_id = Input::get('categories');
-			$data->fedup_active = (isset($input['fedup_active'])) ? 1 : 0;
-			$data->exclusive  = (isset($input['exclusive'])) ? 1 : 0;
-			$data->catering  = (isset($input['catering'])) ? 1 : 0;
-			$data->length 	= $input['length'];
-			$data->difficulty 	= $input['difficulty'];
-			$data->serve 	= $input['serve'];
-			$data->menu_type 	= $input['menu_type'];
-			$data->df  = (isset($input['DF'])) ? 1 : 0;
-			$data->ds  = (isset($input['DS'])) ? 1 : 0;
-			$data->ef  = (isset($input['EF'])) ? 1 : 0;
-			$data->fi  = (isset($input['FI'])) ? 1 : 0;
-			$data->gf  = (isset($input['GF'])) ? 1 : 0;
-			$data->nf  = (isset($input['NF'])) ? 1 : 0;
-			$data->sf  = (isset($input['SF'])) ? 1 : 0;
-			$data->ve  = (isset($input['VE'])) ? 1 : 0;
-			$data->v  = (isset($input['V'])) ? 1 : 0;
-			if($data->save()){
-				if(isset($input['images'])){
-					$p_count = count($input['images']);
-					$p=0;
-					foreach($input['images'] as $image){
-						if($p <= $p_count){
-							foreach($image as $i_photo=>$photo){
-								if($i_photo == 'x'){
-									$_image = new Images();
-									$_image->name = $photo;
-									$_image->summary = $input['img_des'][$p]['x'];
-									$_image->link_id = $input['id'];
-									$_image->section = 'RECIPE';
-									$_image->ordering = $p;
-									$_image->active = 1;
-									
-								}else{
-									$_image = Images::find($i_photo);
-									$_image->name = $photo;
-									$_image->summary = $input['img_des'][$p][$i_photo];
-									$_image->link_id = $input['id'];
-									$_image->section = 'RECIPE';
-									$_image->ordering = $p;
-									$_image->active = 1;
-								};
-								$data->Images()->save($_image);
-							};
-						$p++;
-						}
-					};
-				};
-				
-				///echo '<pre>'; print_r($input['fact']); echo '</pre>'; 	exit;
-				if(isset($input['fact'])){
-					$f_count = count($input['fact']);
-					$fc = 1;
-					foreach($input['fact'] as $fact){
-						if($fc <= $f_count){
-							//We need the index = $i and $f is the value
-							foreach($fact as $i=>$f){
-								if ($i == 'x'){
-									$_fact = new MenuRecipesFacts();
-									$_fact->description = $f;
-									$_fact->ordering = $fc;
-									$_fact->active = 1;
-									//echo '<pre>'; print_r($_fact); echo '</pre>'; 	exit;
-								}else {
-									$_fact = MenuRecipesFacts::find($i);
-									$_fact->description = $f;
-									$_fact->ordering = $fc;
-								};
-								$data->MenuRecipesFacts()->save($_fact);
-							};
-						$fc++;
-						};
-					};
-				};
-				
-				if(isset($input['ingredients']) && isset($input['amount']) && isset($input['metric'])){
-					
-					$ingredient = $input['ingredients'];
-					$amount = $input['amount'];
-					$metric = $input['metric'];
-					$grams = $input['grams'];
+			
 
-					$array_count = count($ingredient);
-					for($i=0; $i<$array_count; $i++){
-					  
-					  $xx = array_keys($ingredient[$i]);
-					  if($xx[0] == 'x'){
-						  $r_i = new MenuRecipesIngredients();
-						  $r_i->menu_ingredients_id = $ingredient[$i][$xx[0]];
-						  $r_i->amount = $amount[$i][$xx[0]];
-						  $r_i->metric_id = $metric[$i][$xx[0]];
-						  $r_i->grams = $grams[$i][$xx[0]];
-						  $r_i->ordering = $i;
-						  $r_i->active = 1;  
-					  }else{
-						$r_i = MenuRecipesIngredients::find($xx[0]);
-						$r_i->menu_ingredients_id = $ingredient[$i][$xx[0]];
-						$r_i->amount = $amount[$i][$xx[0]];
-						$r_i->metric_id = $metric[$i][$xx[0]]; 
-						$r_i->grams = $grams[$i][$xx[0]];
-						$r_i->ordering = $i;
-					  };
-					  
-					  $data->MenuRecipesIngredients()->save($r_i);
-					 	
-					};			
-				};
+			if(isset($input['ingredients_p']) && isset($input['amount_p']) && isset($input['metric_p'])){
+					
 				
-				if(isset($input['method'])){
-					$m_count = count($input['method']);
-					$mc = 1;
-					foreach($input['method'] as $method){
-						if($mc <= $m_count){
-							foreach($method as $i=>$m){
-								if($i == 'x'){
-									$_method = new MenuRecipesMethods();
-									$_method->description = $m;
-									$_method->ordering = $mc;
-									$_method->active = 1;
-								}else{
-									$_method = MenuRecipesMethods::find($i);
-									$_method->description = $m;
-									$_method->ordering = $mc;
-								}
-								$data->MenuRecipesMethods()->save($_method);
-							};
-						$mc++;
-						};
-					};					
-				};
 				
-				if(isset($input['extra'])){
-					$e_count = count($input['extra']);
-					$ec = 1;
-					foreach($input['extra'] as $_extra){
-						if($ec <= $e_count){
-							foreach($_extra as $i=>$ex){
-								if($i == 'x'){
-									$_extra = new MenuRecipesExtras();
-									$_extra->description = $ex;
-									$_extra->ordering = $ec;
-									$_extra->active = 1;
-								}else{
-									$_extra = MenuRecipesExtras::find($i);
-									$_extra->description = $ex;
-									$_extra->ordering = $ec;
-								}
-								$data->MenuRecipesExtras()->save($_extra);
-							};
-						$ec++;
-						};
-					};					
+				$ingredient = $input['ingredients_p'];
+				$amount = $input['amount_p'];
+				$i_sales_amount = $input['ri_sales_amount_p'];
+				$metric = $input['metric_p'];
+				$grams = $input['grams_p'];
+
+				// echo '<pre>'; print_r($metric); echo '</pre>'; exit;
+
+				if(isset($input['ip_grams'])){$ip_grams = $input['ip_grams'];}else{$ip_grams = 0;};
+				if(isset($input['ip_price'])){$ip_price = $input['ip_price'];}else{$ip_price = 0;}
+
+				$tip_cost = 0;
+				$tip_grams = 0;
+
+
+				$array_count = count($ingredient);
+				for($i=0; $i<$array_count; $i++){
+				  
+					$xx = array_keys($ingredient[$i]);
+					$input_ingredient_id = $ingredient[$i][$xx[0]];
+					$input_metric_id = $metric[$i][$xx[0]];
+					$input_i_sales_amount = $i_sales_amount[$i][$xx[0]];
+					$riGrams = $grams[$i][$xx[0]];
+
+					$imData = MenuIngredients::where('id', '=', $input_ingredient_id)
+						->with(array('Metric' => function($query) use ($input_ingredient_id){
+							$query->where('ingredient_metric.menu_ingredients_id', '=', $input_ingredient_id);
+						}))	
+					->first();
+
+					if(!empty($imData->Metric)){
+						// echo '<pre>'; print_r($imData); echo '</pre>';exit;
+						foreach ($imData->Metric as $pivot_data) { //Ingredient Metric Data
+							// echo '<pre>'; print_r($data); echo '</pre>';exit;
+							if($pivot_data->id == $input_metric_id){
+								$piGrams = $pivot_data->pivot->metric_grams * $input_i_sales_amount;                            //Recipe Ingredient Grams
+								// echo '<pre>'; print_r($riGrams); echo '</pre>';
+							}else{
+								$piGrams = 0;
+							}
+						}
+					}
+
+					if($xx[0] == 'x'){
+						$r_i = MenuIngredients::find($input_ingredient_id);
+						$r_i->project_protein = 1;
+						$r_i->project_base = 0;
+						$r_i->project_side = 0;
+						$r_i->project_topping = 0;
+						$r_i->project_metric_id = $input_metric_id;
+						$r_i->project_grams = $piGrams;
+						$r_i->project_amount = $input_i_sales_amount;
+						$r_i->project_active = 1;
+					}else{
+						$r_i = MenuIngredients::find($input_ingredient_id);
+						$r_i->project_protein = 1;
+						$r_i->project_metric_id = $input_metric_id;
+						$r_i->project_grams = $piGrams;
+						$r_i->project_amount = $input_i_sales_amount;
+						$r_i->project_active = 1;
+					}						
+
+
+				   	
+
+				  	$r_i->save();
+			  		// echo '<pre>'; print_r($r_i); echo '</pre>';exit;
 				};
+
+				// echo '<pre>'; print_r($ti_grams); echo '</pre>';exit;
+				
+				if(isset($input['ddp'])){
+					$ddi = $input['ddp'];
+
+					
+					foreach($ddi as $_delete){
+						
+						$di = MenuIngredients::find($_delete);
+						//$di->active = 9;
+						//$di->save();
+						$di->delete();
+					};
+				};		
 			};
+
+			if(isset($input['ingredients_b']) && isset($input['amount_b']) && isset($input['metric_b'])){
+					
+				
+				
+				$ingredient = $input['ingredients_b'];
+				$amount = $input['amount_b'];
+				$i_sales_amount = $input['ri_sales_amount_b'];
+				$metric = $input['metric_b'];
+				$grams = $input['grams_b'];
+
+				
+
+				if(isset($input['ib_grams'])){$ib_grams = $input['ib_grams'];}else{$ib_grams = 0;};
+				if(isset($input['ib_price'])){$ib_price = $input['ib_price'];}else{$ib_price = 0;}
+
+				$tib_cost = 0;
+				$tib_grams = 0;
+
+
+				$array_count = count($ingredient);
+				for($i=0; $i<$array_count; $i++){
+				  
+					$xx = array_keys($ingredient[$i]);
+					$input_ingredient_id = $ingredient[$i][$xx[0]];
+					$input_metric_id = $metric[$i][$xx[0]];
+					$input_i_sales_amount = $i_sales_amount[$i][$xx[0]];
+					$riGrams = $grams[$i][$xx[0]];
+
+					$imData = MenuIngredients::where('id', '=', $input_ingredient_id)
+						->with(array('Metric' => function($query) use ($input_ingredient_id){
+							$query->where('ingredient_metric.menu_ingredients_id', '=', $input_ingredient_id);
+						}))	
+					->first();
+
+					// echo '<pre>'; print_r($imData); echo '</pre>'; exit;
+
+					if(!empty($imData->Metric)){
+						// echo '<pre>'; print_r($imData); echo '</pre>';exit;
+						foreach ($imData->Metric as $pivot_data) { //Ingredient Metric Data
+							// echo '<pre>'; print_r($data); echo '</pre>';exit;
+							if($pivot_data->id == $input_metric_id){
+								$biGrams = $pivot_data->pivot->metric_grams * $input_i_sales_amount;                            //Recipe Ingredient Grams
+								// echo '<pre>'; print_r($riGrams); echo '</pre>';
+							}else{
+								$biGrams = 0;
+							}
+						}
+					}
+
+					if($xx[0] == 'x'){
+						$r_i = MenuIngredients::find($input_ingredient_id);
+						$r_i->project_protein = 0;
+						$r_i->project_base = 1;
+						$r_i->project_side = 0;
+						$r_i->project_topping = 0;
+						$r_i->project_metric_id = $input_metric_id;
+						$r_i->project_grams = $biGrams;
+						$r_i->project_amount = $input_i_sales_amount;
+						$r_i->project_active = 1;
+					}else{
+						$r_i = MenuIngredients::find($input_ingredient_id);
+						$r_i->project_base = 1;
+						$r_i->project_metric_id = $input_metric_id;
+						$r_i->project_grams = $biGrams;
+						$r_i->project_amount = $input_i_sales_amount;
+						$r_i->project_active = 1;
+					}						
+
+
+				   	
+
+				  	$r_i->save();
+			  		
+				};
+
+				// echo '<pre>'; print_r($ti_grams); echo '</pre>';exit;
+				if(isset($input['ddb'])){
+					$ddi = $input['ddb'];
+
+					
+					foreach($ddi as $_delete){
+						
+						$di = MenuIngredients::find($_delete);
+						//$di->active = 9;
+						//$di->save();
+						$di->delete();
+					};
+				};		
+			};
+
+			if(isset($input['ingredients_s']) && isset($input['amount_s']) && isset($input['metric_s'])){
+				$ingredient = $input['ingredients_s'];
+				$amount = $input['amount_s'];
+				$i_sales_amount = $input['ri_sales_amount_s'];
+				$metric = $input['metric_s'];
+				$grams = $input['grams_s'];			
+
+				if(isset($input['is_grams'])){$is_grams = $input['is_grams'];}else{$is_grams = 0;};
+				if(isset($input['is_price'])){$is_price = $input['is_price'];}else{$is_price = 0;}
+
+				$tsb_cost = 0;
+				$tsb_grams = 0;
+
+				$array_count = count($ingredient);
+				for($i=0; $i<$array_count; $i++){
+					$xx = array_keys($ingredient[$i]);
+					$input_ingredient_id = $ingredient[$i][$xx[0]];
+					$input_metric_id = $metric[$i][$xx[0]];
+					$input_i_sales_amount = $i_sales_amount[$i][$xx[0]];
+					$riGrams = $grams[$i][$xx[0]];
+
+					$imData = MenuIngredients::where('id', '=', $input_ingredient_id)
+						->with(array('Metric' => function($query) use ($input_ingredient_id){
+							$query->where('ingredient_metric.menu_ingredients_id', '=', $input_ingredient_id);
+						}))	
+					->first();
+
+					if(!empty($imData->Metric)){
+						// echo '<pre>'; print_r($imData); echo '</pre>';exit;
+						foreach ($imData->Metric as $pivot_data) { //Ingredient Metric Data
+							// echo '<pre>'; print_r($data); echo '</pre>';exit;
+							if($pivot_data->id == $input_metric_id){
+								$siGrams = $pivot_data->pivot->metric_grams * $input_i_sales_amount;                            //Recipe Ingredient Grams
+								// echo '<pre>'; print_r($riGrams); echo '</pre>';
+							}else{
+								$siGrams = 0;
+							}
+						}
+					}
+
+					if($xx[0] == 'x'){
+						$r_i = MenuIngredients::find($input_ingredient_id);
+						$r_i->project_protein = 0;
+						$r_i->project_base = 0;
+						$r_i->project_side = 1;
+						$r_i->project_topping = 0;
+						$r_i->project_metric_id = $input_metric_id;
+						$r_i->project_grams = $siGrams;
+						$r_i->project_amount = $input_i_sales_amount;
+						$r_i->project_active = 1;
+					}else{
+						$r_i = MenuIngredients::find($input_ingredient_id);
+						$r_i->project_side = 1;
+						$r_i->project_metric_id = $input_metric_id;
+						$r_i->project_grams = $siGrams;
+						$r_i->project_amount = $input_i_sales_amount;
+						$r_i->project_active = 1;
+					}						
+
+				   	// echo '<pre>'; print_r($r_i); echo '</pre>'; exit;
+
+				  	$r_i->save();
+			  		// echo '<pre>'; print_r($r_i); echo '</pre>'; exit;
+				};
+
+				// echo '<pre>'; print_r($ti_grams); echo '</pre>';exit;
+				if(isset($input['dds'])){
+					$ddi = $input['dds'];
+
+					
+					foreach($ddi as $_delete){
+						
+						$di = MenuIngredients::find($_delete);
+						//$di->active = 9;
+						//$di->save();
+						$di->delete();
+					};
+				};		
+			};
+
+			if(isset($input['ingredients_t']) && isset($input['amount_t']) && isset($input['metric_t'])){
+				$ingredient = $input['ingredients_t'];
+				$amount = $input['amount_t'];
+				$i_sales_amount = $input['ri_sales_amount_t'];
+				$metric = $input['metric_t'];
+				$grams = $input['grams_t'];			
+
+				if(isset($input['ts_grams'])){$ts_grams = $input['ts_grams'];}else{$ts_grams = 0;};
+				if(isset($input['ts_price'])){$ts_price = $input['ts_price'];}else{$ts_price = 0;}
+
+				$tsb_cost = 0;
+				$tsb_grams = 0;
+
+				$array_count = count($ingredient);
+				for($i=0; $i<$array_count; $i++){
+					$xx = array_keys($ingredient[$i]);
+					$input_ingredient_id = $ingredient[$i][$xx[0]];
+					$input_metric_id = $metric[$i][$xx[0]];
+					$input_i_sales_amount = $i_sales_amount[$i][$xx[0]];
+					$riGrams = $grams[$i][$xx[0]];
+
+					$imData = MenuIngredients::where('id', '=', $input_ingredient_id)
+						->with(array('Metric' => function($query) use ($input_ingredient_id){
+							$query->where('ingredient_metric.menu_ingredients_id', '=', $input_ingredient_id);
+						}))	
+					->first();
+
+					if(!empty($imData->Metric)){
+						// echo '<pre>'; print_r($imData); echo '</pre>';exit;
+						foreach ($imData->Metric as $pivot_data) { //Ingredient Metric Data
+							// echo '<pre>'; print_r($data); echo '</pre>';exit;
+							if($pivot_data->id == $input_metric_id){
+								$tiGrams = $pivot_data->pivot->metric_grams * $input_i_sales_amount;                            //Recipe Ingredient Grams
+								// echo '<pre>'; print_r($riGrams); echo '</pre>';
+							}else{
+								$tiGrams = 0;
+							}
+						}
+					}
+
+					if($xx[0] == 'x'){
+						$r_i = MenuIngredients::find($input_ingredient_id);
+						$r_i->project_protein = 0;
+						$r_i->project_base = 0;
+						$r_i->project_side = 0;
+						$r_i->project_topping = 1;
+						$r_i->project_metric_id = $input_metric_id;
+						$r_i->project_grams = $tiGrams;
+						$r_i->project_amount = $input_i_sales_amount;
+						$r_i->project_active = 1;
+					}else{
+						$r_i = MenuIngredients::find($input_ingredient_id);
+						$r_i->project_topping = 1;
+						$r_i->project_metric_id = $input_metric_id;
+						$r_i->project_grams = $tiGrams;
+						$r_i->project_amount = $input_i_sales_amount;
+						$r_i->project_active = 1;
+					}						
+
+				   	// echo '<pre>'; print_r($r_i); echo '</pre>'; exit;
+
+				  	$r_i->save();
+			  		
+				};
+
+				// echo '<pre>'; print_r($ti_grams); echo '</pre>';exit;
+				if(isset($input['ddt'])){
+					$ddi = $input['ddt'];
+
+					
+					foreach($ddi as $_delete){
+						
+						$di = MenuIngredients::find($_delete);
+						//$di->active = 9;
+						//$di->save();
+						$di->delete();
+					};
+				};		
+			};
+
+
+
+
+
+			
+
+
+			
 		}
+
+		// echo '<pre>'; print_r($input['sdata_id']); echo '</pre>'; exit;
 
 		
 
-		if(empty($input['sdata_id'])){
-			// echo 'YES!!!'; 	exit;
-			$_sales = new SalesData();
-			$_sales->menu_recipe_id = $data->id;
-			$data->SalesData()->save($_sales);
-		}
+		// if(empty($input['sdata_id'])){
+		// 	// echo 'YES!!!'; 	exit;
+		// 	$_sales = new SalesData();
+		// 	$_sales->menu_recipe_id = $data->id;
+		// 	$data->SalesData()->save($_sales);
+		// }
 		
 
 		if(isset($input['sc'])){
-			return Redirect::action('Admin_RecipesController@getRecipes');
+			return Redirect::action('Admin_QuickController@getQuick');
 		}else{
-			return Redirect::action('Admin_RecipesController@getEditRecipes', array($data->id)); 
+			return Redirect::action('Admin_QuickController@getEditQuick', array($data->id)); 
 		}
 	}
 	
-	public function getEditRecipes($id){
-		$data = MenuRecipes::findOrFail($id);
-		$categories = MenuCategories::orderBy('name','ASC')->where('active', '!=', '9')->get(); // Bring in data that has not been deleted
+	public function getEditQuick(){
 		$ingredients = MenuIngredients::orderBy('name','ASC')->where('active', '!=', '9')->get();
 		$metrics = Metric::orderBy('name','ASC')->get();
-		$sales_data = SalesData::where('menu_recipe_id', '=', $data->id)->get();
+		// $sales_data = SalesData::where('menu_recipe_id', '=', $data->id)->get();
 		// $sales_data_ingredients = SalesDataIngredients::where('menu_recipe_id', '=', $data->id)->get();
 
-		$recipes_images = $data->Images()->orderBy('ordering','ASC')->where('section', '=', 'RECIPE')->get();
-		$recipes_facts = $data->MenuRecipesFacts()->orderBy('ordering','ASC')->get();
-		$recipes_ingredients = $data->MenuRecipesIngredients()->orderBy('ordering','ASC')->get();
-		$recipes_methods = $data->MenuRecipesMethods()->orderBy('ordering','ASC')->get();
-		$recipes_extras = $data->MenuRecipesExtras()->orderBy('ordering','ASC')->get();
-		
-		
-		
-
-		// $queries = DB::getQueryLog();
-		//   echo '<pre>'; print_r($queries); echo '</pre>';
-	 	// echo '<pre>'; print_r($sales_data->price); echo '</pre>'; 
-		// echo '<pre>'; print_r( $data->id ); echo '</pre>'; 	exit;
-
-		// foreach ($sales_data_ingredients as $sales_data_ingredient) {
-		// 	echo '<pre>'; print_r( $sales_data_ingredient ); echo '</pre>'; 	exit;
-		// }
-		// echo 'No'; exit;
-		//$data = MenuRecipes::where('active', '!=', 9)->get();
-		
-		
-		foreach($ingredients as $ingredient){
-			// echo '<pre>'; print_r( $ingredient->name ); echo '</pre>';
-			// $s_ingredient = $ingredients; 	
-		}
-		// exit;
-		
-		$mCat = array();
-		$mCat[0]	= '- Select Category -';
-		foreach ($categories as $category) {
-			$mCat[$category->id] = $category->name;
-		};
-		//
+		//put ingredients into an array oof each stage, then pull it into the view
 
 		$json_array = array();
 		$mIng = array();
@@ -336,21 +497,14 @@ class Admin_QuickController extends BaseController{
 
 		return View::make('admin.recipes.form')
 			->with(array(
-				'data' => $data,// This 
 				'categories' => $mCat,
 				'ingredients' => $mIng,
-				'metric' => $mMetric,
-				'r_images' => $recipes_images,
-				'r_facts' => $recipes_facts,
-				'r_ingredients' => $recipes_ingredients,
-				'r_methods' => $recipes_methods,
-				'r_extras' => $recipes_extras,
-				'r_sales' => $sales_data,
+				// 'r_sales' => $sales_data,
 				'json_calc' => $json_calc,
 				'json_array' => $json_array,
 				's_ingredients' => $s_ingredients,
 				// 'sales_data_ingredients' => $sales_data_ingredients,
-				'title'		=> 'Edit Recipe:'.$data->name,
+				'title'		=> 'Edit Fed Up Projects:'.$data->name,
 				'calculated' => 0,
 			));	
 		

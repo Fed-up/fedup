@@ -25,6 +25,123 @@
 		});
 		$( "._mySortable" ).disableSelection();
 
+
+
+
+
+
+
+		//Start Ingredients
+		$('#counterProtein').val( $('#_ListProtein li').length );
+		$('#btnActionAddProtein').click(function(e) {
+			e.preventDefault();
+			
+			var currentID = $('#counterProtein').val();
+					
+			$ix = 0;
+			var ingredientsArray = [];
+			<?php
+			
+			$ix = 0;
+			foreach ($ingredients as $i=>$v) {
+				echo 'ingredientsArray['.$ix.'] = ["'.$i.'","'.$v.'"]'."\n";
+				$ix++;
+			}; 
+
+			?>
+			
+			var SelectList	= $('<select>',{
+						'name':'ingredients_p[][x]',
+						'id':'ingredients_p_'+currentID,
+						'class':'form-control input--ingredient',
+					});
+			
+			$.each(ingredientsArray, function(key,value) {
+				SelectList
+					.append($('<option></option>')
+					.attr('value',value[0])
+					.text(value[1])); 
+			});
+			
+			var metricArray = [];
+			<?php
+			
+			$ix = 0;
+			foreach ($metric as $i=>$v) {
+				echo 'metricArray['.$ix.'] = ["'.$i.'","'.$v.'"]'."\n";
+				$ix++;
+			}; 
+
+			?>
+			
+			var SelectListM	= $('<select>',{
+						'name':'metric_p[][x]',
+						'id':'metric_p_'+currentID,
+						'class':'form-control input--metric',
+					});
+			
+			$.each(metricArray, function(key,value) {
+				SelectListM
+					.append($('<option></option>')
+					.attr('value',value[0])//Returns first element in the array
+					.text(value[1])); //Returns second element in the array
+			});
+			
+			var deleteButton	= $('<button>',{
+										'class':'glyphicon glyphicon-remove btn btn-danger'
+									});
+			deleteButton.bind('click', function(e){
+				e.preventDefault();
+				$(this).parent('li').remove().unbind('click');
+			});
+			
+			$('#_ListProtein')
+				.append( $('<li>') 
+				
+					.append( SelectList )
+					.append( '&nbsp;' )
+					.append( $('<input>',{
+						'name':'amount_p[][x]',
+						'id':'amount_p_'+currentID,
+						'class':'form-control input--amount',
+						'placeholder':'amount',
+					}) )
+					.append( '&nbsp;' )
+					.append( SelectListM )
+					.append( '&nbsp;' )
+					.append( $('<input>',{
+						'name':'ri_sales_amount_p[][x]',
+						'id':'ri_sales_amount_p_'+currentID,
+						'class':'form-control input--amount',
+						'placeholder':'0.00',
+					}) )
+					.append( '&nbsp;' )
+					.append( $('<input>',{
+						'name':'grams_p[][x]',
+						'id':'grams_b_'+currentID,
+						'class':'form-control input--grams',
+						'placeholder':'grams',
+					}) )
+					.append( '&nbsp;' )
+
+					.append( deleteButton )
+					.append( '&nbsp;' )
+					.append( $('<span>',{
+						'class':'glyphicon glyphicon-sort btn btn-default disabled'
+					}) )
+					
+				)
+			;
+			
+			$('#counterProtein').val( parseInt(currentID, 10) + 1 );
+			
+		});
+
+
+
+
+
+
 		
 
 		//Start Delete Ingredient
@@ -80,7 +197,7 @@
 			?>
 			
 			var SelectList	= $('<select>',{
-						'name':'ingredients_b_[][x]',
+						'name':'ingredients_b[][x]',
 						'id':'ingredients_b_'+currentID,
 						'class':'form-control input--ingredient',
 					});
@@ -104,7 +221,7 @@
 			?>
 			
 			var SelectListM	= $('<select>',{
-						'name':'metric_b_[][x]',
+						'name':'metric_b[][x]',
 						'id':'metric_b_'+currentID,
 						'class':'form-control input--metric',
 					});
@@ -130,7 +247,7 @@
 					.append( SelectList )
 					.append( '&nbsp;' )
 					.append( $('<input>',{
-						'name':'amount_b_[][x]',
+						'name':'amount_b[][x]',
 						'id':'amount_b_'+currentID,
 						'class':'form-control input--amount',
 						'placeholder':'amount',
@@ -139,7 +256,7 @@
 					.append( SelectListM )
 					.append( '&nbsp;' )
 					.append( $('<input>',{
-						'name':'ri_sales_amount_b_[][x]',
+						'name':'ri_sales_amount_b[][x]',
 						'id':'ri_sales_amount_b_'+currentID,
 						'class':'form-control input--amount',
 						'placeholder':'0.00',
@@ -165,183 +282,6 @@
 			$('#counterBase').val( parseInt(currentID, 10) + 1 );
 			
 		});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-		//Start Ingredients
-		$('#counterProtein').val( $('#_ListProtein li').length );
-		$('#btnActionAddProtein').click(function(e) {
-			e.preventDefault();
-			
-			var currentID = $('#counterProtein').val();
-					
-			$ix = 0;
-			var ingredientsArray = [];
-			<?php
-			
-			$ix = 0;
-			foreach ($ingredients as $i=>$v) {
-				echo 'ingredientsArray['.$ix.'] = ["'.$i.'","'.$v.'"]'."\n";
-				$ix++;
-			}; 
-
-			?>
-			
-			var SelectList	= $('<select>',{
-						'name':'ingredients_p_[][x]',
-						'id':'ingredients_p_'+currentID,
-						'class':'form-control input--ingredient',
-					});
-			
-			$.each(ingredientsArray, function(key,value) {
-				SelectList
-					.append($('<option></option>')
-					.attr('value',value[0])
-					.text(value[1])); 
-			});
-			
-			var metricArray = [];
-			<?php
-			
-			$ix = 0;
-			foreach ($metric as $i=>$v) {
-				echo 'metricArray['.$ix.'] = ["'.$i.'","'.$v.'"]'."\n";
-				$ix++;
-			}; 
-
-			?>
-			
-			var SelectListM	= $('<select>',{
-						'name':'metric_p_[][x]',
-						'id':'metric_p_'+currentID,
-						'class':'form-control input--metric',
-					});
-			
-			$.each(metricArray, function(key,value) {
-				SelectListM
-					.append($('<option></option>')
-					.attr('value',value[0])//Returns first element in the array
-					.text(value[1])); //Returns second element in the array
-			});
-			
-			var deleteButton	= $('<button>',{
-										'class':'glyphicon glyphicon-remove btn btn-danger'
-									});
-			deleteButton.bind('click', function(e){
-				e.preventDefault();
-				$(this).parent('li').remove().unbind('click');
-			});
-			
-			$('#_ListProtein')
-				.append( $('<li>') 
-				
-					.append( SelectList )
-					.append( '&nbsp;' )
-					.append( $('<input>',{
-						'name':'amount_p_[][x]',
-						'id':'amount_p_'+currentID,
-						'class':'form-control input--amount',
-						'placeholder':'amount',
-					}) )
-					.append( '&nbsp;' )
-					.append( SelectListM )
-					.append( '&nbsp;' )
-					.append( $('<input>',{
-						'name':'ri_sales_amount_p_[][x]',
-						'id':'ri_sales_amount_p_'+currentID,
-						'class':'form-control input--amount',
-						'placeholder':'0.00',
-					}) )
-					.append( '&nbsp;' )
-					.append( $('<input>',{
-						'name':'grams_p[][x]',
-						'id':'grams_b_'+currentID,
-						'class':'form-control input--grams',
-						'placeholder':'grams',
-					}) )
-					.append( '&nbsp;' )
-
-					.append( deleteButton )
-					.append( '&nbsp;' )
-					.append( $('<span>',{
-						'class':'glyphicon glyphicon-sort btn btn-default disabled'
-					}) )
-					
-				)
-			;
-			
-			$('#counterProtein').val( parseInt(currentID, 10) + 1 );
-			
-		});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -398,7 +338,7 @@
 			?>
 			
 			var SelectList	= $('<select>',{
-						'name':'ingredients_s_[][x]',
+						'name':'ingredients_s[][x]',
 						'id':'ingredients_s_'+currentID,
 						'class':'form-control input--ingredient',
 					});
@@ -422,7 +362,7 @@
 			?>
 			
 			var SelectListM	= $('<select>',{
-						'name':'metric_s_[][x]',
+						'name':'metric_s[][x]',
 						'id':'metric_s_'+currentID,
 						'class':'form-control input--metric',
 					});
@@ -448,7 +388,7 @@
 					.append( SelectList )
 					.append( '&nbsp;' )
 					.append( $('<input>',{
-						'name':'amount_s_[][x]',
+						'name':'amount_s[][x]',
 						'id':'amount_s_'+currentID,
 						'class':'form-control input--amount',
 						'placeholder':'amount',
@@ -457,14 +397,14 @@
 					.append( SelectListM )
 					.append( '&nbsp;' )
 					.append( $('<input>',{
-						'name':'ri_sales_amount_s_[][x]',
+						'name':'ri_sales_amount_s[][x]',
 						'id':'ri_sales_amount_s_'+currentID,
 						'class':'form-control input--amount',
 						'placeholder':'0.00',
 					}) )
 					.append( '&nbsp;' )
 					.append( $('<input>',{
-						'name':'grams_s_[][x]',
+						'name':'grams_s[][x]',
 						'id':'grams_s_'+currentID,
 						'class':'form-control input--grams',
 						'placeholder':'grams',
@@ -484,203 +424,7 @@
 			
 		});
 		
-		
-		
-		
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-				// //Start Delete Side2
-		$('#counterSide2').val( $('#_ListSide2 li').length );
-
-		$('.deleteSide2').click(function(e) {
-			e.preventDefault();
-			
-			//var currentID = 0;	
-					
-			var currentID = (this.id);
-			
-			if($("#dds" + currentID).length == 0) {
-				$('#_ListSide2')
-					
-						.append( $('<input>',{
-							'type':'hidden',
-							'name':'ddss[]',
-							'id':'ddss'+currentID, /*ddi = delete data ingredient*/
-							'class':'form-control',
-							'value':''+currentID,
-						}) )
-				;
-				$(this).parent('li').hide().unbind('click');
-				
-			} else {
-			//alert('this record already exists');
-				$("#dds" + currentID).closest('input').remove().unbind('click');
-			}
-			
-			
-			
-		});
-
-		
-		// //Start Ingredients Side 2
-		$('#counterSide2').val( $('#_ListSide2 li').length );
-		$('#btnActionAddSide2').click(function(e) {
-			e.preventDefault();
-			
-			var currentID = $('#counterSide2').val();
-					
-			$ix = 0;
-			var ingredientsArray = [];
-			<?php
-			
-			$ix = 0;
-			foreach ($ingredients as $i=>$v) {
-				echo 'ingredientsArray['.$ix.'] = ["'.$i.'","'.$v.'"]'."\n";
-				$ix++;
-			}; 
-
-			?>
-			
-			var SelectList	= $('<select>',{
-						'name':'ingredients_ss_[][x]',
-						'id':'ingredients_ss_'+currentID,
-						'class':'form-control input--ingredient',
-					});
-			
-			$.each(ingredientsArray, function(key,value) {
-				SelectList
-					.append($('<option></option>')
-					.attr('value',value[0])
-					.text(value[1])); 
-			});
-			
-			var metricArray = [];
-			<?php
-			
-			$ix = 0;
-			foreach ($metric as $i=>$v) {
-				echo 'metricArray['.$ix.'] = ["'.$i.'","'.$v.'"]'."\n";
-				$ix++;
-			}; 
-
-			?>
-			
-			var SelectListM	= $('<select>',{
-						'name':'metric_ss_[][x]',
-						'id':'metric_ss_'+currentID,
-						'class':'form-control input--metric',
-					});
-			
-			$.each(metricArray, function(key,value) {
-				SelectListM
-					.append($('<option></option>')
-					.attr('value',value[0])//Returns first element in the array
-					.text(value[1])); //Returns second element in the array
-			});
-			
-			var deleteButton	= $('<button>',{
-										'class':'glyphicon glyphicon-remove btn btn-danger'
-									});
-			deleteButton.bind('click', function(e){
-				e.preventDefault();
-				$(this).parent('li').remove().unbind('click');
-			});
-			
-			$('#_ListSide2')
-				.append( $('<li>') 
-				
-					.append( SelectList )
-					.append( '&nbsp;' )
-					.append( $('<input>',{
-						'name':'amount_ss_[][x]',
-						'id':'amount_ss_'+currentID,
-						'class':'form-control input--amount',
-						'placeholder':'amount',
-					}) )
-					.append( '&nbsp;' )
-					.append( SelectListM )
-					.append( '&nbsp;' )
-					.append( $('<input>',{
-						'name':'ri_sales_amount_ss_[][x]',
-						'id':'ri_sales_amount_ss_'+currentID,
-						'class':'form-control input--amount',
-						'placeholder':'0.00',
-					}) )
-					.append( '&nbsp;' )
-					.append( $('<input>',{
-						'name':'grams_ss_[][x]',
-						'id':'grams_ss_'+currentID,
-						'class':'form-control input--grams',
-						'placeholder':'grams',
-					}) )
-					.append( '&nbsp;' )
-
-					.append( deleteButton )
-					.append( '&nbsp;' )
-					.append( $('<span>',{
-						'class':'glyphicon glyphicon-sort btn btn-default disabled'
-					}) )
-					
-				)
-			;
-			
-			$('#counterSide2').val( parseInt(currentID, 10) + 1 );
-			
-		});
-
-
-				// //Start Delete Side2
-		$('#counterSide2').val( $('#_ListSide2 li').length );
-
-		$('.deleteSide2').click(function(e) {
-			e.preventDefault();
-			
-			//var currentID = 0;	
-					
-			var currentID = (this.id);
-			
-			if($("#dds" + currentID).length == 0) {
-				$('#_ListSide2')
-					
-						.append( $('<input>',{
-							'type':'hidden',
-							'name':'ddss[]',
-							'id':'ddss'+currentID, /*ddi = delete data ingredient*/
-							'class':'form-control',
-							'value':''+currentID,
-						}) )
-				;
-				$(this).parent('li').hide().unbind('click');
-				
-			} else {
-			//alert('this record already exists');
-				$("#dds" + currentID).closest('input').remove().unbind('click');
-			}
-			
-			
-			
-		});
 
 		
 		// //Start Ingredients Topping
@@ -703,7 +447,7 @@
 			?>
 			
 			var SelectList	= $('<select>',{
-						'name':'ingredients_t_[][x]',
+						'name':'ingredients_t[][x]',
 						'id':'ingredients_t_'+currentID,
 						'class':'form-control input--ingredient',
 					});
@@ -727,7 +471,7 @@
 			?>
 			
 			var SelectListM	= $('<select>',{
-						'name':'metric_t_[][x]',
+						'name':'metric_t[][x]',
 						'id':'metric_t_'+currentID,
 						'class':'form-control input--metric',
 					});
@@ -753,8 +497,8 @@
 					.append( SelectList )
 					.append( '&nbsp;' )
 					.append( $('<input>',{
-						'name':'amount_tt_[][x]',
-						'id':'amount_tt_'+currentID,
+						'name':'amount_t[][x]',
+						'id':'amount_t_'+currentID,
 						'class':'form-control input--amount',
 						'placeholder':'amount',
 					}) )
@@ -762,15 +506,15 @@
 					.append( SelectListM )
 					.append( '&nbsp;' )
 					.append( $('<input>',{
-						'name':'ri_sales_amount_tt_[][x]',
-						'id':'ri_sales_amount_tt_'+currentID,
+						'name':'ri_sales_amount_t[][x]',
+						'id':'ri_sales_amount_t_'+currentID,
 						'class':'form-control input--amount',
 						'placeholder':'0.00',
 					}) )
 					.append( '&nbsp;' )
 					.append( $('<input>',{
-						'name':'grams_tt_[][x]',
-						'id':'grams_tt_'+currentID,
+						'name':'grams_t[][x]',
+						'id':'grams_t_'+currentID,
 						'class':'form-control input--grams',
 						'placeholder':'grams',
 					}) )
@@ -832,143 +576,143 @@
 
 
 		
-		//Start Delete Ingredient
-		$('#counterIngredients').val( $('#_ListIngredients li').length );
+		// //Start Delete Ingredient
+		// $('#counterIngredients').val( $('#_ListIngredients li').length );
 
-		$('.deleteIngredient').click(function(e) {
-			e.preventDefault();
+		// $('.deleteIngredient').click(function(e) {
+		// 	e.preventDefault();
 			
-			//var currentID = 0;	
+		// 	//var currentID = 0;	
 					
-			var currentID = (this.id);
+		// 	var currentID = (this.id);
 			
-			if($("#ddi" + currentID).length == 0) {
-				$('#_ListIngredients')
+		// 	if($("#ddi" + currentID).length == 0) {
+		// 		$('#_ListIngredients')
 					
-						.append( $('<input>',{
-							'type':'hidden',
-							'name':'ddi[]',
-							'id':'ddi'+currentID, /*ddi = delete data ingredient*/
-							'class':'form-control',
-							'value':''+currentID,
-						}) )
-				;
-				$(this).parent('li').hide().unbind('click');
+		// 				.append( $('<input>',{
+		// 					'type':'hidden',
+		// 					'name':'ddi[]',
+		// 					'id':'ddi'+currentID, /*ddi = delete data ingredient*/
+		// 					'class':'form-control',
+		// 					'value':''+currentID,
+		// 				}) )
+		// 		;
+		// 		$(this).parent('li').hide().unbind('click');
 				
-			} else {
-			//alert('this record already exists');
-				$("#ddi" + currentID).closest('input').remove().unbind('click');
-			}
+		// 	} else {
+		// 	//alert('this record already exists');
+		// 		$("#ddi" + currentID).closest('input').remove().unbind('click');
+		// 	}
 			
 			
 			
-		});
+		// });
 
 		
-		//Start Ingredients
-		$('#counterIngredients').val( $('#_ListIngredients li').length );
-		$('#btnActionAddIngredient').click(function(e) {
-			e.preventDefault();
+		// //Start Ingredients
+		// $('#counterIngredients').val( $('#_ListIngredients li').length );
+		// $('#btnActionAddIngredient').click(function(e) {
+		// 	e.preventDefault();
 			
-			var currentID = $('#counterIngredients').val();
+		// 	var currentID = $('#counterIngredients').val();
 			
-			var ingredientsArray = [];
-			<?php
+		// 	var ingredientsArray = [];
+		// 	<?php
 			
-			$ix = 0;
-			foreach ($ingredients as $i=>$v) {
-				echo 'ingredientsArray['.$ix.'] = ["'.$i.'","'.$v.'"]'."\n";
-				$ix++;
-			}; 
+		// 	$ix = 0;
+		// 	foreach ($ingredients as $i=>$v) {
+		// 		echo 'ingredientsArray['.$ix.'] = ["'.$i.'","'.$v.'"]'."\n";
+		// 		$ix++;
+		// 	}; 
 
-			?>
+		// 	?>
 			
-			var SelectList	= $('<select>',{
-						'name':'ingredients[][x]',
-						'id':'ingredients_'+currentID,
-						'class':'form-control input--ingredient',
-					});
+		// 	var SelectList	= $('<select>',{
+		// 				'name':'ingredients[][x]',
+		// 				'id':'ingredients_'+currentID,
+		// 				'class':'form-control input--ingredient',
+		// 			});
 			
-			$.each(ingredientsArray, function(key,value) {
-				SelectList
-					.append($('<option></option>')
-					.attr('value',value[0])
-					.text(value[1])); 
-			});
+		// 	$.each(ingredientsArray, function(key,value) {
+		// 		SelectList
+		// 			.append($('<option></option>')
+		// 			.attr('value',value[0])
+		// 			.text(value[1])); 
+		// 	});
 			
-			var metricArray = [];
-			<?php
+		// 	var metricArray = [];
+		// 	<?php
 			
-			$ix = 0;
-			foreach ($metric as $i=>$v) {
-				echo 'metricArray['.$ix.'] = ["'.$i.'","'.$v.'"]'."\n";
-				$ix++;
-			}; 
+		// 	$ix = 0;
+		// 	foreach ($metric as $i=>$v) {
+		// 		echo 'metricArray['.$ix.'] = ["'.$i.'","'.$v.'"]'."\n";
+		// 		$ix++;
+		// 	}; 
 
-			?>
+		// 	?>
 			
-			var SelectListM	= $('<select>',{
-						'name':'metric[][x]',
-						'id':'metric_'+currentID,
-						'class':'form-control input--metric',
-					});
+		// 	var SelectListM	= $('<select>',{
+		// 				'name':'metric[][x]',
+		// 				'id':'metric_'+currentID,
+		// 				'class':'form-control input--metric',
+		// 			});
 			
-			$.each(metricArray, function(key,value) {
-				SelectListM
-					.append($('<option></option>')
-					.attr('value',value[0])//Returns first element in the array
-					.text(value[1])); //Returns second element in the array
-			});
+		// 	$.each(metricArray, function(key,value) {
+		// 		SelectListM
+		// 			.append($('<option></option>')
+		// 			.attr('value',value[0])//Returns first element in the array
+		// 			.text(value[1])); //Returns second element in the array
+		// 	});
 			
-			var deleteButton	= $('<button>',{
-										'class':'glyphicon glyphicon-remove btn btn-danger'
-									});
-			deleteButton.bind('click', function(e){
-				e.preventDefault();
-				$(this).parent('li').remove().unbind('click');
-			});
+		// 	var deleteButton	= $('<button>',{
+		// 								'class':'glyphicon glyphicon-remove btn btn-danger'
+		// 							});
+		// 	deleteButton.bind('click', function(e){
+		// 		e.preventDefault();
+		// 		$(this).parent('li').remove().unbind('click');
+		// 	});
 			
-			$('#_ListIngredients')
-				.append( $('<li>') 
+		// 	$('#_ListIngredients')
+		// 		.append( $('<li>') 
 				
-					.append( SelectList )
-					.append( '&nbsp;' )
-					.append( $('<input>',{
-						'name':'amount[][x]',
-						'id':'amount_'+currentID,
-						'class':'form-control input--amount',
-						'placeholder':'amount',
-					}) )
-					.append( '&nbsp;' )
-					.append( SelectListM )
-					.append( '&nbsp;' )
-					.append( $('<input>',{
-						'name':'ri_sales_amount[][x]',
-						'id':'ri_sales_amount_'+currentID,
-						'class':'form-control input--amount',
-						'placeholder':'0.00',
-					}) )
-					.append( '&nbsp;' )
-					.append( $('<input>',{
-						'name':'grams[][x]',
-						'id':'grams_'+currentID,
-						'class':'form-control input--grams',
-						'placeholder':'grams',
-					}) )
-					.append( '&nbsp;' )
+		// 			.append( SelectList )
+		// 			.append( '&nbsp;' )
+		// 			.append( $('<input>',{
+		// 				'name':'amount[][x]',
+		// 				'id':'amount_'+currentID,
+		// 				'class':'form-control input--amount',
+		// 				'placeholder':'amount',
+		// 			}) )
+		// 			.append( '&nbsp;' )
+		// 			.append( SelectListM )
+		// 			.append( '&nbsp;' )
+		// 			.append( $('<input>',{
+		// 				'name':'ri_sales_amount[][x]',
+		// 				'id':'ri_sales_amount_'+currentID,
+		// 				'class':'form-control input--amount',
+		// 				'placeholder':'0.00',
+		// 			}) )
+		// 			.append( '&nbsp;' )
+		// 			.append( $('<input>',{
+		// 				'name':'grams[][x]',
+		// 				'id':'grams_'+currentID,
+		// 				'class':'form-control input--grams',
+		// 				'placeholder':'grams',
+		// 			}) )
+		// 			.append( '&nbsp;' )
 
-					.append( deleteButton )
-					.append( '&nbsp;' )
-					.append( $('<span>',{
-						'class':'glyphicon glyphicon-sort btn btn-default disabled'
-					}) )
+		// 			.append( deleteButton )
+		// 			.append( '&nbsp;' )
+		// 			.append( $('<span>',{
+		// 				'class':'glyphicon glyphicon-sort btn btn-default disabled'
+		// 			}) )
 					
-				)
-			;
+		// 		)
+		// 	;
 			
-			$('#counterIngredients').val( parseInt(currentID, 10) + 1 );
+		// 	$('#counterIngredients').val( parseInt(currentID, 10) + 1 );
 			
-		});
+		// });
 		
 		
 	}) ;
@@ -983,17 +727,22 @@
   
   <div class="row">
   	<h1 class="page-header"><?php echo $__env->yieldContent('title'); ?></h1>
+
+  	<?php if ($errors->any()): ?>
+        <?php echo implode('', $errors->all('<div>:message</div>')); ?>
+	<?php endif; ?>
+
+
     <?php if(isset($data->id)): ?>
-    	<?php echo Form::open(array('action' => 'Admin_RecipesController@postUpdateRecipes', 'class' => 'form-horizontal')); ?> 
+    	<?php echo Form::open(array('action' => 'Admin_QuickController@postUpdateQuick', 'class' => 'form-horizontal')); ?> 
    	<?php else: ?>
-  		<?php echo Form::open(array('action' => 'Admin_RecipesController@postAddRecipes', 'class' => 'form-horizontal')); ?> 
+  		<?php echo Form::open(array('action' => 'Admin_QuickController@postAddQuick', 'class' => 'form-horizontal')); ?> 
     <?php endif; ?>
     
     <ul id="myTab" class="nav nav-tabs">
       	<li class="<?php if($calculated != 1): ?>active<?php endif; ?>"><a href="#protein" data-toggle="tab">Protein</a></li>
       	<li><a href="#base" data-toggle="tab">Base</a></li>
       	<li><a href="#side1" data-toggle="tab">Side 1</a></li>
-     	<li><a href="#side2" data-toggle="tab">Side 2</a></li>
       	<li><a href="#topping" data-toggle="tab">Topping</a></li>
       <li class="<?php if($calculated == 1): ?>active<?php endif; ?>"><a href="#sales" data-toggle="tab">Sales Data</a></li>
     </ul>
@@ -1006,12 +755,12 @@
 	          	<?php echo Form::hidden('counterProtein',null,array('id'=>'counterProtein')); ?> 
 	        </div>
 			<hr/>
-			 <div class="form-group <?php echo ($errors->has('base')) ? 'has-error' : '' ;; ?>">
-	           	<?php echo ($errors->has('base'))? '<p>'. $errors->first('base') .'</p>' : ''; ?>
+			 <div class="form-group <?php echo ($errors->has('protein')) ? 'has-error' : '' ;; ?>">
+	           	<?php echo ($errors->has('protein'))? '<p>'. $errors->first('protein') .'</p>' : ''; ?>
 	          	<ul id="_ListProtein" class="_mySortable">
 	            	<?php $x = 0; ?>
-	                <?php if(isset($b_ingredients)): ?>
-	                	<?php foreach($b_ingredients as $b_ingredient): ?>
+	                <?php if(isset($ingredients_p)): ?>
+	                	<?php foreach($ingredients_p as $p_ingredient): ?>
 	                    	<li>
 	                            <select name="ingredients[][<?php echo $r_ingredient->id; ?>]" id="ingredients_<?php echo $x; ?>" class="form-control input--ingredient"/>
 	                                <?php foreach($base as $i=>$v): ?>
@@ -1136,7 +885,7 @@
 			</div>
 		</div>
 
-		<div class="tab-pane fade in" id="side2">
+		<!-- <div class="tab-pane fade in" id="side2">
 			<div class="col-sm-1">
 	          	<?php /* Form::button('+ Add', array('id' => 'btnActionAddSide2','class' => 'btn btn-primary')) */ ?>
 	          	<a href="#" id="btnActionAddSide2" class="btn btn-primary">+ Add</a>
@@ -1146,7 +895,7 @@
 			<div class="form-group <?php echo ($errors->has('side2')) ? 'has-error' : '' ;; ?>">
 	           	<?php echo ($errors->has('side2'))? '<p>'. $errors->first('side2') .'</p>' : ''; ?>
 	          	<ul id="_ListSide2" class="_mySortable">
-	            	<?php $x = 0; ?>
+	            	<?php ?> - Line need to be fixed $x = 0
 	                <?php if(isset($r_ingredients)): ?>
 	                	<?php foreach($r_ingredients as $r_ingredient): ?>
 	                    	<li>
@@ -1180,7 +929,7 @@
 	                <?php endif; ?>
 	         	</ul>
 			</div>
-		</div>
+		</div> -->
 		
       	<div class="tab-pane fade in" id="topping">
       		<div class="col-sm-1">
