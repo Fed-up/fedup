@@ -309,31 +309,17 @@ hr{
     width: 9rem;
 }
 
-#_ListSide1 .form-control { /*Space makes the site style all elements within this class with the ID #_ListIngredients */
+#_ListSide .form-control { /*Space makes the site style all elements within this class with the ID #_ListIngredients */
  display:inline;
  width:auto; /*Only uses the width of the element*/ 
  margin:0 10px 0 0;
 }
 
-#_ListSide1 .input--amount{
+#_ListSide .input--amount{
     width: 6rem;
 }
 
-#_ListSide1 .input--grams{
-    width: 9rem;
-}
-
-#_ListSide2 .form-control { /*Space makes the site style all elements within this class with the ID #_ListIngredients */
- display:inline;
- width:auto; /*Only uses the width of the element*/ 
- margin:0 10px 0 0;
-}
-
-#_ListSide2 .input--amount{
-    width: 6rem;
-}
-
-#_ListSide2 .input--grams{
+#_ListSide .input--grams{
     width: 9rem;
 }
 
@@ -375,7 +361,7 @@ hr{
   width:80%;
 }
 
-#_ListSide1 li{
+#_ListSide li{
   display:block;  
   margin-bottom:10px;
   padding-bottom:10px;
@@ -402,7 +388,7 @@ hr{
 
 
 
-#btnActionAddBase, #btnActionAddProtein, #btnActionAddSide1, #btnActionAddSide2, #btnActionAddTopping, #btnActionAddIngredient, #btnActionAddMethod, #btnActionAddExtra, #btnActionCalculate {
+#btnActionAddBase, #btnActionAddProtein, #btnActionAddSide, #btnActionAddTopping, #btnActionAddIngredient, #btnActionAddMethod, #btnActionAddExtra, #btnActionCalculate {
 	margin-bottom:10px;	
 }
 

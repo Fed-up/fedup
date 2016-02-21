@@ -290,8 +290,6 @@ class Admin_RecipesController extends BaseController{
 			}
 		
 		};
-		// echo '<pre>'; print_r( $sales_data ); echo '</pre>'; 
-		// exit;
 
 		$out = array_values($json_array);
 		$json_calc = json_encode($json_array);
@@ -564,6 +562,10 @@ class Admin_RecipesController extends BaseController{
 							$r_i->metric_id = $input_metric_id;
 							$r_i->grams = $riGrams;
 
+							
+							if($serve_amount == 0){ $serve_amount = 1;}
+							// echo '<pre>'; print_r($serve_amount); echo '</pre>';exit;
+							
 							if(isset($input['sales_amount'])){
 								$sales_amount = $input['sales_amount'];
 								$r_i->sales_grams = $sales_grams = $riGrams/$serve_amount * $sales_amount; 
