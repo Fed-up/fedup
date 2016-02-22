@@ -145,7 +145,9 @@ class Admin_QuickController extends BaseController{
 						$r_i->project_sales_grams = $input_i_sales_grams;
 						$r_i->project_active = 1;
 						$r_i->project_active = 1;
-					}						
+					}	
+
+
 
 
 				   	
@@ -484,7 +486,7 @@ class Admin_QuickController extends BaseController{
 				// 	'price' => $ingredient->price
 				// );
 			};
-		// echo '<pre>'; print_r( $mIng ); echo '</pre>';exit;
+		
 
 		$p_array = array();
 		$pIng = array();
@@ -504,6 +506,8 @@ class Admin_QuickController extends BaseController{
 		};
 		$out = array_values($p_array);
 		$json_p = json_encode($p_array);
+
+		// echo '<pre>'; print_r( $out ); echo '</pre>';exit;
 
 		$b_array = array();
 		$bIng = array();
@@ -664,7 +668,7 @@ class Admin_QuickController extends BaseController{
 
 
 
-
+				
 
 
 
@@ -726,22 +730,51 @@ class Admin_QuickController extends BaseController{
 					// echo '<pre>'; print_r($input_ingredient_id); echo '</pre>';
 					// echo '<pre>'; print_r($xx[0]); echo '</pre>';
 
+					if($xx[0] != 'x'){
+						if ($xx[0] != $input_ingredient_id){
+							$d_i = MenuIngredients::find($xx[0]);
+							$d_i->project_protein = 0;
+							$d_i->project_amount = 0;
+							$d_i->project_metric_id = 0;
+							$d_i->project_grams = 0;
+							$d_i->project_sales_grams = 0;
+							$d_i->project_active = 0;
+							$d_i->save();
+						}
+					}
 
-					if ($xx[0] != $input_ingredient_id){
-						$d_i = MenuIngredients::find($xx[0]);
-						$d_i->project_protein = 0;
-						$d_i->project_amount = 0;
-						$d_i->project_metric_id = 0;
-						$d_i->project_grams = 0;
-						$d_i->project_sales_grams = 0;
-						$d_i->project_active = 0;
-						$d_i->save();
+					if(isset($input['i_sales_grams_p'])){
+						// $sales_amount = $input['sales_amount'];
+						// $r_i->sales_grams = $sales_grams = $riGrams/$serve_amount * $sales_amount; 
+						foreach($ip_grams as $id => $i_gram){
+						  	if($ingredient[$i][$xx[0]] == $id){
+						  		if(isset($input['calc'])){
+						  			if($i_gram > 0){
+						  				$packet_grams_percentage = $input_i_sales_grams / $i_gram * 100; 
+						  				
+										$r_i->project_packet_grams_percentage = $packet_grams_percentage;
+									}
+						  		}
+						  	}
+						}
+					}
+
+					if(isset($input['ip_price'])){
+						foreach($ip_price as $id => $i_price){
+						  	if($ingredient[$i][$xx[0]] == $id){
+						  		if(isset($packet_grams_percentage)){
+							  		$recipe_ingredient_cost = $packet_grams_percentage/100 * $i_price;
+							  		
+							  		$r_i->project_cost = $recipe_ingredient_cost;
+						  		}
+						  	}
+						}
 					}
 
 				  	$r_i->save();
-			  		
+			  	
 				};
-				// exit;
+
 				if(isset($input['ddp'])){
 					$ddp = $input['ddp'];
 					// echo '<pre>'; print_r($input); echo '</pre>';exit;			
@@ -755,6 +788,8 @@ class Admin_QuickController extends BaseController{
 				};		
 			};
 			
+			// echo '<pre>'; print_r($recipe_ingredient_cost); echo '</pre>';exit;
+				// exit;
 			// echo '<pre>'; print_r($input); echo '</pre>';exit;	
 
 			if(isset($input['ingredients_b']) && isset($input['amount_b']) && isset($input['metric_b'])){
@@ -821,24 +856,54 @@ class Admin_QuickController extends BaseController{
 						$r_i->project_active = 1;
 					}			
 
-					if ($xx[0] != $input_ingredient_id){
-						$d_i = MenuIngredients::find($xx[0]);
-						
-						$d_i->project_base = 0;
-						$d_i->project_amount = 0;
-						$d_i->project_metric_id = 0;
-						$d_i->project_grams = 0;
-						$d_i->project_sales_grams = 0;
-						$d_i->project_active = 0;
-						$d_i->project_active = 0;
-						$d_i->save();
+					if($xx[0] != 'x'){
+						if ($xx[0] != $input_ingredient_id){
+							$d_i = MenuIngredients::find($xx[0]);
+							
+							$d_i->project_base = 0;
+							$d_i->project_amount = 0;
+							$d_i->project_metric_id = 0;
+							$d_i->project_grams = 0;
+							$d_i->project_sales_grams = 0;
+							$d_i->project_active = 0;
+							$d_i->project_active = 0;
+							$d_i->save();
+						}
+					}
+
+					if(isset($input['i_sales_grams_b'])){
+						// $sales_amount = $input['sales_amount'];
+						// $r_i->sales_grams = $sales_grams = $riGrams/$serve_amount * $sales_amount; 
+						foreach($ib_grams as $id => $i_gram){
+						  	if($ingredient[$i][$xx[0]] == $id){
+						  		if(isset($input['calc'])){
+						  			if($i_gram > 0){
+						  				$packet_grams_percentage = $input_i_sales_grams / $i_gram * 100; 
+						  				
+										$r_i->project_packet_grams_percentage = $packet_grams_percentage;
+									}
+						  		}
+						  	}
+						}
+					}
+
+					if(isset($input['ib_price'])){
+						foreach($ib_price as $id => $i_price){
+						  	if($ingredient[$i][$xx[0]] == $id){
+						  		if(isset($packet_grams_percentage)){
+							  		$recipe_ingredient_cost = $packet_grams_percentage/100 * $i_price;
+							  		// echo '<pre>'; print_r($recipe_ingredient_cost); echo '</pre>';
+							  		$r_i->project_cost = $recipe_ingredient_cost;
+						  		}
+						  	}
+						}
 					}
 
 				  	$r_i->save();
 			  		// echo '<pre>'; print_r($r_i); echo '</pre>';exit;
 				};
 				// exit;
-				// echo '<pre>'; print_r($input); echo '</pre>';exit;			
+							
 				if(isset($input['ddb'])){
 					$ddb = $input['ddb'];
 					// echo '<pre>'; print_r($input); echo '</pre>';exit;					
@@ -851,6 +916,8 @@ class Admin_QuickController extends BaseController{
 					};
 				};		
 			};
+			
+			
 
 			if(isset($input['ingredients_s']) && isset($input['amount_s']) && isset($input['metric_s'])){
 				$ingredient = $input['ingredients_s'];
@@ -926,6 +993,34 @@ class Admin_QuickController extends BaseController{
 						$d_i->save();
 					}
 
+					if(isset($input['i_sales_grams_s'])){
+						// $sales_amount = $input['sales_amount'];
+						// $r_i->sales_grams = $sales_grams = $riGrams/$serve_amount * $sales_amount; 
+						foreach($is_grams as $id => $i_gram){
+						  	if($ingredient[$i][$xx[0]] == $id){
+						  		if(isset($input['calc'])){
+						  			if($i_gram > 0){
+						  				$packet_grams_percentage = $input_i_sales_grams / $i_gram * 100; 
+						  				
+										$r_i->project_packet_grams_percentage = $packet_grams_percentage;
+									}
+						  		}
+						  	}
+						}
+					}
+
+					if(isset($input['is_price'])){
+						foreach($is_price as $id => $i_price){
+						  	if($ingredient[$i][$xx[0]] == $id){
+						  		if(isset($packet_grams_percentage)){
+							  		$recipe_ingredient_cost = $packet_grams_percentage/100 * $i_price;
+							  		// echo '<pre>'; print_r($recipe_ingredient_cost); echo '</pre>';
+							  		$r_i->project_cost = $recipe_ingredient_cost;
+						  		}
+						  	}
+						}
+					}
+
 				  	$r_i->save();
 			  		// echo '<pre>'; print_r($r_i); echo '</pre>';exit;
 				};
@@ -942,6 +1037,9 @@ class Admin_QuickController extends BaseController{
 					};
 				};		
 			};
+
+			// echo '<pre>'; print_r($recipe_ingredient_cost); echo '</pre>';exit;
+
 
 			if(isset($input['ingredients_t']) && isset($input['amount_t']) && isset($input['metric_t'])){
 				$ingredient = $input['ingredients_t'];
@@ -1004,17 +1102,47 @@ class Admin_QuickController extends BaseController{
 						$r_i->project_active = 1;
 					}		
 
-					if ($xx[0] != $input_ingredient_id){
-						$d_i = MenuIngredients::find($xx[0]);
-						
-						$d_i->project_topping = 0;
-						$d_i->project_amount = 0;
-						$d_i->project_metric_id = 0;
-						$d_i->project_grams = 0;
-						$d_i->project_sales_grams = 0;
-						$d_i->project_active = 0;
-						$d_i->project_active = 0;
-						$d_i->save();
+					if($xx[0] != 'x'){
+						if ($xx[0] != $input_ingredient_id){
+							$d_i = MenuIngredients::find($xx[0]);
+							
+							$d_i->project_topping = 0;
+							$d_i->project_amount = 0;
+							$d_i->project_metric_id = 0;
+							$d_i->project_grams = 0;
+							$d_i->project_sales_grams = 0;
+							$d_i->project_active = 0;
+							$d_i->project_active = 0;
+							$d_i->save();
+						}
+					}
+
+					if(isset($input['i_sales_grams_t'])){
+						// $sales_amount = $input['sales_amount'];
+						// $r_i->sales_grams = $sales_grams = $riGrams/$serve_amount * $sales_amount; 
+						foreach($it_grams as $id => $i_gram){
+						  	if($ingredient[$i][$xx[0]] == $id){
+						  		if(isset($input['calc'])){
+						  			if($i_gram > 0){
+						  				$packet_grams_percentage = $input_i_sales_grams / $i_gram * 100; 
+						  				
+										$r_i->project_packet_grams_percentage = $packet_grams_percentage;
+									}
+						  		}
+						  	}
+						}
+					}
+
+					if(isset($input['it_price'])){
+						foreach($it_price as $id => $i_price){
+						  	if($ingredient[$i][$xx[0]] == $id){
+						  		if(isset($packet_grams_percentage)){
+							  		$recipe_ingredient_cost = $packet_grams_percentage/100 * $i_price;
+							  		// echo '<pre>'; print_r($recipe_ingredient_cost); echo '</pre>';
+							  		$r_i->project_cost = $recipe_ingredient_cost;
+						  		}
+						  	}
+						}
 					}
 
 				  	$r_i->save();
@@ -1098,7 +1226,7 @@ class Admin_QuickController extends BaseController{
 				};
 
 				foreach ($ingredients as $ingredient) {
-					if($ingredient->project_side == 1){
+					if($ingredient->project_topping == 1){
 						$t_array[$ingredient->id] = array(
 							'name' => $ingredient->name, 
 							'project_amount' => $ingredient->project_amount, 
@@ -1114,47 +1242,186 @@ class Admin_QuickController extends BaseController{
 
 
 				foreach ($p_array as $pk => $pv){
+					$p_id = $pk;
 					$p_name = $pv['name'];
 					$p_grams = $pv['project_grams'];
 					$p_sales_grams = $pv['project_sales_grams'];
 					$p_price = $pv['price'];
 					foreach ($b_array as $bk => $bv) {
+						$p_id = $bk;
 						$b_name = $bv['name'];
 						$b_grams = $bv['project_grams'];
 						$b_sales_grams = $pv['project_sales_grams'];
 						$b_price = $bv['price'];
+						$calc = $p_price + $b_price;
+
+						$combo2[] = array(
+							$ida['id'] = array($pk,$p_id),
+							$name['name'] = array($p_name,$b_name),
+							$project_grams['project_grams'] = array($p_grams,$b_grams),
+							$project_sales_grams['project_sales_grams'] = array($p_sales_grams,$b_sales_grams),
+							$price['price'] = array($p_price,$b_price),
+							'combo2' => $calc, 
+						);
+						
+						
+
+					
+						// echo '<pre>'; print_r($pk); echo '</pre>';
+						// echo '<pre>'; print_r($bk); echo '</pre>';
+						// echo '<hr/>';
+// echo '<pre>'; print_r($p_price); echo ' + '; print_r($b_price); echo ' = '; print_r($fprice); echo '</pre>';
+
+
+// 		echo '<pre>'; print_r($p_name); echo ' + '; print_r($b_name); echo ' = '; print_r($fprice); echo '</pre>';	
+// 		echo "<hr>";
+
+					}
+				}
+				// echo '<pre>'; print_r($pk); echo '</pre>';
+				// echo '<pre>'; print_r($bk); echo '</pre>';
+				// echo '<pre>'; print_r($combo2); echo '</pre>';exit;
+
+
+
+
+
+
+
+				$array_count = count($combo2);
+			
+
+				for($i=0; $i<$array_count; $i++){			  
+					$xx = array_keys($combo2[$i]);
+					$vv = array_values($combo2[$i]);
+
+					$vv_array_count = count($vv[0]);
+					for($v=0; $v<$vv_array_count; $v++){
+						$combo2_id = $combo2[$i][0][$v];
+						$combo2_name = $combo2[$i][1];
+						$combo2_grams = $combo2[$i][2][$v];
+						$combo2_sales_grams = $combo2[$i][3][$v];
+						$combo2_price = $combo2[$i][4][$v];
+						$combo2_calc = $combo2[$i]['combo2'];
+					
+					
+					
+						
+
 						foreach ($s_array as $sk => $sv){
-							$s_name = $sv['name'];
-							$s_grams = $sv['project_grams'];
+							$s_id = $sk;
+							// echo '<pre>'; print_r($s_id); echo '</pre>';exit;
+							$combo2_name[2] = $s_name = $sv['name'];
+							$combo2_grams[2] = $s_grams = $sv['project_grams'];
 							$s_sales_grams = $sv['project_sales_grams'];
 							$s_price = $sv['price'];
-							foreach ($ss_array as $ssk => $ssv){
-								$ss_name = $ssv['name'];
-								$ss_grams = $ssv['project_grams'];
-								$ss_sales_grams = $ssv['project_sales_grams'];
-								$ss_price = $ssv['price'];
-								foreach ($t_array as $tk => $tv){
-									$t_name = $tv['name'];
-									$t_grams = $tv['project_grams'];
-									$t_sales_grams = $tv['project_sales_grams'];
-									$t_price = $tv['price'];
+							$price3 = $combo2_calc + $s_price;
 
-
-								$fprice = $p_price + $b_price + $s_price + $ss_price + $t_price;
-
-
-echo '<pre>'; print_r($p_price); echo ' + '; print_r($b_price); echo ' + '; print_r($s_price); echo ' + '; print_r($ss_price); echo ' + '; print_r($t_price); echo ' = '; print_r($fprice); echo '</pre>';
-
-
-		echo '<pre>'; print_r($p_name); echo ' + '; print_r($b_name); echo ' + '; print_r($s_name); echo ' + '; print_r($ss_name); echo ' + '; print_r($t_name); echo ' = '; print_r($fprice); echo '</pre>';	
-		echo "<hr>";
-								}
-							}	
+							
+							$combo3 = array(
+								// $id = array($combo2_id),
+								$name = array($combo2_name),
+								$grams = array($combo2_grams), 
+							);
+							// $combo2_id[2] = ($s_id);
+							
+							// echo '<hr/>';
 						}
 					}
 				}
-				exit;	
+				echo '<pre>'; print_r($combo2_grams); echo '</pre>'; 
+				echo '<hr/>';
+				echo '<pre>'; print_r($combo3); echo '</pre>'; exit;
 
+
+
+
+				$array_count = count($combo3);
+				for($i=0; $i<$array_count; $i++){			  
+					$xx = array_keys($combo3[$i]);
+					$vv = array_values($combo3[$i]);
+
+					$vv_array_count = count($vv[0]);
+					for($v=0; $v<$vv_array_count; $v++){
+
+						 echo '<pre>'; print_r($combo3); echo '</pre>'; 
+
+						// $combo3_id = $combo3[$i][0][$v];
+						// $combo3_name = $combo3[$i][1];
+						// $combo3_grams = $combo3[$i][2][$v];
+						// $combo3_sales_grams = $combo3[$i][3][$v];
+						// $combo3_price = $combo2[$i][4][$v];
+						// $combo3_calc = $combo2[$i]['combo3'];
+					
+					
+					// echo '<pre>'; print_r($combo2_calc); echo '</pre>';
+					
+
+						// foreach ($ss_array as $ssk => $ssv){
+						// 	$ss_id = $sk;
+						// 	$ss_name = $ssv['name'];
+						// 	$ss_grams = $ssv['project_grams'];
+						// 	$ss_sales_grams = $ssv['project_sales_grams'];
+						// 	$ss_price = $ssv['price'];
+						// 	$price4 = $combo3_calc + $ss_price;
+						// 	$combo3_name[3] = ($ss_name);
+						// 	$combo4[] = array(
+						// 		$ssa[] = array($combo3_name), 
+						// 	);
+						// 	// echo '<hr/>';
+						// }
+					}
+				}
+				 exit;
+
+				$array_count = count($combo4);
+				for($i=0; $i<$array_count; $i++){			  
+					$xx = array_keys($combo4[$i]);
+					$vv = array_values($combo4[$i]);
+					$combo4_name = $combo4[$i][$xx[0]];
+					$combo4_grams = $combo4[$i][$xx[1]];
+					$combo4_sales_grams = $combo4[$i][$xx[2]];
+					$combo4_price = $combo4[$i][$xx[3]];
+					$combo4_calc = $combo4[$i][$xx[4]];
+
+					foreach ($t_array as $tk => $tv){
+						$t_name = $tv['name'];
+						$t_grams = $tv['project_grams'];
+						$t_sales_grams = $tv['project_sales_grams'];
+						$t_price = $tv['price'];
+						$price5 = $combo4_calc + $t_price;
+
+
+
+						$combo5[] = array(
+							// 'id' => $id;
+							'name' => $combo4_name.' + '.$t_name, 
+							'project_grams' => $combo4_grams.' + '.$t_grams,
+							'project_sales_grams' => $combo4_sales_grams.' + '.$t_sales_grams,
+							'price' => $combo4_price.' + '.$t_price, 
+							'combo4' => $price5, 
+							 
+							
+
+						);
+					}
+				}
+				
+				echo '<pre>'; print_r($p_id); echo '</pre>';
+
+				
+				// var_dump($uniques);
+
+				
+				// echo '<pre>'; print_r($s_array); echo '</pre>';
+				exit;
+				
+
+				// 'name' => $p_name.'+'.$b_name, 
+				// 			'project_grams' => $p_grams.'+'.$b_grams,
+				// 			'project_sales_grams' => $p_sales_grams.'+'.$b_sales_grams,
+				// 			'price' => $p_price.'+'.$b_price, 
+				// 			'combo2' => $price2, 
 
 
 
@@ -1215,7 +1482,7 @@ echo '<pre>'; print_r($p_price); echo ' + '; print_r($b_price); echo ' + '; prin
 						'price' => $ingredient->price
 					);
 				};
-				echo '<pre>'; print_r( $mIng ); echo '</pre>';exit;
+				// echo '<pre>'; print_r( $mIng ); echo '</pre>';exit;
 
 
 				$p_array = array();
