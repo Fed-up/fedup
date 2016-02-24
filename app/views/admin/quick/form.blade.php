@@ -829,22 +829,22 @@
             	
 	            <div class="col-sm-3">
 	            	<p class="input_title">Protein</p>
-	                {{ Form::select('calc_p', $calc_p, (isset($input['calc_p'])? Input::old('calc_p') : (isset($calc_p_set)? $calc_p_set : 0 )), array('class'=>'form-control')) }} 
+	                {{ Form::select('calc_p', (isset($calc_p)? $calc_p : 0 ), (isset($input['calc_p'])? Input::old('calc_p') : (isset($calc_p_set)? $calc_p_set : 0 )), array('class'=>'form-control')) }} 
 	            </div>
 
 	            <div class="col-sm-3">
 	            	<p class="input_title">Base</p>
-	                {{ Form::select('calc_b', $calc_b, (isset($input['calc_b'])? Input::old('calc_b') : (isset($calc_b_set)? $calc_b_set : 0 )), array('class'=>'form-control')) }} 
+	                {{ Form::select('calc_b', (isset($calc_b)? $calc_b : 0 ), (isset($input['calc_b'])? Input::old('calc_b') : (isset($calc_b_set)? $calc_b_set : 0 )), array('class'=>'form-control')) }} 
 	            </div>
 
 	            <div class="col-sm-3">
 	            	<p class="input_title">Side 1</p>
-	                {{ Form::select('calc_s', $calc_s, (isset($input['calc_s'])? Input::old('calc_s') : (isset($calc_s_set)? $calc_s_set : 0 )), array('class'=>'form-control')) }} 
+	                {{ Form::select('calc_s', (isset($calc_s)? $calc_s : 0 ), (isset($input['calc_s'])? Input::old('calc_s') : (isset($calc_s_set)? $calc_s_set : 0 )), array('class'=>'form-control')) }} 
 	            </div>
 
 	            <div class="col-sm-3">
 	            	<p class="input_title">Topping</p>
-	                {{ Form::select('calc_t', $calc_t, (isset($input['calc_t'])? Input::old('calc_t') : (isset($calc_t_set)? $calc_t_set : 0 )), array('class'=>'form-control')) }} 
+	                {{ Form::select('calc_t', (isset($calc_t)? $calc_t : 0 ), (isset($input['calc_t'])? Input::old('calc_t') : (isset($calc_t_set)? $calc_t_set : 0 )), array('class'=>'form-control')) }} 
 	            </div>
 		    </div>   
 
@@ -869,23 +869,25 @@
 
 
 			            @if(isset($combos))
-	            			@foreach($combos as $combo)
+			            	@if($combos != 0)
+		            			@foreach($combos as $combo)
 
-					            <tbody>
-						            <tr>
-						                <td> {{ $combo[0] }} </td>
-						                <td> {{ $combo[1] }} </td>
-						                <td> {{ $combo[2] }} </td>
-						                <td> {{ $combo[3] }} </td>
-						                <td> {{ $combo[4] }} </td>
+						            <tbody>
+							            <tr>
+							                <td> {{ $combo[0] }} </td>
+							                <td> {{ $combo[1] }} </td>
+							                <td> {{ $combo[2] }} </td>
+							                <td> {{ $combo[3] }} </td>
+							                <td> {{ $combo[4] }} </td>
 
-						                <td> {{ $combo[5] }} </td>
-						                <td> {{ $combo[6] }} </td>
-						                <td> {{ $combo[7] }} </td>
-						            </tr>
-					            </tbody>
+							                <td> {{ $combo[5] }} </td>
+							                <td> {{ $combo[6] }} </td>
+							                <td> {{ $combo[7] }} </td>
+							            </tr>
+						            </tbody>
 
-				            @endforeach
+					            @endforeach
+					        @endif
 			            @endif
 			            <tfoot>
 			            	<tr>

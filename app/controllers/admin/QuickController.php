@@ -22,6 +22,126 @@ class Admin_QuickController extends BaseController{
 		$categories = MenuCategories::orderBy('name','ASC')->where('active', '!=', '9')->get(); // Bring in data that has not been deleted
 		$ingredients = MenuIngredients::orderBy('name','ASC')->where('active', '!=', '9')->get();
 		$metrics = Metric::orderBy('name','ASC')->get();
+
+		$calc_p_set = array();
+		$calc_p = array();
+		$calc_p[0]	= '- Select Protein -';
+		foreach ($ingredients as $ingredient) {
+			// $calc_p[$ingredient->id]	= $ingredient->name;
+			if($ingredient->project_protein == 1){
+				$calc_p[$ingredient->id] = $ingredient->name;
+			}
+		};
+
+
+
+		$calc_b_set = array();
+		$calc_b = array();
+		$calc_b[0]	= '- Select Base -';
+		foreach ($ingredients as $ingredient) {
+			// $calc_p[$ingredient->id]	= $ingredient->name;
+			if($ingredient->project_base == 1){
+				$calc_b[$ingredient->id] = $ingredient->name;
+			}
+		}
+
+		$calc_s_set = array();
+		$calc_s = array();
+		$calc_s[0]	= '- Select Side -';
+		foreach ($ingredients as $ingredient) {
+			// $calc_p[$ingredient->id]	= $ingredient->name;
+			if($ingredient->project_side == 1){
+				$calc_s[$ingredient->id] = $ingredient->name;
+			}
+		}
+
+		$calc_t_set = array();
+		$calc_t = array();
+		$calc_t[0]	= '- Select Topping -';
+		foreach ($ingredients as $ingredient) {
+			// $calc_p[$ingredient->id]	= $ingredient->name;
+			if($ingredient->project_topping== 1){
+				$calc_t[$ingredient->id] = $ingredient->name;
+			}
+		}
+
+		$p_array = array();
+		$pIng = array();
+		$pIng[0]	= '- Select Ingredients -';	
+		foreach ($ingredients as $ingredient) {
+			if($ingredient->project_protein == 1){
+				$p_array[$ingredient->id] = array(
+					'name' => $ingredient->name, 
+					'project_amount' => $ingredient->project_amount, 
+					'project_metric_id' => $ingredient->project_metric_id, 
+					'project_grams' => $ingredient->project_grams,
+					'project_sales_grams' => $ingredient->project_sales_grams, 
+					'grams' => $ingredient->grams, 
+					'price' => $ingredient->price
+				);
+			}		
+		};
+		$out = array_values($p_array);
+		$json_p = json_encode($p_array);
+
+		// echo '<pre>'; print_r( $out ); echo '</pre>';exit;
+
+		$b_array = array();
+		$bIng = array();
+		$bIng[0]	= '- Select Ingredients -';	
+		foreach ($ingredients as $ingredient) {
+			if($ingredient->project_base == 1){
+				$b_array[$ingredient->id] = array(
+					'name' => $ingredient->name, 
+					'project_amount' => $ingredient->project_amount, 
+					'project_metric_id' => $ingredient->project_metric_id, 
+					'project_grams' => $ingredient->project_grams,
+					'project_sales_grams' => $ingredient->project_sales_grams, 
+					'grams' => $ingredient->grams, 
+					'price' => $ingredient->price
+				);
+			}		
+		};
+		$out = array_values($b_array);
+		$json_b = json_encode($b_array);
+
+		$s_array = array();
+		$sIng = array();
+		$sIng[0]	= '- Select Ingredients -';	
+		foreach ($ingredients as $ingredient) {
+			if($ingredient->project_side == 1){
+				$s_array[$ingredient->id] = array(
+					'name' => $ingredient->name, 
+					'project_amount' => $ingredient->project_amount, 
+					'project_metric_id' => $ingredient->project_metric_id, 
+					'project_grams' => $ingredient->project_grams,
+					'project_sales_grams' => $ingredient->project_sales_grams, 
+					'grams' => $ingredient->grams, 
+					'price' => $ingredient->price
+				);
+			}		
+		};
+		$out = array_values($s_array);
+		$json_s = json_encode($s_array);
+
+		$t_array = array();
+		$tIng = array();
+		$tIng[0]	= '- Select Ingredients -';	
+		foreach ($ingredients as $ingredient) {
+			if($ingredient->project_topping == 1){
+				$t_array[$ingredient->id] = array(
+					'name' => $ingredient->name, 
+					'project_amount' => $ingredient->project_amount, 
+					'project_metric_id' => $ingredient->project_metric_id, 
+					'project_grams' => $ingredient->project_grams,
+					'project_sales_grams' => $ingredient->project_sales_grams, 
+					'grams' => $ingredient->grams, 
+					'price' => $ingredient->price
+				);
+			}		
+		};
+		$out = array_values($t_array);
+		$json_t = json_encode($t_array);
 		
 		$bIng = array();
 		$bIng[0]	= '- Select Base Ingredients -';
@@ -43,6 +163,28 @@ class Admin_QuickController extends BaseController{
 		
 		return View::make('admin.quick.form')
 			->with(array(
+				'calc_p' => $calc_p,
+				'calc_p_set' => $calc_p_set,
+				'calc_b' => $calc_b,
+				'calc_b_set' => $calc_b_set,
+				'calc_s' => $calc_s,
+				'calc_s_set' => $calc_s_set,
+				'calc_t' => $calc_t,
+				'calc_t_set' => $calc_t_set,
+				'json_p' => $json_p,
+				'p_array' => $p_array, 
+
+				'ingredients_b' => $bIng,
+				'json_b' => $json_b,
+				'b_array' => $b_array,
+
+				'ingredients_s' => $sIng,
+				'json_s' => $json_s,
+				's_array' => $s_array,
+
+				'ingredients_t' => $tIng,
+				'json_t' => $json_t,
+				't_array' => $t_array,
 				'base'	=> $bIng,
 				'ingredients'	=> $mIng,
 				'metric'	=> $mMetric,
@@ -178,7 +320,8 @@ class Admin_QuickController extends BaseController{
 				
 				$ingredient = $input['ingredients_b'];
 				$amount = $input['amount_b'];
-				$i_sales_amount = $input['ri_sales_amount_b'];
+				if(isset($input['ri_sales_amount_b'])){$i_sales_amount = $input['ri_sales_amount_b'];}else{$i_sales_amount = 0;};
+				// $i_sales_amount = $input['ri_sales_amount_b'];
 				$metric = $input['metric_b'];
 				$grams = $input['grams_b'];
 
@@ -206,7 +349,7 @@ class Admin_QuickController extends BaseController{
 						}))	
 					->first();
 
-					// echo '<pre>'; print_r($imData); echo '</pre>'; exit;
+					
 
 					if(!empty($imData->Metric)){
 						// echo '<pre>'; print_r($imData); echo '</pre>';exit;
@@ -341,6 +484,8 @@ class Admin_QuickController extends BaseController{
 					};
 				};		
 			};
+
+			echo '<pre>'; print_r($input['ingredients_t']); echo '</pre>';exit;
 
 			if(isset($input['ingredients_t']) && isset($input['amount_t']) && isset($input['metric_t'])){
 				$ingredient = $input['ingredients_t'];
@@ -787,7 +932,7 @@ class Admin_QuickController extends BaseController{
 						}
 					}
 
-					if(isset($input['i_sales_grams_p'])){
+					if(isset($input['i_sales_grams_p']) && isset($input['ip_grams'])){
 						// $sales_amount = $input['sales_amount'];
 						// $r_i->sales_grams = $sales_grams = $riGrams/$serve_amount * $sales_amount; 
 						foreach($ip_grams as $id => $i_gram){
@@ -803,7 +948,7 @@ class Admin_QuickController extends BaseController{
 						}
 					}
 
-					if(isset($input['ip_price'])){
+					if(isset($input['i_sales_grams_p']) && isset($input['ip_grams'])  && isset($input['ip_price'])){
 						foreach($ip_price as $id => $i_price){
 						  	if($ingredient[$i][$xx[0]] == $id){
 						  		if(isset($packet_grams_percentage)){
@@ -914,10 +1059,8 @@ class Admin_QuickController extends BaseController{
 							$d_i->save();
 						}
 					}
-
-					if(isset($input['i_sales_grams_b'])){
-						// $sales_amount = $input['sales_amount'];
-						// $r_i->sales_grams = $sales_grams = $riGrams/$serve_amount * $sales_amount; 
+					
+					if(isset($input['i_sales_grams_b']) && isset($input['ib_grams'])){
 						foreach($ib_grams as $id => $i_gram){
 						  	if($ingredient[$i][$xx[0]] == $id){
 						  		if(isset($input['calc'])){
@@ -931,7 +1074,7 @@ class Admin_QuickController extends BaseController{
 						}
 					}
 
-					if(isset($input['ib_price'])){
+					if(isset($input['i_sales_grams_b']) && isset($input['ib_grams'])  && isset($input['ib_price'])){
 						foreach($ib_price as $id => $i_price){
 						  	if($ingredient[$i][$xx[0]] == $id){
 						  		if(isset($packet_grams_percentage)){
@@ -1001,6 +1144,7 @@ class Admin_QuickController extends BaseController{
 							}
 						}
 					}
+					// echo '<pre>'; print_r($xx[0]); echo '</pre>';exit;
 					// exit;
 					if($xx[0] == 'x'){
 						$r_i = MenuIngredients::find($input_ingredient_id);
@@ -1024,20 +1168,22 @@ class Admin_QuickController extends BaseController{
 						$r_i->project_active = 1;
 					}		
 
-					if ($xx[0] != $input_ingredient_id){
-						$d_i = MenuIngredients::find($xx[0]);
-						
-						$d_i->project_side = 0;
-						$d_i->project_amount = 0;
-						$d_i->project_metric_id = 0;
-						$d_i->project_grams = 0;
-						$d_i->project_sales_grams = 0;
-						$d_i->project_active = 0;
-						$d_i->project_active = 0;
-						$d_i->save();
+					if($xx[0] != 'x'){
+						if ($xx[0] != $input_ingredient_id){
+							$d_i = MenuIngredients::find($xx[0]);
+							
+							$d_i->project_side = 0;
+							$d_i->project_amount = 0;
+							$d_i->project_metric_id = 0;
+							$d_i->project_grams = 0;
+							$d_i->project_sales_grams = 0;
+							$d_i->project_active = 0;
+							$d_i->project_active = 0;
+							$d_i->save();
+						}
 					}
 
-					if(isset($input['i_sales_grams_s'])){
+					if(isset($input['i_sales_grams_s']) && isset($input['is_grams'])){
 						// $sales_amount = $input['sales_amount'];
 						// $r_i->sales_grams = $sales_grams = $riGrams/$serve_amount * $sales_amount; 
 						foreach($is_grams as $id => $i_gram){
@@ -1053,7 +1199,7 @@ class Admin_QuickController extends BaseController{
 						}
 					}
 
-					if(isset($input['is_price'])){
+					if(isset($input['i_sales_grams_s']) && isset($input['is_grams'])  && isset($input['is_price'])){
 						foreach($is_price as $id => $i_price){
 						  	if($ingredient[$i][$xx[0]] == $id){
 						  		if(isset($packet_grams_percentage)){
@@ -1161,7 +1307,7 @@ class Admin_QuickController extends BaseController{
 						}
 					}
 
-					if(isset($input['i_sales_grams_t'])){
+					if(isset($input['i_sales_grams_t']) && isset($input['it_grams'])){
 						// $sales_amount = $input['sales_amount'];
 						// $r_i->sales_grams = $sales_grams = $riGrams/$serve_amount * $sales_amount; 
 						foreach($it_grams as $id => $i_gram){
@@ -1177,7 +1323,7 @@ class Admin_QuickController extends BaseController{
 						}
 					}
 
-					if(isset($input['it_price'])){
+					if(isset($input['i_sales_grams_t']) && isset($input['it_grams'])  && isset($input['it_price'])){
 						foreach($it_price as $id => $i_price){
 						  	if($ingredient[$i][$xx[0]] == $id){
 						  		if(isset($packet_grams_percentage)){
@@ -1722,6 +1868,10 @@ class Admin_QuickController extends BaseController{
 		
 
 		$calculated = 1;
+
+		if(isset($combos)){$combos = $combos;}else{$combos = 0;}
+		if(isset($desired_total_markup)){$desired_total_markup = $desired_total_markup;}else{$desired_total_markup = 0;}
+		if(isset($staff_cost_per_hour)){$staff_cost_per_hour = $staff_cost_per_hour;}else{$staff_cost_per_hour = 0;}
 
 		return View::make('admin.quick.form')
 			->with(array(
