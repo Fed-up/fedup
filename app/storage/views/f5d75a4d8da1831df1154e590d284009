@@ -815,15 +815,39 @@
 		            </div>
 		            <div class="col-sm-3">
 		            	 <?php echo Form::label('staff_cost_per_hour', 'Staff Cost: ', array('class' => 'control-label')); ?>
-			            <?php echo Form::text('staff_cost_per_hour', (isset($input['staff_cost_per_hour'])? Input::old('staff_cost_per_hour') : (isset($sdata->staff_cost_per_hour)? $sdata->staff_cost_per_hour : '' )), array('class' => 'form-control')); ?>	
+			            <?php echo Form::text('staff_cost_per_hour', (isset($input['staff_cost_per_hour'])? Input::old('staff_cost_per_hour') : (isset($staff_cost_per_hour)? $staff_cost_per_hour : '' )), array('class' => 'form-control')); ?>	
 		            </div>
 		            <div class="col-sm-3">
 		            	<?php echo Form::label('desired_total_markup', 'Desired Markup: ', array('class' => 'control-label')); ?>
-			             <?php echo Form::text('desired_total_markup', (isset($input['desired_total_markup'])? Input::old('desired_total_markup') : (isset($sdata->desired_total_markup)? $sdata->desired_total_markup : '' )), array('class' => 'form-control', 'placeholder' => '350')); ?>
+			             <?php echo Form::text('desired_total_markup', (isset($input['desired_total_markup'])? Input::old('desired_total_markup') : (isset($desired_total_markup)? $desired_total_markup : '' )), array('class' => 'form-control', 'placeholder' => '350')); ?>
 		            </div>
 
 		    </div>
-            <hr/>              	
+            <hr/> 
+            <div class="row">
+            	
+	            <div class="col-sm-3">
+	            	<p class="input_title">Protein</p>
+	                <?php echo Form::select('calc_p', $calc_p, (isset($input['calc_p'])? Input::old('calc_p') : (isset($calc_p_set)? $calc_p_set : 0 )), array('class'=>'form-control')); ?> 
+	            </div>
+
+	            <div class="col-sm-3">
+	            	<p class="input_title">Base</p>
+	                <?php echo Form::select('calc_b', $calc_b, (isset($input['calc_b'])? Input::old('calc_b') : (isset($calc_b_set)? $calc_b_set : 0 )), array('class'=>'form-control')); ?> 
+	            </div>
+
+	            <div class="col-sm-3">
+	            	<p class="input_title">Side 1</p>
+	                <?php echo Form::select('calc_s', $calc_s, (isset($input['calc_s'])? Input::old('calc_s') : (isset($calc_s_set)? $calc_s_set : 0 )), array('class'=>'form-control')); ?> 
+	            </div>
+
+	            <div class="col-sm-3">
+	            	<p class="input_title">Topping</p>
+	                <?php echo Form::select('calc_t', $calc_t, (isset($input['calc_t'])? Input::old('calc_t') : (isset($calc_t_set)? $calc_t_set : 0 )), array('class'=>'form-control')); ?> 
+	            </div>
+		    </div>   
+
+		    <hr/>         	
 
 	        <div class="row">
 
@@ -838,37 +862,29 @@
 			                    <th>Topping </th>
 			                    <th>Cost</th>
 			                    <th>Price</th>
-			                    <th>Markup</th>
 			                    <th>Profit</th>
 			                </tr>
 			            </thead>
-			            <?php if(isset($r_ingredients)): ?>
-
-            			<?php foreach($r_ingredients as $r_ingredient): ?>
-
-	            			<?php foreach($s_ingredients as $ingredient): ?>
-
-		            			
-		            				<?php //echo '<pre>'; print_r($sales_data_ingredients); echo '</pre>'; exit;?>
-		            				
-		            				<?php //echo '<pre>'; print_r($ingredient->id); echo '</pre>'; exit; ?>
 
 
-		                            <?php if ($r_ingredient->menu_ingredients_id == $ingredient->id): ?>    	
-						            <tbody>
-							            <tr>
-							                <td> <?php echo $ingredient->name; ?> </td>
-							                <td>$ <?php echo $ingredient->price; ?> </td>
-							                <td> <?php echo $ingredient->grams; ?>g </td>
-							                <td> <?php echo $r_ingredient->packet_grams_percentage; ?> % </td>
-							                <td>$ <?php echo $r_ingredient->recipe_ingredient_cost; ?> </td>
-							                <td> <?php echo $r_ingredient->sales_grams; ?>g </td>
-							            </tr>
-						            </tbody>
-						            <?php endif; ?> 
-					            
+			            <?php if(isset($combos)): ?>
+	            			<?php foreach($combos as $combo): ?>
+
+					            <tbody>
+						            <tr>
+						                <td> <?php echo $combo[0]; ?> </td>
+						                <td> <?php echo $combo[1]; ?> </td>
+						                <td> <?php echo $combo[2]; ?> </td>
+						                <td> <?php echo $combo[3]; ?> </td>
+						                <td> <?php echo $combo[4]; ?> </td>
+
+						                <td> <?php echo $combo[5]; ?> </td>
+						                <td> <?php echo $combo[6]; ?> </td>
+						                <td> <?php echo $combo[7]; ?> </td>
+						            </tr>
+					            </tbody>
+
 				            <?php endforeach; ?>
-			            <?php endforeach; ?>
 			            <?php endif; ?>
 			            <tfoot>
 			            	<tr>

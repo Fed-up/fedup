@@ -816,15 +816,39 @@
 		            </div>
 		            <div class="col-sm-3">
 		            	 {{ Form::label('staff_cost_per_hour', 'Staff Cost: ', array('class' => 'control-label')) }}
-			            {{ Form::text('staff_cost_per_hour', (isset($input['staff_cost_per_hour'])? Input::old('staff_cost_per_hour') : (isset($sdata->staff_cost_per_hour)? $sdata->staff_cost_per_hour : '' )), array('class' => 'form-control')) }}	
+			            {{ Form::text('staff_cost_per_hour', (isset($input['staff_cost_per_hour'])? Input::old('staff_cost_per_hour') : (isset($staff_cost_per_hour)? $staff_cost_per_hour : '' )), array('class' => 'form-control')) }}	
 		            </div>
 		            <div class="col-sm-3">
 		            	{{ Form::label('desired_total_markup', 'Desired Markup: ', array('class' => 'control-label')) }}
-			             {{ Form::text('desired_total_markup', (isset($input['desired_total_markup'])? Input::old('desired_total_markup') : (isset($sdata->desired_total_markup)? $sdata->desired_total_markup : '' )), array('class' => 'form-control', 'placeholder' => '350')) }}
+			             {{ Form::text('desired_total_markup', (isset($input['desired_total_markup'])? Input::old('desired_total_markup') : (isset($desired_total_markup)? $desired_total_markup : '' )), array('class' => 'form-control', 'placeholder' => '350')) }}
 		            </div>
 
 		    </div>
-            <hr/>              	
+            <hr/> 
+            <div class="row">
+            	
+	            <div class="col-sm-3">
+	            	<p class="input_title">Protein</p>
+	                {{ Form::select('calc_p', $calc_p, (isset($input['calc_p'])? Input::old('calc_p') : (isset($calc_p_set)? $calc_p_set : 0 )), array('class'=>'form-control')) }} 
+	            </div>
+
+	            <div class="col-sm-3">
+	            	<p class="input_title">Base</p>
+	                {{ Form::select('calc_b', $calc_b, (isset($input['calc_b'])? Input::old('calc_b') : (isset($calc_b_set)? $calc_b_set : 0 )), array('class'=>'form-control')) }} 
+	            </div>
+
+	            <div class="col-sm-3">
+	            	<p class="input_title">Side 1</p>
+	                {{ Form::select('calc_s', $calc_s, (isset($input['calc_s'])? Input::old('calc_s') : (isset($calc_s_set)? $calc_s_set : 0 )), array('class'=>'form-control')) }} 
+	            </div>
+
+	            <div class="col-sm-3">
+	            	<p class="input_title">Topping</p>
+	                {{ Form::select('calc_t', $calc_t, (isset($input['calc_t'])? Input::old('calc_t') : (isset($calc_t_set)? $calc_t_set : 0 )), array('class'=>'form-control')) }} 
+	            </div>
+		    </div>   
+
+		    <hr/>         	
 
 	        <div class="row">
 
@@ -839,37 +863,29 @@
 			                    <th>Topping </th>
 			                    <th>Cost</th>
 			                    <th>Price</th>
-			                    <th>Markup</th>
 			                    <th>Profit</th>
 			                </tr>
 			            </thead>
-			            @if(isset($r_ingredients))
-
-            			@foreach($r_ingredients as $r_ingredient)
-
-	            			@foreach($s_ingredients as $ingredient)
-
-		            			
-		            				<?php //echo '<pre>'; print_r($sales_data_ingredients); echo '</pre>'; exit;?>
-		            				
-		            				<?php //echo '<pre>'; print_r($ingredient->id); echo '</pre>'; exit; ?>
 
 
-		                            @if ($r_ingredient->menu_ingredients_id == $ingredient->id)    	
-						            <tbody>
-							            <tr>
-							                <td> {{ $ingredient->name }} </td>
-							                <td>$ {{ $ingredient->price }} </td>
-							                <td> {{ $ingredient->grams }}g </td>
-							                <td> {{ $r_ingredient->packet_grams_percentage }} % </td>
-							                <td>$ {{ $r_ingredient->recipe_ingredient_cost }} </td>
-							                <td> {{ $r_ingredient->sales_grams }}g </td>
-							            </tr>
-						            </tbody>
-						            @endif 
-					            
+			            @if(isset($combos))
+	            			@foreach($combos as $combo)
+
+					            <tbody>
+						            <tr>
+						                <td> {{ $combo[0] }} </td>
+						                <td> {{ $combo[1] }} </td>
+						                <td> {{ $combo[2] }} </td>
+						                <td> {{ $combo[3] }} </td>
+						                <td> {{ $combo[4] }} </td>
+
+						                <td> {{ $combo[5] }} </td>
+						                <td> {{ $combo[6] }} </td>
+						                <td> {{ $combo[7] }} </td>
+						            </tr>
+					            </tbody>
+
 				            @endforeach
-			            @endforeach
 			            @endif
 			            <tfoot>
 			            	<tr>

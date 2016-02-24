@@ -460,33 +460,75 @@ class Admin_QuickController extends BaseController{
 		//put ingredients into an array oof each stage, then pull it into the view
 
 		$mIng = array();
-			$mIng[0]	= '- Select Ingredients -';
-			$data_check = 0;
-			foreach ($ingredients as $ingredient) {
-				$mIng[$ingredient->id]	= $ingredient->name;
-				if($ingredient->project_protein == 1){
-					$data_check = 1;
-				}
-				if($ingredient->project_base == 1){
-					$data_check = 1;
-				}
-				if($ingredient->project_side == 1){
-					$data_check = 1;
-				}
-				if($ingredient->project_topping == 1){
-					$data_check = 1;
-				}
-				// $mIng[] = array(
-				// 	'name' => $ingredient->name, 
-				// 	'project_amount' => $ingredient->project_amount, 
-				// 	'project_metric_id' => $ingredient->project_metric_id, 
-				// 	'project_grams' => $ingredient->project_grams,
-				// 	'project_sales_grams' => $ingredient->project_sales_grams, 
-				// 	'grams' => $ingredient->grams, 
-				// 	'price' => $ingredient->price
-				// );
-			};
-		
+		$mIng[0]	= '- Select Ingredients -';
+		$data_check = 0;
+		foreach ($ingredients as $ingredient) {
+			$mIng[$ingredient->id]	= $ingredient->name;
+			if($ingredient->project_protein == 1){
+				$data_check = 1;
+			}
+			if($ingredient->project_base == 1){
+				$data_check = 1;
+			}
+			if($ingredient->project_side == 1){
+				$data_check = 1;
+			}
+			if($ingredient->project_topping == 1){
+				$data_check = 1;
+			}
+			// $mIng[] = array(
+			// 	'name' => $ingredient->name, 
+			// 	'project_amount' => $ingredient->project_amount, 
+			// 	'project_metric_id' => $ingredient->project_metric_id, 
+			// 	'project_grams' => $ingredient->project_grams,
+			// 	'project_sales_grams' => $ingredient->project_sales_grams, 
+			// 	'grams' => $ingredient->grams, 
+			// 	'price' => $ingredient->price
+			// );
+		};
+
+		$calc_p_set = array();
+		$calc_p = array();
+		$calc_p[0]	= '- Select Protein -';
+		foreach ($ingredients as $ingredient) {
+			// $calc_p[$ingredient->id]	= $ingredient->name;
+			if($ingredient->project_protein == 1){
+				$calc_p[$ingredient->id] = $ingredient->name;
+			}
+		};
+
+
+
+		$calc_b_set = array();
+		$calc_b = array();
+		$calc_b[0]	= '- Select Base -';
+		foreach ($ingredients as $ingredient) {
+			// $calc_p[$ingredient->id]	= $ingredient->name;
+			if($ingredient->project_base == 1){
+				$calc_b[$ingredient->id] = $ingredient->name;
+			}
+		}
+
+		$calc_s_set = array();
+		$calc_s = array();
+		$calc_s[0]	= '- Select Side -';
+		foreach ($ingredients as $ingredient) {
+			// $calc_p[$ingredient->id]	= $ingredient->name;
+			if($ingredient->project_side == 1){
+				$calc_s[$ingredient->id] = $ingredient->name;
+			}
+		}
+
+		$calc_t_set = array();
+		$calc_t = array();
+		$calc_t[0]	= '- Select Topping -';
+		foreach ($ingredients as $ingredient) {
+			// $calc_p[$ingredient->id]	= $ingredient->name;
+			if($ingredient->project_topping== 1){
+				$calc_t[$ingredient->id] = $ingredient->name;
+			}
+		}
+	
 
 		$p_array = array();
 		$pIng = array();
@@ -631,6 +673,15 @@ class Admin_QuickController extends BaseController{
 				// 'sales_data_ingredients' => $sales_data_ingredients,
 				'title'		=> 'Edit Fed Up Projects:',
 				'calculated' => 0,
+
+				'calc_p' => $calc_p,
+				'calc_p_set' => $calc_p_set,
+				'calc_b' => $calc_b,
+				'calc_b_set' => $calc_b_set,
+				'calc_s' => $calc_s,
+				'calc_s_set' => $calc_s_set,
+				'calc_t' => $calc_t,
+				'calc_t_set' => $calc_t_set,
 			));	
 		
 	}
@@ -664,13 +715,6 @@ class Admin_QuickController extends BaseController{
 				if(isset($input['ip_price'])){$ip_price = $input['ip_price'];}else{$ip_price = 0;}
 				$tip_cost = 0;
 				$tip_grams = 0;
-
-
-
-
-				
-
-
 
 				$array_count = count($ingredient);
 				for($i=0; $i<$array_count; $i++){			  
@@ -1148,7 +1192,7 @@ class Admin_QuickController extends BaseController{
 				  	$r_i->save();
 			  		// echo '<pre>'; print_r($r_i); echo '</pre>';exit;
 				};
-				// echo '<pre>'; print_r($input); echo '</pre>';exit;			
+					
 				if(isset($input['ddt'])){
 					$ddt = $input['ddt'];
 					// echo '<pre>'; print_r($input); echo '</pre>';exit;					
@@ -1161,292 +1205,361 @@ class Admin_QuickController extends BaseController{
 					};
 				};		
 			};
-
+			// echo '<pre>'; print_r($input); echo '</pre>';exit;		
 			if(isset($input['calc'])){
 
 				$ingredients = MenuIngredients::orderBy('name','ASC')->where('active', '!=', '9')->get();
 				$metrics = Metric::orderBy('name','ASC')->get();
 
+				$combo_name = array();
+				$count = 0;
+				if(isset($input['desired_total_markup']) == 0){$desired_total_markup = 350;}else{$desired_total_markup = $input['desired_total_markup'];}
+				if(isset($input['staff_cost_per_hour']) == 0){$staff_cost_per_hour = 25;}else{$staff_cost_per_hour = $input['staff_cost_per_hour'];}
+				if(isset($input['time']) == 0){$time = 5;}else{$time = $input['time'];}
+				$staff_cost = $staff_cost_per_hour / 60 * $time;
+
+				$calc_p = $input['calc_p'];
+				$calc_b = $input['calc_b'];
+				$calc_s = $input['calc_s'];
+				$calc_t = $input['calc_t'];
+
+				// echo '<pre>'; print_r($input['calc_p']); echo '</pre>'; exit;
+
+				foreach ($ingredients as $protein) {
+					if($calc_p == 0 ){
+
+						foreach ($ingredients as $base) {
+							if($protein->id != $base->id){
+								if($calc_b == 0 ){
+
+									if($protein->project_protein == 1 ){
+										if($base->project_base == 1){
+
+											foreach ($ingredients as $side) {
+												if($side->project_side == 1 ){
+													if($calc_s == 0 ){
+
+														foreach ($ingredients as $side2) {
+															if($side2->project_side == 1 ){
+
+																foreach ($ingredients as $topping) {
+																	if($topping->project_topping == 1 ){
+																		if($calc_t == 0 ){
+																			$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
+																			$price = $cost * ($desired_total_markup / 100);
+																			$profit = $price - $cost;
+																			
+																			$combos[] = array($protein->name,$base->name,$side->name,$side2->name,$topping->name,$cost,$price,$profit);
+																		}
+																		if($calc_t == $topping->id ){
+																			$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
+																			$price = $cost * ($desired_total_markup / 100);
+																			$profit = $price - $cost;
+																			
+																			$combos[] = array($protein->name,$base->name,$side->name,$side2->name,$topping->name,$cost,$price,$profit);
+																		}
+																	}
+																}
+															}	
+														}
+													}
+													if($calc_s == $side->id ){
+
+														foreach ($ingredients as $side2) {
+															if($side2->project_side == 1 ){
+
+																foreach ($ingredients as $topping) {
+																	if($topping->project_topping == 1 ){
+																		if($calc_t == 0 ){
+																			$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
+																			$price = $cost * ($desired_total_markup / 100);
+																			$profit = $price - $cost;
+																			
+																			$combos[] = array($protein->name,$base->name,$side->name,$side2->name,$topping->name,$cost,$price,$profit);
+																		}
+																		if($calc_t == $topping->id ){
+																			$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
+																			$price = $cost * ($desired_total_markup / 100);
+																			$profit = $price - $cost;
+																			
+																			$combos[] = array($protein->name,$base->name,$side->name,$side2->name,$topping->name,$cost,$price,$profit);
+																		}
+
+									
+																	}
+																}
+																
+															}	
+														}
+													}
+
+												}
+											}
+
+											
+										}
+									}
+								}
+
+								if($calc_b == $base->id){
+
+									if($protein->project_protein == 1 ){
+										if($base->project_base == 1){
+
+											foreach ($ingredients as $side) {
+												if($side->project_side == 1 ){
+													if($calc_s == 0 ){
+
+														foreach ($ingredients as $side2) {
+															if($side2->project_side == 1 ){
+
+																foreach ($ingredients as $topping) {
+																	if($topping->project_topping == 1 ){
+																		if($calc_t == 0 ){
+																			$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
+																			$price = $cost * ($desired_total_markup / 100);
+																			$profit = $price - $cost;
+																			
+																			$combos[] = array($protein->name,$base->name,$side->name,$side2->name,$topping->name,$cost,$price,$profit);
+																		}
+																		if($calc_t == $topping->id ){
+																			$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
+																			$price = $cost * ($desired_total_markup / 100);
+																			$profit = $price - $cost;
+																			
+																			$combos[] = array($protein->name,$base->name,$side->name,$side2->name,$topping->name,$cost,$price,$profit);
+																		}
+
+									
+																	}
+																}
+																
+															}	
+														}
+													}
+													if($calc_s == $side->id ){
+
+														foreach ($ingredients as $side2) {
+															if($side2->project_side == 1 ){
+
+																foreach ($ingredients as $topping) {
+																	if($topping->project_topping == 1 ){
+																		if($calc_t == 0 ){
+																			$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
+																			$price = $cost * ($desired_total_markup / 100);
+																			$profit = $price - $cost;
+																			
+																			$combos[] = array($protein->name,$base->name,$side->name,$side2->name,$topping->name,$cost,$price,$profit);
+																		}
+																		if($calc_t == $topping->id ){
+																			$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
+																			$price = $cost * ($desired_total_markup / 100);
+																			$profit = $price - $cost;
+																			
+																			$combos[] = array($protein->name,$base->name,$side->name,$side2->name,$topping->name,$cost,$price,$profit);
+																		}
+
+									
+																	}
+																}
+																
+															}	
+														}
+													}
+
+												}
+											}
+
+											
+										}
+									}
+								}
 
 
-				foreach ($ingredients as $ingredient) {
-					if($ingredient->project_protein == 1){
-						$p_array[$ingredient->id] = array(
-							'name' => $ingredient->name, 
-							'project_amount' => $ingredient->project_amount, 
-							'project_metric_id' => $ingredient->project_metric_id, 
-							'project_grams' => $ingredient->project_grams,
-							'project_sales_grams' => $ingredient->project_sales_grams, 
-							'grams' => $ingredient->grams, 
-							'price' => $ingredient->price
-						);
-					}		
-				};
-
-				foreach ($ingredients as $ingredient) {
-					if($ingredient->project_base == 1){
-						$b_array[$ingredient->id] = array(
-							'name' => $ingredient->name, 
-							'project_amount' => $ingredient->project_amount, 
-							'project_metric_id' => $ingredient->project_metric_id, 
-							'project_grams' => $ingredient->project_grams,
-							'project_sales_grams' => $ingredient->project_sales_grams, 
-							'grams' => $ingredient->grams, 
-							'price' => $ingredient->price
-						);
-					}		
-				};
-
-				foreach ($ingredients as $ingredient) {
-					if($ingredient->project_side == 1){
-						$s_array[$ingredient->id] = array(
-							'name' => $ingredient->name, 
-							'project_amount' => $ingredient->project_amount, 
-							'project_metric_id' => $ingredient->project_metric_id, 
-							'project_grams' => $ingredient->project_grams,
-							'project_sales_grams' => $ingredient->project_sales_grams, 
-							'grams' => $ingredient->grams, 
-							'price' => $ingredient->price
-						);
-					}		
-				};
-
-				foreach ($ingredients as $ingredient) {
-					if($ingredient->project_side == 1){
-						$ss_array[$ingredient->id] = array(
-							'name' => $ingredient->name, 
-							'project_amount' => $ingredient->project_amount, 
-							'project_metric_id' => $ingredient->project_metric_id, 
-							'project_grams' => $ingredient->project_grams,
-							'project_sales_grams' => $ingredient->project_sales_grams, 
-							'grams' => $ingredient->grams, 
-							'price' => $ingredient->price
-						);
-					}		
-				};
-
-				foreach ($ingredients as $ingredient) {
-					if($ingredient->project_topping == 1){
-						$t_array[$ingredient->id] = array(
-							'name' => $ingredient->name, 
-							'project_amount' => $ingredient->project_amount, 
-							'project_metric_id' => $ingredient->project_metric_id, 
-							'project_grams' => $ingredient->project_grams,
-							'project_sales_grams' => $ingredient->project_sales_grams, 
-							'grams' => $ingredient->grams, 
-							'price' => $ingredient->price
-						);
-					}		
-				};
-
-
-
-				foreach ($p_array as $pk => $pv){
-					$p_id = $pk;
-					$p_name = $pv['name'];
-					$p_grams = $pv['project_grams'];
-					$p_sales_grams = $pv['project_sales_grams'];
-					$p_price = $pv['price'];
-					foreach ($b_array as $bk => $bv) {
-						$p_id = $bk;
-						$b_name = $bv['name'];
-						$b_grams = $bv['project_grams'];
-						$b_sales_grams = $pv['project_sales_grams'];
-						$b_price = $bv['price'];
-						$calc = $p_price + $b_price;
-
-						$combo2[] = array(
-							$ida['id'] = array($pk,$p_id),
-							$name['name'] = array($p_name,$b_name),
-							$project_grams['project_grams'] = array($p_grams,$b_grams),
-							$project_sales_grams['project_sales_grams'] = array($p_sales_grams,$b_sales_grams),
-							$price['price'] = array($p_price,$b_price),
-							'combo2' => $calc, 
-						);
-						
-						
-
-					
-						// echo '<pre>'; print_r($pk); echo '</pre>';
-						// echo '<pre>'; print_r($bk); echo '</pre>';
-						// echo '<hr/>';
-// echo '<pre>'; print_r($p_price); echo ' + '; print_r($b_price); echo ' = '; print_r($fprice); echo '</pre>';
-
-
-// 		echo '<pre>'; print_r($p_name); echo ' + '; print_r($b_name); echo ' = '; print_r($fprice); echo '</pre>';	
-// 		echo "<hr>";
-
-					}
-				}
-				// echo '<pre>'; print_r($pk); echo '</pre>';
-				// echo '<pre>'; print_r($bk); echo '</pre>';
-				// echo '<pre>'; print_r($combo2); echo '</pre>';exit;
-
-
-
-
-
-
-
-				$array_count = count($combo2);
-			
-
-				for($i=0; $i<$array_count; $i++){			  
-					$xx = array_keys($combo2[$i]);
-					$vv = array_values($combo2[$i]);
-
-					$vv_array_count = count($vv[0]);
-					for($v=0; $v<$vv_array_count; $v++){
-						$combo2_id = $combo2[$i][0][$v];
-						$combo2_name = $combo2[$i][1];
-						$combo2_grams = $combo2[$i][2][$v];
-						$combo2_sales_grams = $combo2[$i][3][$v];
-						$combo2_price = $combo2[$i][4][$v];
-						$combo2_calc = $combo2[$i]['combo2'];
-					
-					
-					
-						
-
-						foreach ($s_array as $sk => $sv){
-							$s_id = $sk;
-							// echo '<pre>'; print_r($s_id); echo '</pre>';exit;
-							$combo2_name[2] = $s_name = $sv['name'];
-							$combo2_grams[2] = $s_grams = $sv['project_grams'];
-							$s_sales_grams = $sv['project_sales_grams'];
-							$s_price = $sv['price'];
-							$price3 = $combo2_calc + $s_price;
-
-							
-							$combo3 = array(
-								// $id = array($combo2_id),
-								$name = array($combo2_name),
-								$grams = array($combo2_grams), 
-							);
-							// $combo2_id[2] = ($s_id);
-							
-							// echo '<hr/>';
+							}
 						}
 					}
-				}
-				echo '<pre>'; print_r($combo2_grams); echo '</pre>'; 
-				echo '<hr/>';
-				echo '<pre>'; print_r($combo3); echo '</pre>'; exit;
+
+					if($calc_p == $protein->id ){
+						foreach ($ingredients as $base) {
+							if($protein->id != $base->id){
+								if($protein->project_protein == 1 ){
+									if($base->project_base == 1){
 
 
+										if($calc_b == 0 ){
 
+											if($protein->project_protein == 1 ){
+												if($base->project_base == 1){
 
-				$array_count = count($combo3);
-				for($i=0; $i<$array_count; $i++){			  
-					$xx = array_keys($combo3[$i]);
-					$vv = array_values($combo3[$i]);
+													foreach ($ingredients as $side) {
+														if($side->project_side == 1 ){
 
-					$vv_array_count = count($vv[0]);
-					for($v=0; $v<$vv_array_count; $v++){
+															if($calc_s == 0 ){
 
-						 echo '<pre>'; print_r($combo3); echo '</pre>'; 
+																foreach ($ingredients as $side2) {
+																	if($side2->project_side == 1 ){
 
-						// $combo3_id = $combo3[$i][0][$v];
-						// $combo3_name = $combo3[$i][1];
-						// $combo3_grams = $combo3[$i][2][$v];
-						// $combo3_sales_grams = $combo3[$i][3][$v];
-						// $combo3_price = $combo2[$i][4][$v];
-						// $combo3_calc = $combo2[$i]['combo3'];
-					
-					
-					// echo '<pre>'; print_r($combo2_calc); echo '</pre>';
-					
+																		foreach ($ingredients as $topping) {
+																			if($topping->project_topping == 1 ){
+																				if($calc_t == 0 ){
+																					$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
+																					$price = $cost * ($desired_total_markup / 100);
+																					$profit = $price - $cost;
+																					
+																					$combos[] = array($protein->name,$base->name,$side->name,$side2->name,$topping->name,$cost,$price,$profit);
+																				}
+																				if($calc_t == $topping->id ){
+																				$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
+																				$price = $cost * ($desired_total_markup / 100);
+																				$profit = $price - $cost;
+																				
+																				$combos[] = array($protein->name,$base->name,$side->name,$side2->name,$topping->name,$cost,$price,$profit);
+																				}
+											
+																			}
+																		}
+																		
+																	}	
+																}
+															}
+															if($calc_s == $side->id ){
 
-						// foreach ($ss_array as $ssk => $ssv){
-						// 	$ss_id = $sk;
-						// 	$ss_name = $ssv['name'];
-						// 	$ss_grams = $ssv['project_grams'];
-						// 	$ss_sales_grams = $ssv['project_sales_grams'];
-						// 	$ss_price = $ssv['price'];
-						// 	$price4 = $combo3_calc + $ss_price;
-						// 	$combo3_name[3] = ($ss_name);
-						// 	$combo4[] = array(
-						// 		$ssa[] = array($combo3_name), 
-						// 	);
-						// 	// echo '<hr/>';
-						// }
+																foreach ($ingredients as $side2) {
+																	if($side2->project_side == 1 ){
+
+																		foreach ($ingredients as $topping) {
+																			if($topping->project_topping == 1 ){
+																				if($calc_t == 0 ){
+																					$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
+																					$price = $cost * ($desired_total_markup / 100);
+																					$profit = $price - $cost;
+																					
+																					$combos[] = array($protein->name,$base->name,$side->name,$side2->name,$topping->name,$cost,$price,$profit);
+																				}
+																				if($calc_t == $topping->id ){
+																				$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
+																				$price = $cost * ($desired_total_markup / 100);
+																				$profit = $price - $cost;
+																				
+																				$combos[] = array($protein->name,$base->name,$side->name,$side2->name,$topping->name,$cost,$price,$profit);
+																				}
+
+											
+																			}
+																		}
+																		
+																	}	
+																}
+															}
+
+														}
+													}
+
+													
+												}
+											}
+										}
+
+										if($calc_b == $base->id){
+
+											if($protein->project_protein == 1 ){
+												if($base->project_base == 1){
+
+													foreach ($ingredients as $side) {
+														if($side->project_side == 1 ){
+
+															if($calc_s == 0 ){
+
+																foreach ($ingredients as $side2) {
+																	if($side2->project_side == 1 ){
+
+																		foreach ($ingredients as $topping) {
+																			if($topping->project_topping == 1 ){
+																				if($calc_t == 0 ){
+																					$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
+																					$price = $cost * ($desired_total_markup / 100);
+																					$profit = $price - $cost;
+																					
+																					$combos[] = array($protein->name,$base->name,$side->name,$side2->name,$topping->name,$cost,$price,$profit);
+																				}
+																				if($calc_t == $topping->id ){
+																				$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
+																				$price = $cost * ($desired_total_markup / 100);
+																				$profit = $price - $cost;
+																				
+																				$combos[] = array($protein->name,$base->name,$side->name,$side2->name,$topping->name,$cost,$price,$profit);
+																				}
+
+											
+																			}
+																		}
+																		
+																	}	
+																}
+															}
+															if($calc_s == $side->id ){
+
+																foreach ($ingredients as $side2) {
+																	if($side2->project_side == 1 ){
+
+																		foreach ($ingredients as $topping) {
+																			if($topping->project_topping == 1 ){
+																				if($calc_t == 0 ){
+																					$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
+																					$price = $cost * ($desired_total_markup / 100);
+																					$profit = $price - $cost;
+																					
+																					$combos[] = array($protein->name,$base->name,$side->name,$side2->name,$topping->name,$cost,$price,$profit);
+																				}
+																				if($calc_t == $topping->id ){
+																				$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
+																				$price = $cost * ($desired_total_markup / 100);
+																				$profit = $price - $cost;
+																				
+																				$combos[] = array($protein->name,$base->name,$side->name,$side2->name,$topping->name,$cost,$price,$profit);
+																				}
+
+											
+																			}
+																		}
+																		
+																	}	
+																}
+															}
+
+														}
+													}
+
+													
+												}
+											}
+										}
+
+										
+									}
+								}
+							}
+						}
 					}
+
 				}
-				 exit;
 
-				$array_count = count($combo4);
-				for($i=0; $i<$array_count; $i++){			  
-					$xx = array_keys($combo4[$i]);
-					$vv = array_values($combo4[$i]);
-					$combo4_name = $combo4[$i][$xx[0]];
-					$combo4_grams = $combo4[$i][$xx[1]];
-					$combo4_sales_grams = $combo4[$i][$xx[2]];
-					$combo4_price = $combo4[$i][$xx[3]];
-					$combo4_calc = $combo4[$i][$xx[4]];
-
-					foreach ($t_array as $tk => $tv){
-						$t_name = $tv['name'];
-						$t_grams = $tv['project_grams'];
-						$t_sales_grams = $tv['project_sales_grams'];
-						$t_price = $tv['price'];
-						$price5 = $combo4_calc + $t_price;
-
-
-
-						$combo5[] = array(
-							// 'id' => $id;
-							'name' => $combo4_name.' + '.$t_name, 
-							'project_grams' => $combo4_grams.' + '.$t_grams,
-							'project_sales_grams' => $combo4_sales_grams.' + '.$t_sales_grams,
-							'price' => $combo4_price.' + '.$t_price, 
-							'combo4' => $price5, 
-							 
-							
-
-						);
-					}
-				}
-				
-				echo '<pre>'; print_r($p_id); echo '</pre>';
-
-				
-				// var_dump($uniques);
-
-				
-				// echo '<pre>'; print_r($s_array); echo '</pre>';
-				exit;
-				
-
-				// 'name' => $p_name.'+'.$b_name, 
-				// 			'project_grams' => $p_grams.'+'.$b_grams,
-				// 			'project_sales_grams' => $p_sales_grams.'+'.$b_sales_grams,
-				// 			'price' => $p_price.'+'.$b_price, 
-				// 			'combo2' => $price2, 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-				echo '<pre>'; print_r($input); echo '</pre>';exit;
+				// 
 			}		
 
+			// foreach ($combo_name as $key => $name) {
+			// 	echo '<pre>'; print_r($name[0]);print_r($name[1]); echo '</pre>';
+			// }
 
-
+			
+			// echo '<pre>'; print_r($input); echo '</pre>';
 			// exit;
 
 			if(isset($input['sc'])){
 				return Redirect::action('Admin_QuickController@getQuick');
 			}else{
-				return Redirect::action('Admin_QuickController@getEditQuick');
+				// return Redirect::action('Admin_QuickController@getEditQuick');
 
 				$ingredients = MenuIngredients::orderBy('name','ASC')->where('active', '!=', '9')->get();
 				$metrics = Metric::orderBy('name','ASC')->get();
@@ -1472,18 +1585,55 @@ class Admin_QuickController extends BaseController{
 					if($ingredient->project_topping == 1){
 						$data_check = 1;
 					}
-					$mIng[] = array(
-						'name' => $ingredient->name, 
-						'project_amount' => $ingredient->project_amount, 
-						'project_metric_id' => $ingredient->project_metric_id, 
-						'project_grams' => $ingredient->project_grams,
-						'project_sales_grams' => $ingredient->project_sales_grams, 
-						'grams' => $ingredient->grams, 
-						'price' => $ingredient->price
-					);
 				};
-				// echo '<pre>'; print_r( $mIng ); echo '</pre>';exit;
 
+				$calc_p_set = array();
+				if(isset($input['calc_p'])){$calc_p_set = $input['calc_p'];}else{$calc_p_set = 0;}
+				$calc_p = array();
+				$calc_p[0]	= '- Select Protein -';
+				foreach ($ingredients as $ingredient) {
+					// $calc_p[$ingredient->id]	= $ingredient->name;
+					if($ingredient->project_protein == 1){
+						$calc_p[$ingredient->id] = $ingredient->name;
+					}
+				};
+
+
+
+				$calc_b_set = array();
+				if(isset($input['calc_b'])){$calc_b_set = $input['calc_b'];}else{$calc_b_set = 0;}
+				$calc_b = array();
+				$calc_b[0]	= '- Select Base -';
+				foreach ($ingredients as $ingredient) {
+					// $calc_p[$ingredient->id]	= $ingredient->name;
+					if($ingredient->project_base == 1){
+						$calc_b[$ingredient->id] = $ingredient->name;
+					}
+				}
+
+				$calc_s_set = array();
+				if(isset($input['calc_s'])){$calc_s_set = $input['calc_s'];}else{$calc_s_set = 0;}
+				$calc_s = array();
+				$calc_s[0]	= '- Select Side -';
+				foreach ($ingredients as $ingredient) {
+					// $calc_p[$ingredient->id]	= $ingredient->name;
+					if($ingredient->project_side == 1){
+						$calc_s[$ingredient->id] = $ingredient->name;
+					}
+				}
+
+				$calc_t_set = array();
+				if(isset($input['calc_t'])){$calc_t_set = $input['calc_t'];}else{$calc_t_set = 0;}
+				$calc_t = array();
+				$calc_t[0]	= '- Select Topping -';
+				foreach ($ingredients as $ingredient) {
+					// $calc_p[$ingredient->id]	= $ingredient->name;
+					if($ingredient->project_topping== 1){
+						$calc_t[$ingredient->id] = $ingredient->name;
+					}
+				}
+				
+				
 
 				$p_array = array();
 				$pIng = array();
@@ -1568,39 +1718,10 @@ class Admin_QuickController extends BaseController{
 					$mMetric[$metric->id]	= $metric->name;
 				};
 				
-				// $sales_data_ingredients = array();
-				// $s_ingredients = $ingredients;
-				
-
-				
-
-				// foreach($sales_data as $i => $in){
-				// 	echo '<pre>'; print_r( $i); echo '</pre>'; 
-				// 	echo '<pre>'; print_r( $in ); echo '</pre>'; 
-				// // 	echo '<br/';
-				// }
-				// exit;
-
-				//$data from the load function above holds all the data for facts to go into the form
-				$calculated = 0;
-
-
-		// <select name="ingredients[][{{ $p_ingredient->id }}]" id="ingredients_{{ $x }}" class="form-control input--ingredient"/>
-	 //        @foreach($base as $i=>$v)
-	 //        	<option value="{{ $i }}" @if ($b_ingredient->menu_ingredients_id == $i) selected="selected" @endif >{{ $v }}</option>
-	 //        @endforeach
-	 //    </select>
 
 		
 
-		// foreach ($p_array as $key => $p_ingredient) { 
-		// 	echo '<pre>'; print_r( $p_ingredient ); echo '</pre>'; 
-
-		
-		// }
-		
-
-
+		$calculated = 1;
 
 		return View::make('admin.quick.form')
 			->with(array(
@@ -1625,7 +1746,20 @@ class Admin_QuickController extends BaseController{
 				'data_check' => $data_check,
 				// 'sales_data_ingredients' => $sales_data_ingredients,
 				'title'		=> 'Edit Fed Up Projects:',
-				'calculated' => 0,
+				'calculated' => $calculated,
+				'combos' => $combos,
+				'desired_total_markup' => $desired_total_markup,
+				'staff_cost_per_hour' => $staff_cost_per_hour,
+
+				'calc_p' => $calc_p,
+				'calc_p_set' => $calc_p_set,
+				'calc_b' => $calc_b,
+				'calc_b_set' => $calc_b_set,
+				'calc_s' => $calc_s,
+				'calc_s_set' => $calc_s_set,
+				'calc_t' => $calc_t,
+				'calc_t_set' => $calc_t_set,
+
 			));	
 
 

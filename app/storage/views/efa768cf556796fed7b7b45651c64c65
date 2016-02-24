@@ -8,6 +8,7 @@
         <?php if(Auth::user()->user_type === 'Manager' || Auth::user()->user_type === 'ADMIN' ): ?>
             <?php if (Request::segment(2) === 'menu'): ?>
             <li <?php echo (Request::segment(3) === 'menu')? 'class="active"' : 'class=""' ; ?>><?php echo HTML::link('admin/menu/menu', 'Cafe Menu'); ?></li>
+            
             <li <?php echo (Request::segment(3) === 'quick')? 'class="active"' : 'class=""' ; ?>><?php echo HTML::link('admin/menu/quick', 'Work Bench'); ?></li>
             <li <?php echo (Request::segment(3) === 'categories')? 'class="active"' : 'class=""' ; ?>><?php echo HTML::link('admin/menu/categories', 'Categories'); ?></li>
             <li <?php echo (Request::segment(3) === 'recipes')? 'class="active"' : 'class=""' ; ?>><?php echo HTML::link('admin/menu/recipes', 'Recipes'); ?></li>
