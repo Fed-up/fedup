@@ -664,6 +664,16 @@ class Admin_QuickController extends BaseController{
 			}
 		}
 
+		$calc_ss_set = array();
+		$calc_ss = array();
+		$calc_ss[0]	= '- Select Side -';
+		foreach ($ingredients as $ingredient) {
+			// $calc_p[$ingredient->id]	= $ingredient->name;
+			if($ingredient->project_side == 1){
+				$calc_ss[$ingredient->id] = $ingredient->name;
+			}
+		}
+
 		$calc_t_set = array();
 		$calc_t = array();
 		$calc_t[0]	= '- Select Topping -';
@@ -733,6 +743,25 @@ class Admin_QuickController extends BaseController{
 		};
 		$out = array_values($s_array);
 		$json_s = json_encode($s_array);
+
+		$ss_array = array();
+		$ssIng = array();
+		$ssIng[0]	= '- Select Ingredients -';	
+		foreach ($ingredients as $ingredient) {
+			if($ingredient->project_side == 1){
+				$s_array[$ingredient->id] = array(
+					'name' => $ingredient->name, 
+					'project_amount' => $ingredient->project_amount, 
+					'project_metric_id' => $ingredient->project_metric_id, 
+					'project_grams' => $ingredient->project_grams,
+					'project_sales_grams' => $ingredient->project_sales_grams, 
+					'grams' => $ingredient->grams, 
+					'price' => $ingredient->price
+				);
+			}		
+		};
+		$out = array_values($ss_array);
+		$json_ss = json_encode($ss_array);
 
 		$t_array = array();
 		$tIng = array();
@@ -809,6 +838,10 @@ class Admin_QuickController extends BaseController{
 				'json_s' => $json_s,
 				's_array' => $s_array,
 
+				'ingredients_ss' => $ssIng,
+				'json_ss' => $json_ss,
+				'ss_array' => $ss_array,
+
 				'ingredients_t' => $tIng,
 				'json_t' => $json_t,
 				't_array' => $t_array,
@@ -825,6 +858,8 @@ class Admin_QuickController extends BaseController{
 				'calc_b_set' => $calc_b_set,
 				'calc_s' => $calc_s,
 				'calc_s_set' => $calc_s_set,
+				'calc_ss' => $calc_ss,
+				'calc_ss_set' => $calc_ss_set,
 				'calc_t' => $calc_t,
 				'calc_t_set' => $calc_t_set,
 			));	
@@ -1351,7 +1386,7 @@ class Admin_QuickController extends BaseController{
 					};
 				};		
 			};
-			// echo '<pre>'; print_r($input); echo '</pre>';exit;		
+				
 			if(isset($input['calc'])){
 
 				$ingredients = MenuIngredients::orderBy('name','ASC')->where('active', '!=', '9')->get();
@@ -1367,9 +1402,31 @@ class Admin_QuickController extends BaseController{
 				$calc_p = $input['calc_p'];
 				$calc_b = $input['calc_b'];
 				$calc_s = $input['calc_s'];
-				$calc_t = $input['calc_t'];
+				$calc_ss = $input['calc_ss'];
+				if(isset($calc_t)){$calc_t = $calc_t;}else{$calc_t = 0;}
+				if(isset($input['desired_total_markup'])){
+					$desired_total_markup = $input['desired_total_markup'];
+					if($desired_total_markup == 0){
+						$desired_total_markup = 350;
+					}else{
+						$desired_total_markup = $input['desired_total_markup'];
+					}
 
-				// echo '<pre>'; print_r($input['calc_p']); echo '</pre>'; exit;
+				}
+
+				if(isset($input['desired_total_markup'])){
+					$dtm = $input['desired_total_markup'];
+					if($dtm == 0){
+						$dtm = 1;
+					}else{
+						$dtm = $dtm/100;
+					}
+
+				}
+				
+				// echo '<pre>'; print_r($dtm); echo '</pre>';exit;	
+				
+				
 
 				foreach ($ingredients as $protein) {
 					if($calc_p == 0 ){
@@ -1387,25 +1444,100 @@ class Admin_QuickController extends BaseController{
 
 														foreach ($ingredients as $side2) {
 															if($side2->project_side == 1 ){
+																if($calc_ss == 0 ){
 
-																foreach ($ingredients as $topping) {
-																	if($topping->project_topping == 1 ){
-																		if($calc_t == 0 ){
-																			$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
-																			$price = $cost * ($desired_total_markup / 100);
-																			$profit = $price - $cost;
-																			
-																			$combos[] = array($protein->name,$base->name,$side->name,$side2->name,$topping->name,$cost,$price,$profit);
-																		}
-																		if($calc_t == $topping->id ){
-																			$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
-																			$price = $cost * ($desired_total_markup / 100);
-																			$profit = $price - $cost;
-																			
-																			$combos[] = array($protein->name,$base->name,$side->name,$side2->name,$topping->name,$cost,$price,$profit);
+																	foreach ($ingredients as $topping) {
+																		if($topping->project_topping == 1 ){
+																			if($calc_t == 0 ){
+																				$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $staff_cost;
+																				$price = $cost * ($desired_total_markup / 100);
+																				$profit = $price - $cost;
+																				
+																				$total_grams = $protein->project_sales_grams + $base->project_sales_grams + $side->project_sales_grams + $side2->project_sales_grams;
+																				$combos[] = array($protein->name,
+																					$protein->project_cost*$dtm, 
+																					$protein->project_sales_grams, 
+																					$base->name,
+																					$base->project_cost*$dtm, 
+																					$base->project_sales_grams,
+																					$side->name,
+																					$side->project_cost*$dtm, 
+																					$side->project_sales_grams,
+																					$side2->name,
+																					$side2->project_cost*$dtm, 
+																					$side2->project_sales_grams,
+																					$total_grams,
+																					$cost,
+																					$price,
+																					$profit
+																				);
+																			}
+																			if($calc_t == $topping->id ){
+																				$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
+																				$price = $cost * ($desired_total_markup / 100);
+																				$profit = $price - $cost;
+																				
+																				$total_grams = $protein->project_sales_grams + $base->project_sales_grams + $side->project_sales_grams + $side2->project_sales_grams;
+																				$combos[] = array($protein->name,
+																					$protein->project_cost*$dtm, 
+																					$protein->project_sales_grams, 
+																					$base->name,
+																					$base->project_cost*$dtm, 
+																					$base->project_sales_grams,
+																					$side->name,
+																					$side->project_cost*$dtm, 
+																					$side->project_sales_grams,
+																					$side2->name,
+																					$side2->project_cost*$dtm, 
+																					$side2->project_sales_grams,
+																					$total_grams,
+																					$cost,
+																					$price,
+																					$profit
+																				);
+																			}
 																		}
 																	}
 																}
+																if($calc_ss == $side2->id ){
+
+																	foreach ($ingredients as $topping) {
+																		if($topping->project_topping == 1 ){
+																			if($calc_t == 0 ){
+																				$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
+																				$price = $cost * ($desired_total_markup / 100);
+																				$profit = $price - $cost;
+																				
+																				$combos[] = array($protein->name,$base->name,$side->name,$side2->name,$topping->name,$cost,$price,$profit);
+																			}
+																			if($calc_t == $topping->id ){
+																				$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
+																				$price = $cost * ($desired_total_markup / 100);
+																				$profit = $price - $cost;
+																				
+																				$total_grams = $protein->project_sales_grams + $base->project_sales_grams + $side->project_sales_grams + $side2->project_sales_grams;
+																				$combos[] = array($protein->name,
+																					$protein->project_cost*$dtm, 
+																					$protein->project_sales_grams, 
+																					$base->name,
+																					$base->project_cost*$dtm, 
+																					$base->project_sales_grams,
+																					$side->name,
+																					$side->project_cost*$dtm, 
+																					$side->project_sales_grams,
+																					$side2->name,
+																					$side2->project_cost*$dtm, 
+																					$side2->project_sales_grams,
+																					$total_grams,
+																					$cost,
+																					$price,
+																					$profit
+																				);
+																			}
+																		}
+																	}
+																}
+
 															}	
 														}
 													}
@@ -1413,25 +1545,80 @@ class Admin_QuickController extends BaseController{
 
 														foreach ($ingredients as $side2) {
 															if($side2->project_side == 1 ){
+																if($calc_ss == 0 ){
 
-																foreach ($ingredients as $topping) {
-																	if($topping->project_topping == 1 ){
-																		if($calc_t == 0 ){
-																			$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
-																			$price = $cost * ($desired_total_markup / 100);
-																			$profit = $price - $cost;
-																			
-																			$combos[] = array($protein->name,$base->name,$side->name,$side2->name,$topping->name,$cost,$price,$profit);
+																	foreach ($ingredients as $topping) {
+																		if($topping->project_topping == 1 ){
+																			if($calc_t == 0 ){
+																				$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
+																				$price = $cost * ($desired_total_markup / 100);
+																				$profit = $price - $cost;
+																				
+																				$combos[] = array($protein->name,$base->name,$side->name,$side2->name,$topping->name,$cost,$price,$profit);
+																			}
+																			if($calc_t == $topping->id ){
+																				$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
+																				$price = $cost * ($desired_total_markup / 100);
+																				$profit = $price - $cost;
+																				
+																				$total_grams = $protein->project_sales_grams + $base->project_sales_grams + $side->project_sales_grams + $side2->project_sales_grams;
+																				$combos[] = array($protein->name,
+																					$protein->project_cost*$dtm, 
+																					$protein->project_sales_grams, 
+																					$base->name,
+																					$base->project_cost*$dtm, 
+																					$base->project_sales_grams,
+																					$side->name,
+																					$side->project_cost*$dtm, 
+																					$side->project_sales_grams,
+																					$side2->name,
+																					$side2->project_cost*$dtm, 
+																					$side2->project_sales_grams,
+																					$total_grams,
+																					$cost,
+																					$price,
+																					$profit
+																				);
+																			}
 																		}
-																		if($calc_t == $topping->id ){
-																			$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
-																			$price = $cost * ($desired_total_markup / 100);
-																			$profit = $price - $cost;
-																			
-																			$combos[] = array($protein->name,$base->name,$side->name,$side2->name,$topping->name,$cost,$price,$profit);
-																		}
+																	}
+																}
+																if($calc_ss == $side2->id ){
 
-									
+																	foreach ($ingredients as $topping) {
+																		if($topping->project_topping == 1 ){
+																			if($calc_t == 0 ){
+																				$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
+																				$price = $cost * ($desired_total_markup / 100);
+																				$profit = $price - $cost;
+																				
+																				$combos[] = array($protein->name,$base->name,$side->name,$side2->name,$topping->name,$cost,$price,$profit);
+																			}
+																			if($calc_t == $topping->id ){
+																				$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
+																				$price = $cost * ($desired_total_markup / 100);
+																				$profit = $price - $cost;
+																				
+																				$total_grams = $protein->project_sales_grams + $base->project_sales_grams + $side->project_sales_grams + $side2->project_sales_grams;
+																				$combos[] = array($protein->name,
+																					$protein->project_cost*$dtm, 
+																					$protein->project_sales_grams, 
+																					$base->name,
+																					$base->project_cost*$dtm, 
+																					$base->project_sales_grams,
+																					$side->name,
+																					$side->project_cost*$dtm, 
+																					$side->project_sales_grams,
+																					$side2->name,
+																					$side2->project_cost*$dtm, 
+																					$side2->project_sales_grams,
+																					$total_grams,
+																					$cost,
+																					$price,
+																					$profit
+																				);
+																			}
+																		}
 																	}
 																}
 																
@@ -1458,25 +1645,97 @@ class Admin_QuickController extends BaseController{
 
 														foreach ($ingredients as $side2) {
 															if($side2->project_side == 1 ){
+																if($calc_ss == 0 ){
 
-																foreach ($ingredients as $topping) {
-																	if($topping->project_topping == 1 ){
-																		if($calc_t == 0 ){
-																			$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
-																			$price = $cost * ($desired_total_markup / 100);
-																			$profit = $price - $cost;
-																			
-																			$combos[] = array($protein->name,$base->name,$side->name,$side2->name,$topping->name,$cost,$price,$profit);
+																	foreach ($ingredients as $topping) {
+																		if($topping->project_topping == 1 ){
+																			if($calc_t == 0 ){
+																				$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
+																				$price = $cost * ($desired_total_markup / 100);
+																				$profit = $price - $cost;
+																				
+																				$total_grams = $protein->project_sales_grams + $base->project_sales_grams + $side->project_sales_grams + $side2->project_sales_grams;
+																				$combos[] = array($protein->name,
+																					$protein->project_cost*$dtm, 
+																					$protein->project_sales_grams, 
+																					$base->name,
+																					$base->project_cost*$dtm, 
+																					$base->project_sales_grams,
+																					$side->name,
+																					$side->project_cost*$dtm, 
+																					$side->project_sales_grams,
+																					$side2->name,
+																					$side2->project_cost*$dtm, 
+																					$side2->project_sales_grams,
+																					$total_grams,
+																					$cost,
+																					$price,
+																					$profit
+																				);
+																			}
+																			if($calc_t == $topping->id ){
+																				$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
+																				$price = $cost * ($desired_total_markup / 100);
+																				$profit = $price - $cost;
+																				
+																				$total_grams = $protein->project_sales_grams + $base->project_sales_grams + $side->project_sales_grams + $side2->project_sales_grams;
+																				$combos[] = array($protein->name,
+																					$protein->project_cost*$dtm, 
+																					$protein->project_sales_grams, 
+																					$base->name,
+																					$base->project_cost*$dtm, 
+																					$base->project_sales_grams,
+																					$side->name,
+																					$side->project_cost*$dtm, 
+																					$side->project_sales_grams,
+																					$side2->name,
+																					$side2->project_cost*$dtm, 
+																					$side2->project_sales_grams,
+																					$total_grams,
+																					$cost,
+																					$price,
+																					$profit
+																				);
+																			}
 																		}
-																		if($calc_t == $topping->id ){
-																			$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
-																			$price = $cost * ($desired_total_markup / 100);
-																			$profit = $price - $cost;
-																			
-																			$combos[] = array($protein->name,$base->name,$side->name,$side2->name,$topping->name,$cost,$price,$profit);
-																		}
+																	}
+																}
+																if($calc_ss == $side2->id ){
 
-									
+																	foreach ($ingredients as $topping) {
+																		if($topping->project_topping == 1 ){
+																			if($calc_t == 0 ){
+																				$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
+																				$price = $cost * ($desired_total_markup / 100);
+																				$profit = $price - $cost;
+																				
+																				$combos[] = array($protein->name,$base->name,$side->name,$side2->name,$topping->name,$cost,$price,$profit);
+																			}
+																			if($calc_t == $topping->id ){
+																				$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
+																				$price = $cost * ($desired_total_markup / 100);
+																				$profit = $price - $cost;
+																				
+																				$total_grams = $protein->project_sales_grams + $base->project_sales_grams + $side->project_sales_grams + $side2->project_sales_grams;
+																				$combos[] = array($protein->name,
+																					$protein->project_cost*$dtm, 
+																					$protein->project_sales_grams, 
+																					$base->name,
+																					$base->project_cost*$dtm, 
+																					$base->project_sales_grams,
+																					$side->name,
+																					$side->project_cost*$dtm, 
+																					$side->project_sales_grams,
+																					$side2->name,
+																					$side2->project_cost*$dtm, 
+																					$side2->project_sales_grams,
+																					$total_grams,
+																					$cost,
+																					$price,
+																					$profit
+																				);
+																			}
+																		}
 																	}
 																}
 																
@@ -1487,27 +1746,83 @@ class Admin_QuickController extends BaseController{
 
 														foreach ($ingredients as $side2) {
 															if($side2->project_side == 1 ){
+																if($calc_ss == 0 ){
 
-																foreach ($ingredients as $topping) {
-																	if($topping->project_topping == 1 ){
-																		if($calc_t == 0 ){
-																			$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
-																			$price = $cost * ($desired_total_markup / 100);
-																			$profit = $price - $cost;
-																			
-																			$combos[] = array($protein->name,$base->name,$side->name,$side2->name,$topping->name,$cost,$price,$profit);
+																	foreach ($ingredients as $topping) {
+																		if($topping->project_topping == 1 ){
+																			if($calc_t == 0 ){
+																				$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
+																				$price = $cost * ($desired_total_markup / 100);
+																				$profit = $price - $cost;
+																				
+																				$combos[] = array($protein->name,$base->name,$side->name,$side2->name,$topping->name,$cost,$price,$profit);
+																			}
+																			if($calc_t == $topping->id ){
+																				$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
+																				$price = $cost * ($desired_total_markup / 100);
+																				$profit = $price - $cost;
+																				
+																				$total_grams = $protein->project_sales_grams + $base->project_sales_grams + $side->project_sales_grams + $side2->project_sales_grams;
+																				$combos[] = array($protein->name,
+																					$protein->project_cost*$dtm, 
+																					$protein->project_sales_grams, 
+																					$base->name,
+																					$base->project_cost*$dtm, 
+																					$base->project_sales_grams,
+																					$side->name,
+																					$side->project_cost*$dtm, 
+																					$side->project_sales_grams,
+																					$side2->name,
+																					$side2->project_cost*$dtm, 
+																					$side2->project_sales_grams,
+																					$total_grams,
+																					$cost,
+																					$price,
+																					$profit
+																				);
+																			}
 																		}
-																		if($calc_t == $topping->id ){
-																			$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
-																			$price = $cost * ($desired_total_markup / 100);
-																			$profit = $price - $cost;
-																			
-																			$combos[] = array($protein->name,$base->name,$side->name,$side2->name,$topping->name,$cost,$price,$profit);
-																		}
-
-									
 																	}
 																}
+																if($calc_ss == $side2->id ){
+
+																	foreach ($ingredients as $topping) {
+																		if($topping->project_topping == 1 ){
+																			if($calc_t == 0 ){
+																				$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
+																				$price = $cost * ($desired_total_markup / 100);
+																				$profit = $price - $cost;
+																				
+																				$combos[] = array($protein->name,$base->name,$side->name,$side2->name,$topping->name,$cost,$price,$profit);
+																			}
+																			if($calc_t == $topping->id ){
+																				$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
+																				$price = $cost * ($desired_total_markup / 100);
+																				$profit = $price - $cost;
+																				
+																				$total_grams = $protein->project_sales_grams + $base->project_sales_grams + $side->project_sales_grams + $side2->project_sales_grams;
+																				$combos[] = array($protein->name,
+																					$protein->project_cost*$dtm, 
+																					$protein->project_sales_grams, 
+																					$base->name,
+																					$base->project_cost*$dtm, 
+																					$base->project_sales_grams,
+																					$side->name,
+																					$side->project_cost*$dtm, 
+																					$side->project_sales_grams,
+																					$side2->name,
+																					$side2->project_cost*$dtm, 
+																					$side2->project_sales_grams,
+																					$total_grams,
+																					$cost,
+																					$price,
+																					$profit
+																				);
+																			}
+																		}
+																	}
+																}
+																
 																
 															}	
 														}
@@ -1545,24 +1860,114 @@ class Admin_QuickController extends BaseController{
 
 																foreach ($ingredients as $side2) {
 																	if($side2->project_side == 1 ){
+																		if($calc_ss == 0 ){
 
-																		foreach ($ingredients as $topping) {
-																			if($topping->project_topping == 1 ){
-																				if($calc_t == 0 ){
-																					$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
-																					$price = $cost * ($desired_total_markup / 100);
-																					$profit = $price - $cost;
-																					
-																					$combos[] = array($protein->name,$base->name,$side->name,$side2->name,$topping->name,$cost,$price,$profit);
+																			foreach ($ingredients as $topping) {
+																				if($topping->project_topping == 1 ){
+																					if($calc_t == 0 ){
+																						$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
+																						$price = $cost * ($desired_total_markup / 100);
+																						$profit = $price - $cost;
+																						
+																						$total_grams = $protein->project_sales_grams + $base->project_sales_grams + $side->project_sales_grams + $side2->project_sales_grams;
+																						$combos[] = array($protein->name,
+																							$protein->project_cost*$dtm, 
+																							$protein->project_sales_grams, 
+																							$base->name,
+																							$base->project_cost*$dtm, 
+																							$base->project_sales_grams,
+																							$side->name,
+																							$side->project_cost*$dtm, 
+																							$side->project_sales_grams,
+																							$side2->name,
+																							$side2->project_cost*$dtm, 
+																							$side2->project_sales_grams,
+																							$total_grams,
+																							$cost,
+																							$price,
+																							$profit
+																						);
+																					}
+																					if($calc_t == $topping->id ){
+																						$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
+																						$price = $cost * ($desired_total_markup / 100);
+																						$profit = $price - $cost;
+																						
+																						$total_grams = $protein->project_sales_grams + $base->project_sales_grams + $side->project_sales_grams + $side2->project_sales_grams;
+																						$combos[] = array($protein->name,
+																							$protein->project_cost*$dtm, 
+																							$protein->project_sales_grams, 
+																							$base->name,
+																							$base->project_cost*$dtm, 
+																							$base->project_sales_grams,
+																							$side->name,
+																							$side->project_cost*$dtm, 
+																							$side->project_sales_grams,
+																							$side2->name,
+																							$side2->project_cost*$dtm, 
+																							$side2->project_sales_grams,
+																							$total_grams,
+																							$cost,
+																							$price,
+																							$profit
+																						);
+																					}
 																				}
-																				if($calc_t == $topping->id ){
-																				$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
-																				$price = $cost * ($desired_total_markup / 100);
-																				$profit = $price - $cost;
-																				
-																				$combos[] = array($protein->name,$base->name,$side->name,$side2->name,$topping->name,$cost,$price,$profit);
+																			}
+																		}
+																		if($calc_ss == $side2->id ){
+
+																			foreach ($ingredients as $topping) {
+																				if($topping->project_topping == 1 ){
+																					if($calc_t == 0 ){
+																						$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
+																						$price = $cost * ($desired_total_markup / 100);
+																						$profit = $price - $cost;
+																						
+																						$total_grams = $protein->project_sales_grams + $base->project_sales_grams + $side->project_sales_grams + $side2->project_sales_grams;
+																						$combos[] = array($protein->name,
+																							$protein->project_cost*$dtm, 
+																							$protein->project_sales_grams, 
+																							$base->name,
+																							$base->project_cost*$dtm, 
+																							$base->project_sales_grams,
+																							$side->name,
+																							$side->project_cost*$dtm, 
+																							$side->project_sales_grams,
+																							$side2->name,
+																							$side2->project_cost*$dtm, 
+																							$side2->project_sales_grams,
+																							$total_grams,
+																							$cost,
+																							$price,
+																							$profit
+																						);
+																					}
+																					if($calc_t == $topping->id ){
+																						$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
+																						$price = $cost * ($desired_total_markup / 100);
+																						$profit = $price - $cost;
+																						
+																						$total_grams = $protein->project_sales_grams + $base->project_sales_grams + $side->project_sales_grams + $side2->project_sales_grams;
+																						$combos[] = array($protein->name,
+																							$protein->project_cost*$dtm, 
+																							$protein->project_sales_grams, 
+																							$base->name,
+																							$base->project_cost*$dtm, 
+																							$base->project_sales_grams,
+																							$side->name,
+																							$side->project_cost*$dtm, 
+																							$side->project_sales_grams,
+																							$side2->name,
+																							$side2->project_cost*$dtm, 
+																							$side2->project_sales_grams,
+																							$total_grams,
+																							$cost,
+																							$price,
+																							$profit
+																						);
+																					}
 																				}
-											
 																			}
 																		}
 																		
@@ -1573,28 +1978,83 @@ class Admin_QuickController extends BaseController{
 
 																foreach ($ingredients as $side2) {
 																	if($side2->project_side == 1 ){
+																		if($calc_ss == 0 ){
 
-																		foreach ($ingredients as $topping) {
-																			if($topping->project_topping == 1 ){
-																				if($calc_t == 0 ){
-																					$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
-																					$price = $cost * ($desired_total_markup / 100);
-																					$profit = $price - $cost;
-																					
-																					$combos[] = array($protein->name,$base->name,$side->name,$side2->name,$topping->name,$cost,$price,$profit);
+																			foreach ($ingredients as $topping) {
+																				if($topping->project_topping == 1 ){
+																					if($calc_t == 0 ){
+																						$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
+																						$price = $cost * ($desired_total_markup / 100);
+																						$profit = $price - $cost;
+																						
+																						$combos[] = array($protein->name,$base->name,$side->name,$side2->name,$topping->name,$cost,$price,$profit);
+																					}
+																					if($calc_t == $topping->id ){
+																						$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
+																						$price = $cost * ($desired_total_markup / 100);
+																						$profit = $price - $cost;
+																						
+																						$total_grams = $protein->project_sales_grams + $base->project_sales_grams + $side->project_sales_grams + $side2->project_sales_grams;
+																						$combos[] = array($protein->name,
+																							$protein->project_cost*$dtm, 
+																							$protein->project_sales_grams, 
+																							$base->name,
+																							$base->project_cost*$dtm, 
+																							$base->project_sales_grams,
+																							$side->name,
+																							$side->project_cost*$dtm, 
+																							$side->project_sales_grams,
+																							$side2->name,
+																							$side2->project_cost*$dtm, 
+																							$side2->project_sales_grams,
+																							$total_grams,
+																							$cost,
+																							$price,
+																							$profit
+																						);
+																					}
 																				}
-																				if($calc_t == $topping->id ){
-																				$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
-																				$price = $cost * ($desired_total_markup / 100);
-																				$profit = $price - $cost;
-																				
-																				$combos[] = array($protein->name,$base->name,$side->name,$side2->name,$topping->name,$cost,$price,$profit);
-																				}
-
-											
 																			}
 																		}
-																		
+																		if($calc_ss == $side2->id ){
+
+																			foreach ($ingredients as $topping) {
+																				if($topping->project_topping == 1 ){
+																					if($calc_t == 0 ){
+																						$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
+																						$price = $cost * ($desired_total_markup / 100);
+																						$profit = $price - $cost;
+																						
+																						$combos[] = array($protein->name,$base->name,$side->name,$side2->name,$topping->name,$cost,$price,$profit);
+																					}
+																					if($calc_t == $topping->id ){
+																						$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
+																						$price = $cost * ($desired_total_markup / 100);
+																						$profit = $price - $cost;
+																						
+																						$total_grams = $protein->project_sales_grams + $base->project_sales_grams + $side->project_sales_grams + $side2->project_sales_grams;
+																						$combos[] = array($protein->name,
+																							$protein->project_cost*$dtm, 
+																							$protein->project_sales_grams, 
+																							$base->name,
+																							$base->project_cost*$dtm, 
+																							$base->project_sales_grams,
+																							$side->name,
+																							$side->project_cost*$dtm, 
+																							$side->project_sales_grams,
+																							$side2->name,
+																							$side2->project_cost*$dtm, 
+																							$side2->project_sales_grams,
+																							$total_grams,
+																							$cost,
+																							$price,
+																							$profit
+																						);
+																					}
+																				}
+																			}
+																		}
+																				
 																	}	
 																}
 															}
@@ -1619,25 +2079,80 @@ class Admin_QuickController extends BaseController{
 
 																foreach ($ingredients as $side2) {
 																	if($side2->project_side == 1 ){
+																		if($calc_ss == 0 ){
 
-																		foreach ($ingredients as $topping) {
-																			if($topping->project_topping == 1 ){
-																				if($calc_t == 0 ){
-																					$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
-																					$price = $cost * ($desired_total_markup / 100);
-																					$profit = $price - $cost;
-																					
-																					$combos[] = array($protein->name,$base->name,$side->name,$side2->name,$topping->name,$cost,$price,$profit);
+																			foreach ($ingredients as $topping) {
+																				if($topping->project_topping == 1 ){
+																					if($calc_t == 0 ){
+																						$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
+																						$price = $cost * ($desired_total_markup / 100);
+																						$profit = $price - $cost;
+																						
+																						$combos[] = array($protein->name,$base->name,$side->name,$side2->name,$topping->name,$cost,$price,$profit);
+																					}
+																					if($calc_t == $topping->id ){
+																						$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
+																						$price = $cost * ($desired_total_markup / 100);
+																						$profit = $price - $cost;
+																						
+																						$total_grams = $protein->project_sales_grams + $base->project_sales_grams + $side->project_sales_grams + $side2->project_sales_grams;
+																						$combos[] = array($protein->name,
+																							$protein->project_cost*$dtm, 
+																							$protein->project_sales_grams, 
+																							$base->name,
+																							$base->project_cost*$dtm, 
+																							$base->project_sales_grams,
+																							$side->name,
+																							$side->project_cost*$dtm, 
+																							$side->project_sales_grams,
+																							$side2->name,
+																							$side2->project_cost*$dtm, 
+																							$side2->project_sales_grams,
+																							$total_grams,
+																							$cost,
+																							$price,
+																							$profit
+																						);
+																					}
 																				}
-																				if($calc_t == $topping->id ){
-																				$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
-																				$price = $cost * ($desired_total_markup / 100);
-																				$profit = $price - $cost;
-																				
-																				$combos[] = array($protein->name,$base->name,$side->name,$side2->name,$topping->name,$cost,$price,$profit);
-																				}
+																			}
+																		}
+																		if($calc_ss == $side2->id ){
 
-											
+																			foreach ($ingredients as $topping) {
+																				if($topping->project_topping == 1 ){
+																					if($calc_t == 0 ){
+																						$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
+																						$price = $cost * ($desired_total_markup / 100);
+																						$profit = $price - $cost;
+																						
+																						$combos[] = array($protein->name,$base->name,$side->name,$side2->name,$topping->name,$cost,$price,$profit);
+																					}
+																					if($calc_t == $topping->id ){
+																						$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
+																						$price = $cost * ($desired_total_markup / 100);
+																						$profit = $price - $cost;
+																						
+																						$total_grams = $protein->project_sales_grams + $base->project_sales_grams + $side->project_sales_grams + $side2->project_sales_grams;
+																						$combos[] = array($protein->name,
+																							$protein->project_cost*$dtm, 
+																							$protein->project_sales_grams, 
+																							$base->name,
+																							$base->project_cost*$dtm, 
+																							$base->project_sales_grams,
+																							$side->name,
+																							$side->project_cost*$dtm, 
+																							$side->project_sales_grams,
+																							$side2->name,
+																							$side2->project_cost*$dtm, 
+																							$side2->project_sales_grams,
+																							$total_grams,
+																							$cost,
+																							$price,
+																							$profit
+																						);
+																					}
+																				}
 																			}
 																		}
 																		
@@ -1648,25 +2163,80 @@ class Admin_QuickController extends BaseController{
 
 																foreach ($ingredients as $side2) {
 																	if($side2->project_side == 1 ){
+																		if($calc_ss == 0 ){
 
-																		foreach ($ingredients as $topping) {
-																			if($topping->project_topping == 1 ){
-																				if($calc_t == 0 ){
-																					$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
-																					$price = $cost * ($desired_total_markup / 100);
-																					$profit = $price - $cost;
-																					
-																					$combos[] = array($protein->name,$base->name,$side->name,$side2->name,$topping->name,$cost,$price,$profit);
+																			foreach ($ingredients as $topping) {
+																				if($topping->project_topping == 1 ){
+																					if($calc_t == 0 ){
+																						$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
+																						$price = $cost * ($desired_total_markup / 100);
+																						$profit = $price - $cost;
+																						
+																						$combos[] = array($protein->name,$base->name,$side->name,$side2->name,$topping->name,$cost,$price,$profit);
+																					}
+																					if($calc_t == $topping->id ){
+																						$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
+																						$price = $cost * ($desired_total_markup / 100);
+																						$profit = $price - $cost;
+																						
+																						$combos[] = array($protein->name,$base->name,$side->name,$side2->name,$topping->name,$cost,$price,$profit);
+																					}
 																				}
-																				if($calc_t == $topping->id ){
-																				$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
-																				$price = $cost * ($desired_total_markup / 100);
-																				$profit = $price - $cost;
-																				
-																				$combos[] = array($protein->name,$base->name,$side->name,$side2->name,$topping->name,$cost,$price,$profit);
-																				}
+																			}
+																		}
+																		if($calc_ss == $side2->id ){
 
-											
+																			foreach ($ingredients as $topping) {
+																				if($topping->project_topping == 1 ){
+																					if($calc_t == 0 ){
+																						$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
+																						$price = $cost * ($desired_total_markup / 100);
+																						$profit = $price - $cost;
+																						
+																						$total_grams = $protein->project_sales_grams + $base->project_sales_grams + $side->project_sales_grams + $side2->project_sales_grams;
+																						$combos[] = array($protein->name,
+																							$protein->project_cost*$dtm, 
+																							$protein->project_sales_grams, 
+																							$base->name,
+																							$base->project_cost*$dtm, 
+																							$base->project_sales_grams,
+																							$side->name,
+																							$side->project_cost*$dtm, 
+																							$side->project_sales_grams,
+																							$side2->name,
+																							$side2->project_cost*$dtm, 
+																							$side2->project_sales_grams,
+																							$total_grams,
+																							$cost,
+																							$price,
+																							$profit
+																						);
+																					}
+																					if($calc_t == $topping->id ){
+																						$cost = $protein->project_cost + $base->project_cost + $side->project_cost + $side2->project_cost + $topping->project_cost + $staff_cost;
+																						$price = $cost * ($desired_total_markup / 100);
+																						$profit = $price - $cost;
+																						
+																						$total_grams = $protein->project_sales_grams + $base->project_sales_grams + $side->project_sales_grams + $side2->project_sales_grams;
+																						$combos[] = array($protein->name,
+																							$protein->project_cost*$dtm, 
+																							$protein->project_sales_grams, 
+																							$base->name,
+																							$base->project_cost*$dtm, 
+																							$base->project_sales_grams,
+																							$side->name,
+																							$side->project_cost*$dtm, 
+																							$side->project_sales_grams,
+																							$side2->name,
+																							$side2->project_cost*$dtm, 
+																							$side2->project_sales_grams,
+																							$total_grams,
+																							$cost,
+																							$price,
+																							$profit
+																						);
+																					}
+																				}
 																			}
 																		}
 																		
@@ -1768,6 +2338,17 @@ class Admin_QuickController extends BaseController{
 					}
 				}
 
+				$calc_ss_set = array();
+				if(isset($input['calc_ss'])){$calc_ss_set = $input['calc_ss'];}else{$calc_ss_set = 0;}
+				$calc_ss = array();
+				$calc_ss[0]	= '- Select Side -';
+				foreach ($ingredients as $ingredient) {
+					// $calc_p[$ingredient->id]	= $ingredient->name;
+					if($ingredient->project_side == 1){
+						$calc_ss[$ingredient->id] = $ingredient->name;
+					}
+				}
+
 				$calc_t_set = array();
 				if(isset($input['calc_t'])){$calc_t_set = $input['calc_t'];}else{$calc_t_set = 0;}
 				$calc_t = array();
@@ -1838,6 +2419,25 @@ class Admin_QuickController extends BaseController{
 				$out = array_values($s_array);
 				$json_s = json_encode($s_array);
 
+				$ss_array = array();
+				$ssIng = array();
+				$ssIng[0]	= '- Select Ingredients -';	
+				foreach ($ingredients as $ingredient) {
+					if($ingredient->project_side == 1){
+						$ss_array[$ingredient->id] = array(
+							'name' => $ingredient->name, 
+							'project_amount' => $ingredient->project_amount, 
+							'project_metric_id' => $ingredient->project_metric_id, 
+							'project_grams' => $ingredient->project_grams,
+							'project_sales_grams' => $ingredient->project_sales_grams, 
+							'grams' => $ingredient->grams, 
+							'price' => $ingredient->price
+						);
+					}		
+				};
+				$out = array_values($ss_array);
+				$json_ss = json_encode($ss_array);
+
 				$t_array = array();
 				$tIng = array();
 				$tIng[0]	= '- Select Ingredients -';	
@@ -1888,6 +2488,10 @@ class Admin_QuickController extends BaseController{
 				'json_s' => $json_s,
 				's_array' => $s_array,
 
+				'ingredients_ss' => $ssIng,
+				'json_ss' => $json_ss,
+				'ss_array' => $ss_array,
+
 				'ingredients_t' => $tIng,
 				'json_t' => $json_t,
 				't_array' => $t_array,
@@ -1907,6 +2511,8 @@ class Admin_QuickController extends BaseController{
 				'calc_b_set' => $calc_b_set,
 				'calc_s' => $calc_s,
 				'calc_s_set' => $calc_s_set,
+				'calc_ss' => $calc_ss,
+				'calc_ss_set' => $calc_ss_set,
 				'calc_t' => $calc_t,
 				'calc_t_set' => $calc_t_set,
 

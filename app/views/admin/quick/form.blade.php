@@ -843,9 +843,10 @@
 	            </div>
 
 	            <div class="col-sm-3">
-	            	<p class="input_title">Topping</p>
-	                {{ Form::select('calc_t', (isset($calc_t)? $calc_t : 0 ), (isset($input['calc_t'])? Input::old('calc_t') : (isset($calc_t_set)? $calc_t_set : 0 )), array('class'=>'form-control')) }} 
+	            	<p class="input_title">Side 2</p>
+	                {{ Form::select('calc_ss', (isset($calc_ss)? $calc_ss : 0 ), (isset($input['calc_ss'])? Input::old('calc_ss') : (isset($calc_ss_set)? $calc_ss_set : 0 )), array('class'=>'form-control')) }} 
 	            </div>
+
 		    </div>   
 
 		    <hr/>         	
@@ -860,7 +861,7 @@
 			                    <th>Base</th>
 			                    <th>Side 1</th>
 			                    <th>Side 2</th>
-			                    <th>Topping </th>
+			                    <th>Grams </th>
 			                    <th>Cost</th>
 			                    <th>Price</th>
 			                    <th>Profit</th>
@@ -874,15 +875,15 @@
 
 						            <tbody>
 							            <tr>
-							                <td> {{ $combo[0] }} </td>
-							                <td> {{ $combo[1] }} </td>
-							                <td> {{ $combo[2] }} </td>
-							                <td> {{ $combo[3] }} </td>
-							                <td> {{ $combo[4] }} </td>
+							                <td> {{ $combo[0] }} <br/> <span class="combo_data"> ${{ $combo[1] }} : {{ $combo[2] }}g </span></td>
+							                <td> {{ $combo[3] }} <br/> <span class="combo_data"> ${{ $combo[4] }} : {{ $combo[4] }}g </span></td>
+							                <td> {{ $combo[6] }} <br/> <span class="combo_data"> ${{ $combo[7] }} : {{ $combo[8] }}g </span></td>
+							                <td> {{ $combo[9] }} <br/> <span class="combo_data"> ${{ $combo[10] }} : {{ $combo[11] }}g </span></td>
 
-							                <td> {{ $combo[5] }} </td>
-							                <td> {{ $combo[6] }} </td>
-							                <td> {{ $combo[7] }} </td>
+							                <td> {{ $combo[12] }}g </td>
+							                <td> ${{ $combo[13] }} </td>
+							                <td> ${{ $combo[14] }} </td>
+							                <td> ${{ $combo[15] }} </td>
 							            </tr>
 						            </tbody>
 

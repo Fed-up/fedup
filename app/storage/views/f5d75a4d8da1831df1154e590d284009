@@ -842,9 +842,10 @@
 	            </div>
 
 	            <div class="col-sm-3">
-	            	<p class="input_title">Topping</p>
-	                <?php echo Form::select('calc_t', (isset($calc_t)? $calc_t : 0 ), (isset($input['calc_t'])? Input::old('calc_t') : (isset($calc_t_set)? $calc_t_set : 0 )), array('class'=>'form-control')); ?> 
+	            	<p class="input_title">Side 2</p>
+	                <?php echo Form::select('calc_ss', (isset($calc_ss)? $calc_ss : 0 ), (isset($input['calc_ss'])? Input::old('calc_ss') : (isset($calc_ss_set)? $calc_ss_set : 0 )), array('class'=>'form-control')); ?> 
 	            </div>
+
 		    </div>   
 
 		    <hr/>         	
@@ -859,7 +860,7 @@
 			                    <th>Base</th>
 			                    <th>Side 1</th>
 			                    <th>Side 2</th>
-			                    <th>Topping </th>
+			                    <th>Grams </th>
 			                    <th>Cost</th>
 			                    <th>Price</th>
 			                    <th>Profit</th>
@@ -873,15 +874,15 @@
 
 						            <tbody>
 							            <tr>
-							                <td> <?php echo $combo[0]; ?> </td>
-							                <td> <?php echo $combo[1]; ?> </td>
-							                <td> <?php echo $combo[2]; ?> </td>
-							                <td> <?php echo $combo[3]; ?> </td>
-							                <td> <?php echo $combo[4]; ?> </td>
+							                <td> <?php echo $combo[0]; ?> <br/> <span class="combo_data"> $<?php echo $combo[1]; ?> : <?php echo $combo[2]; ?>g </span></td>
+							                <td> <?php echo $combo[3]; ?> <br/> <span class="combo_data"> $<?php echo $combo[4]; ?> : <?php echo $combo[4]; ?>g </span></td>
+							                <td> <?php echo $combo[6]; ?> <br/> <span class="combo_data"> $<?php echo $combo[7]; ?> : <?php echo $combo[8]; ?>g </span></td>
+							                <td> <?php echo $combo[9]; ?> <br/> <span class="combo_data"> $<?php echo $combo[10]; ?> : <?php echo $combo[11]; ?>g </span></td>
 
-							                <td> <?php echo $combo[5]; ?> </td>
-							                <td> <?php echo $combo[6]; ?> </td>
-							                <td> <?php echo $combo[7]; ?> </td>
+							                <td> <?php echo $combo[12]; ?>g </td>
+							                <td> $<?php echo $combo[13]; ?> </td>
+							                <td> $<?php echo $combo[14]; ?> </td>
+							                <td> $<?php echo $combo[15]; ?> </td>
 							            </tr>
 						            </tbody>
 
